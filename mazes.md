@@ -10,4 +10,6 @@
 - Comparatif **Binary Tree / Sidewinder / DFS / Prim / Kruskal / Eller** (qualité des couloirs, longueur moyenne des chemins, densité de culs-de-sac).
 - **Parfait vs imparfait** : méthode de “braiding” (ajout de boucles) et métriques simples (nb de culs-de-sac, connexité).
 - **Topologie** (wrap-around type Pac-Man), **tessellation** (grilles non carrées).
+- https://www.astrolog.org/labyrnth/algrithm.htm
+- Article : "Randomized Pacman maze generation algorithm"
 
