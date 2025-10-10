@@ -6,16 +6,16 @@ Aujourd’hui, j’ai :
 - Exploré les documents de référence (Mazes for Programmers, slides du projet)
 
 # Rapport d'activité – Jour 2
-Aujourd'hui, ma mission était de développer le module de test ("Testeur") pour analyser et qualifier la qualité des labyrinthes générés.
+Aujourd'hui, mon objectif était de coder le module de test (Testeur) pour analyser les labyrinthes.
 
-Mes contributions ont été les suivantes :
+J'ai commencé par implémenter les fonctionnalités de base dans la classe TesteurLabyrinthe :
 
-Développement des fonctionnalités d'analyse : Mise en place de la classe TesteurLabyrinthe avec plusieurs métriques de qualité essentielles
+Un test de connexité avec un parcours BFS pour vérifier que le labyrinthe est bien une seule zone jouable, sans îles isolées.
 
-Analyse de Connexité : vérifier la jouabilité du labyrinthe, en s'assurant que tous les couloirs forment une seule et même zone de jeu.
+Des tests pour la symétrie horizontale et verticale.
 
-Analyse de Symétrie : Ajout de fonctions pour valider automatiquement la symétrie horizontale et verticale du labyrinthe.
+Ensuite, le plus gros travail a été d'adapter le testeur au nouveau générateur de mon camarade. Le format des données était complètement différent (une liste de murs au lieu d'une grille simple), donc mes tests ne fonctionnaient plus.
 
-Adaptation aux évolutions du projet : Le générateur de labyrinthe ayant évolué vers une structure de données plus complexe, j'ai adapté le testeur en conséquence
+Pour résoudre ce problème, j'ai dû coder une fonction de conversion (_convertir_en_grille) qui "traduit" le labyrinthe pour que mes tests puissent fonctionner dessus.
 
-Création d'une fonction de conversion pour "traduire" le format complexe du labyrinthe en une grille simple, garantissant la compatibilité et la fiabilité des tests.
+Le code final est dans le fichier maze_tester.py, et il est maintenant compatible avec le générateur principal de l'équipe.
