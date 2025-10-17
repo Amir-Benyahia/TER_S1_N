@@ -7,5 +7,12 @@
 </head>
 <body>
   <h1>Hello World</h1>
+  <button id="generate-btn">Générer le labyrinthe</button>
+  <script>
+    document.getElementById('generate-btn').onclick = function() {
+      fetch('/generate-maze', { method: 'POST' });
+      // The maze will be printed in the backend console
+    };
+  </script>
 </body>
 </html>
