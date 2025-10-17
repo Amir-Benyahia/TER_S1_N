@@ -3,21 +3,19 @@ const { spawn } = require('child_process');
 const app = express();
 const port = 3000;
 
-// On crée une route "GET" car l'utilisateur demande (GET) une ressource
+
 function generateMazeHandler(req, res) {
     
     console.log('Serveur Express: Requête reçue ! Lancement du générateur Python...');
 
-    // 1. APPELER L'EXPERT : Lance le script
-    // (Assure-toi que le nom du script est correct)
+    // 1. LANCER LE SCRIPT PYTHON
     const pythonProcess = spawn('python', ['maze_generator.py']);
 
     // Variables pour stocker la réponse de Python
     let pythonData = '';
     let pythonError = '';
 
-    // 2. ÉCOUTER LA SOLUTION (stdout)
-    // On récupère le paquet (labyrinthe + solution)
+    // 2. ÉCOUTER LES DONNÉES (stdout)
     pythonProcess.stdout.on('data', (data) => {
         console.log('Serveur Express: Python a envoyé des données...');
         pythonData += data.toString();
@@ -26,8 +24,8 @@ function generateMazeHandler(req, res) {
     // 3. ÉCOUTER LES ERREURS (stderr)
     pythonProcess.stderr.on('data', (data) => {
         console.error('Serveur Express: Python a envoyé une ERREUR...');
-        // On capture aussi les "print" de débogage de Python s'ils
-        // sont écrits sur stderr (ce qui est une bonne pratique)
+        
+
         if (data.toString().includes("Script Python:")) {
              console.log(data.toString());
         } else {
@@ -35,7 +33,7 @@ function generateMazeHandler(req, res) {
         }
     });
 
-    // 4. QUAND L'EXPERT RACCROCROCHE (close)
+    // 4. QUAND LE PROCESSUS SE TERMINE
     pythonProcess.on('close', (code) => {
         console.log(`Serveur Express: Python a terminé avec le code ${code}`);
 
@@ -46,7 +44,7 @@ function generateMazeHandler(req, res) {
             });
         }
         
-        // Si tout va bien, on renvoie le paquet JSON
+        // Si tout va bien, on renvoie le paquet JSON reçu de Python
         try {
             res.status(200).json(JSON.parse(pythonData));
         } catch (e) {
