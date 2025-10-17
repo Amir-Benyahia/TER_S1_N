@@ -1,8 +1,6 @@
-# Fichier : main.py
-
 # 1. On importe les outils depuis les autres fichiers
 from maze_generator import *
-from tests.maze_tester import TesteurLabyrinthe
+from test.maze_tester import TesteurLabyrinthe
 from maze_visualiser import *
 
 # 2. Le bloc principal qui orchestre tout
