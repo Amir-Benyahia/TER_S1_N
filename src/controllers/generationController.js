@@ -1,26 +1,53 @@
-// generationController.js
-// This script triggers the Python maze generator and prints the result in the browser
+/**
+ * generationController.js
+ * Contrôleur gérant la logique métier de la génération de labyrinthes
+ */
 
-function generateMaze() {
-    // Use Node.js child_process to run the Python main script
-    const { spawn } = require('child_process');
-    const path = require('path');
-    const pythonProcess = spawn('python', [
-        path.join(__dirname, '../services/mazeGeneration/main.py')
-    ]);
 
-    pythonProcess.stdout.on('data', (data) => {
-        // Print the maze matrix and output to the console
-        console.log(data.toString());
-    });
+// Import du service PythonBridge
+const pythonBridge = require('../services/pythonBridge');
 
-    pythonProcess.stderr.on('data', (data) => {
-        console.error('Python error:', data.toString());
-    });
+/**
+ * Génère un labyrinthe avec les dimensions demandées
+ * @param {Object} req - Requête Express (query: largeur, hauteur)
+ * @param {Object} res - Réponse Express (JSON: labyrinthe, largeur, hauteur, nb_lignes, murs_restants)
+ */
+async function generateMaze(req, res) {
+    try {
+        // Récupération et conversion des paramètres
+        const largeur = parseInt(req.query.largeur) || 10;
+        const hauteur = parseInt(req.query.hauteur) || 8;
+        
+        // Validation des types
+        if (isNaN(largeur) || isNaN(hauteur)) {
+            return res.status(400).json({
+                error: 'Les paramètres largeur et hauteur doivent être des nombres'
+            });
+        }
+        
+        // Validation des bornes (min: 3 - max: 50)
+        if (largeur < 3 || largeur > 50 || hauteur < 3 || hauteur > 50) {
+            return res.status(400).json({
+                error: 'Les dimensions doivent être entre 3 et 50'
+            });
+        }
+        
+        console.log(`📊 Génération d'un labyrinthe ${largeur}x${hauteur}...`);
 
-    pythonProcess.on('close', (code) => {
-        console.log(`Python process exited with code ${code}`);
-    });
+        // Appel au générateur Python via le bridge
+        const result = await pythonBridge.generateMaze(largeur, hauteur);
+        
+        console.log(`✅ Labyrinthe généré avec succès (${result.nb_lignes} lignes)`);
+        
+        res.json(result);
+        
+    } catch (error) {
+        console.error('❌ Erreur lors de la génération:', error.message);
+        res.status(500).json({
+            error: 'Erreur lors de la génération du labyrinthe',
+            details: error.message
+        });
+    }
 }
 
 module.exports = { generateMaze };
