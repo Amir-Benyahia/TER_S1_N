@@ -9,10 +9,20 @@ const path = require('path');
 
 class PythonBridge {
     constructor() {
-        // Chemin vers Python dans le virtualenv du projet
-        this.pythonPath = path.join(__dirname, '..', '..', '.venv', 'bin', 'python3');
-        this.timeout = 10000; 
+    // Chemin vers Python - utilise le venv local si disponible, sinon Python système
+    const venvPath = path.join(__dirname, '..', '..', '.venv', 'bin', 'python3');
+    const fs = require('fs');
+    
+    // Vérifie si le venv existe, sinon utilise python3 du système
+    if (fs.existsSync(venvPath)) {
+        this.pythonPath = venvPath;
+    } else {
+        // Sur Render ou autres environnements, utilise python3 du système
+        this.pythonPath = 'python3';
     }
+    
+    this.timeout = 10000; 
+}
 
     /**
      * Exécute un script Python et retourne le résultat
