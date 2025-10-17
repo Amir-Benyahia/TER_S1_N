@@ -21,3 +21,40 @@ La conversion du format alterné en une grille homogène a nécessité un recalc
 J'ai implémenté un système de visualisation double. La sortie graphique en PNG sert pour la présentation finale des résultats, tandis que la sortie ASCII permet la vérification de la cohérence entre la structure générée et sa représentation visuelle.
 
 
+# Rapport d'activité — Jour 3
+## Objectif du jour :
+Mise en place d'une interface web complète pour interagir avec le générateur de labyrinthes via une API REST.
+
+## Travail effectué :
+
+### 1. Création du service pythonBridge.js
+Service indépendant permettant la communication entre Express et Python :
+- Exécution du générateur Python (GenerateurKruskal) via `child_process.spawn`
+- Parsing des résultats JSON retournés par Python
+- Gestion centralisée des erreurs
+
+### 2. Création des routes API (mazeRoutes.js)
+Définition des endpoints REST :
+- Route `GET /api/generate?largeur=X&hauteur=Y`
+- Séparation claire entre routage et logique métier
+
+### 3. Refactorisation du contrôleur (generationController.js)
+Amélioration de la logique métier :
+- Intégration du service pythonBridge
+- Validation des paramètres (dimensions entre 3 et 50)
+- Gestion des erreurs avec réponses HTTP appropriées (400, 500)
+- Logs console pour le suivi des requêtes
+
+### 4. Restructuration du serveur Express (index.js)
+Organisation en architecture MVC :
+- Montage des routes sous le préfixe `/api`
+- Middleware pour servir les fichiers statiques
+- Gestion des routes inexistantes par l'erreur 404
+
+### 5. Restructuration de l'interface web (index.html)
+Restructuration de l'interface utilisateur qui affichait au debut qu'un simple messsage pour effectuer le deploiment et se familiariser avec le dashboard à une interface web complete :
+- Formulaire de saisie de taille et bouton de génération de labyrinthe
+- Affichage de la matrice au format initiale pour l'instant 0/1
+- Messages de succès et d'erreur
+
+
