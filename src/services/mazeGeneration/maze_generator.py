@@ -198,7 +198,47 @@ def afficher_labyrinthe(labyrinthe, largeur, hauteur, tunnels_h=set(), tunnels_v
         # Si la colonne x a un tunnel vertical, on dessine une ouverture
         ligne_basse += ("   " if x in tunnels_v else "---") + "+"
     print(ligne_basse)
+def generateMaze():
+    # --- PARAMÈTRES ---
+    LARGEUR = 28
+    HAUTEUR = 15
+    NIVEAU_IMPERFECTION = 0.30
+    
+    # Nouveaux paramètres pour les tunnels
+    NB_TUNNELS_HORIZONTAUX = 5
+    NB_TUNNELS_VERTICAUX = 3 # Mettre à 1 ou plus pour des tunnels haut/bas
 
+    # --- CHOIX DE L'ALGORITHME ---
+    choix_generateur = "kruskal" # Changer pour "prim" pour tester l'autre
+
+    generateurs = {
+        "kruskal": GenerateurKruskal(),
+        "prim": GenerateurPrim()
+    }
+
+    if choix_generateur not in generateurs:
+        print(f"Erreur: Le générateur '{choix_generateur}' n'existe pas.")
+    else:
+        # 1. Instancier les classes
+        generateur = generateurs[choix_generateur]
+        imperfecteur = Imperfecteur()
+        print(f"🚀 Génération avec l'algorithme de {choix_generateur.capitalize()}...")
+
+        # 2. Générer le labyrinthe parfait
+        labyrinthe_parfait, murs_restants = generateur.generer(LARGEUR, HAUTEUR)
+
+        # 3. Rendre imparfait ET créer les tunnels
+        print("🌀 Ajout d'imperfections et de tunnels...")
+        labyrinthe_imparfait, tunnels_h, tunnels_v = imperfecteur.rendre_imparfait(
+            labyrinthe_parfait, 
+            murs_restants, 
+            NIVEAU_IMPERFECTION,
+            LARGEUR, HAUTEUR, # On passe maintenant largeur/hauteur
+            NB_TUNNELS_HORIZONTAUX,
+            NB_TUNNELS_VERTICAUX
+        )
+        return labyrinthe_imparfait
+    
 def printMazeArray(labyrinthe):
 
     # Convertir en chaînes '1'/'0'
