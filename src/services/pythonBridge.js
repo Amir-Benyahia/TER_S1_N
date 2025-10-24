@@ -91,64 +91,10 @@ class PythonBridge {
         // Validation des dimensions
         if (largeur < 3 || largeur > 50 || hauteur < 3 || hauteur > 50) {
             throw new Error('Les dimensions doivent être entre 3 et 50');
-        }
-        
-        // Code Python exécuté directement (utilise GenerateurKruskal + Imperfecteur)
-        const pythonCode = `
-import sys
-import json
-sys.path.insert(0, '${path.join(__dirname, 'mazeGeneration').replace(/\\/g, '/')}')
-from maze_generator import GenerateurKruskal, Imperfecteur
-from maze_visualiser import vers_grille_pixels
-
-largeur = ${largeur}
-hauteur = ${hauteur}
-
-# Paramètres d'imperfection (style Pacman)
-NIVEAU_IMPERFECTION = 0.20  # 20% pour réduire les culs-de-sac et ouvrir le labyrinthe
-NB_TUNNELS_HORIZONTAUX = 0  # Pas de tunnels (on les gère différemment)
-NB_TUNNELS_VERTICAUX = 0    # Pas de tunnels verticaux
-
-# Génération du labyrinthe parfait
-generateur = GenerateurKruskal()
-labyrinthe_parfait, murs_restants = generateur.generer(largeur, hauteur)
-
-# Rendre le labyrinthe imparfait
-imperfecteur = Imperfecteur()
-labyrinthe, tunnels_h, tunnels_v = imperfecteur.rendre_imparfait(
-    labyrinthe_parfait,
-    murs_restants,
-    NIVEAU_IMPERFECTION,
-    largeur,
-    hauteur,
-    NB_TUNNELS_HORIZONTAUX,
-    NB_TUNNELS_VERTICAUX
-)
-
-# Convertir en grille de pixels (inclut les tunnels)
-grille = vers_grille_pixels(labyrinthe, largeur, hauteur, tunnels_h, tunnels_v)
-
-# Convertir numpy array en liste Python si nécessaire
-if hasattr(grille, 'tolist'):
-    grille = grille.tolist()
-
-resultat = {
-    'grille': grille,
-    'labyrinthe': labyrinthe,
-    'largeur': largeur,
-    'hauteur': hauteur,
-    'nb_lignes': len(labyrinthe),
-    'murs_restants': len(murs_restants),
-    'niveau_imperfection': NIVEAU_IMPERFECTION,
-    'tunnels_horizontaux': list(tunnels_h),
-    'tunnels_verticaux': list(tunnels_v)
-}
-
-print(json.dumps(resultat))
-`;
-        
-        // Exécution du code Python et retour du résultat
-        const result = await this.executeScript(null, ['-c', pythonCode]);
+        }   
+        // Appel direct du générateur principal avec arguments
+        const scriptPath = path.join(__dirname, 'mazeGeneration', 'maze_generator.py');
+        const result = await this.executeScript(scriptPath, [largeur.toString(), hauteur.toString()]);
         return result;
     }
 }
