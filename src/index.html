@@ -255,9 +255,22 @@
         
         const data = await response.json();
         
-        // Affichage du labyrinthe
-        afficherMatrice(data.labyrinthe, data.largeur, data.hauteur);
-        infoDiv.textContent = `Labyrinthe généré: ${largeur}×${hauteur} (${data.nb_lignes} lignes)`;
+        // Affichage du labyrinthe - utilise la grille si disponible, sinon la matrice
+        if (data.grille) {
+          afficherGrille(data.grille);
+        } else {
+          afficherMatrice(data.labyrinthe, data.largeur, data.hauteur);
+        }
+        
+        // Message d'info avec détails sur l'imperfection
+        let infoMessage = `Labyrinthe généré: ${largeur}×${hauteur} (${data.nb_lignes} lignes)`;
+        if (data.niveau_imperfection) {
+          infoMessage += ` - Imperfection: ${(data.niveau_imperfection * 100).toFixed(0)}%`;
+        }
+        if (data.tunnels_horizontaux && data.tunnels_verticaux) {
+          infoMessage += ` - Tunnels: ${data.tunnels_horizontaux.length}H + ${data.tunnels_verticaux.length}V`;
+        }
+        infoDiv.textContent = infoMessage;
         
       } catch (error) {
         errorDiv.textContent = `Erreur: ${error.message}`;
@@ -274,6 +287,50 @@
       }
     }
     
+    /**
+     * Affiche la grille de pixels directement (générée par Python avec tunnels)
+     * @param {Array<Array<number>>} grille - Grille de pixels (0 = couloir, 1 = mur)
+     */
+    function afficherGrille(grille) {
+      const mazeCanvas = document.getElementById('mazeCanvas');
+      const mazeDisplay = document.getElementById('mazeDisplay');
+
+      if (!Array.isArray(grille) || grille.length === 0) {
+        mazeCanvas.style.display = 'none';
+        mazeDisplay.style.display = 'block';
+        mazeDisplay.textContent = 'Grille vide';
+        return;
+      }
+
+      const rows = grille.length;
+      const cols = grille[0].length;
+
+      const ctx = mazeCanvas.getContext('2d');
+      const maxWidth = 880;
+      const maxHeight = 560;
+      let tileSize = Math.floor(Math.min(maxWidth / cols, maxHeight / rows));
+      tileSize = Math.max(tileSize, 4);
+
+      mazeCanvas.width = cols * tileSize;
+      mazeCanvas.height = rows * tileSize;
+
+      ctx.fillStyle = '#060821';
+      ctx.fillRect(0, 0, mazeCanvas.width, mazeCanvas.height);
+
+      const wallColor = '#040404';
+      const pathColor = '#171c85';
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          ctx.fillStyle = grille[row][col] === 1 ? wallColor : pathColor;
+          ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+        }
+      }
+
+      mazeCanvas.style.display = 'block';
+      mazeDisplay.style.display = 'none';
+    }
+
     /**
      * Affiche la matrice du labyrinthe version initiale (true (1)/false (0) )
      * @param {Array<Array<boolean>>} labyrinthe - Matrice du labyrinthe
