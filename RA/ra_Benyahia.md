@@ -46,7 +46,16 @@ Travail effectué :
 4. Tests et validation du flux complet 
    - Tests réalisés avec différentes tailles de labyrinthes pour vérifier la stabilité du service.  
    - Validation du comportement du serveur après exécution du script Python.  
-   - Vérification de la cohérence des logs et du respect des statuts HTTP attendus.  
+   - Vérification de la cohérence des logs et du respect des statuts HTTP attendus.
+  
+
+## Rapport d’activité – Jour 4
+
+Aujourd'hui, j’ai :
+- Corrigé l'imperfecteur (`src/services/mazeGeneration/maze_generator.py`) : normalisation du paramètre (fraction ou %), conversion %→fraction, garantie d'au moins 1 mur cassé et protection des appels à random.sample.
+- Ajouté un test local `test/run_generator_test.py` qui vérifie automatiquement que l'imperfecteur augmente le nombre de murs cassés (ex. 419 → 532 sur une exécution).
+- Ajusté l'UI (`src/index.html`) : inversion des couleurs pour une inspection visuelle plus claire (murs `#171c85`, couloirs `#040404`).
+- Validé le flux local Node → Python → front ; commits locaux puis push après synchronisation avec le dépôt distant.
 
 
 Résultat :  
