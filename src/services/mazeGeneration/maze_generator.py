@@ -146,8 +146,25 @@ class Imperfecteur:
 
     def rendre_imparfait(self, labyrinthe, murs_restants, niveau_imperfection, largeur, hauteur, nb_tunnels_horizontaux=1, nb_tunnels_verticaux=0):
         """Rend le labyrinthe imparfait ET y ajoute des tunnels symétriques."""
+        # Autoriser deux formats pour niveau_imperfection :
+        # - fraction entre 0.0 et 1.0 (ex. 0.3)
+        # - pourcentage entier/float > 1 (ex. 30 ou 30.0)
+        if niveau_imperfection is None:
+            niveau_imperfection = 0
+        if niveau_imperfection > 1:
+            niveau_imperfection = float(niveau_imperfection) / 100.0
+
+        # Calculer le nombre de murs à casser en garantissant une borne valide
         nb_murs_a_casser = int(len(murs_restants) * niveau_imperfection)
-        if len(murs_restants) > nb_murs_a_casser:
+        # Si l'utilisateur demande une imperfection non nulle mais que l'arrondi donne 0,
+        # casser au moins un mur si des murs existent.
+        if niveau_imperfection > 0 and nb_murs_a_casser == 0 and len(murs_restants) > 0:
+            nb_murs_a_casser = 1
+
+        # S'assurer que k pour random.sample est dans les bornes [0, len(murs_restants)]
+        nb_murs_a_casser = max(0, min(nb_murs_a_casser, len(murs_restants)))
+
+        if nb_murs_a_casser > 0:
             murs_a_casser = random.sample(murs_restants, nb_murs_a_casser)
             for (y, x), type_mur in murs_a_casser:
                 if type_mur == 'H':
@@ -248,8 +265,7 @@ def printMazeArray(labyrinthe):
         return
 
     # Déterminer la largeur maximale d'une colonne (ici éléments sont '0' ou '1')
-    # mais on calcule par sécurité pour garder l'alignement si la représentation
-    # change.
+    # mais on calcule par sécurité pour garder l'alignement si la représentation change.
     max_width = 1
     for r in rows:
         for c in r:
@@ -260,17 +276,32 @@ def printMazeArray(labyrinthe):
     for r in rows:
         print(" ".join(c.rjust(max_width) for c in r))
 if __name__ == "__main__":
-
-    LARGEUR = 28
-    HAUTEUR = 15
-    NIVEAU_IMPERFECTION = 0.30
+    import sys
+    import json
     
-    # Nouveaux paramètres pour les tunnels
+    # Mode API : arguments en ligne de commande (largeur hauteur)
+    # Mode Normal : utilise les valeurs par défaut
+    if len(sys.argv) == 3:
+        # Mode API : appelé depuis Node.js avec arguments
+        try:
+            LARGEUR = int(sys.argv[1])
+            HAUTEUR = int(sys.argv[2])
+            MODE_API = True
+        except ValueError:
+            print(json.dumps({"error": "Arguments invalides"}), file=sys.stderr)
+            sys.exit(1)
+    else:
+        # Mode Normal : test local
+        LARGEUR = 28
+        HAUTEUR = 15
+        MODE_API = False
+    
+    NIVEAU_IMPERFECTION = 0.30
     NB_TUNNELS_HORIZONTAUX = 5
     NB_TUNNELS_VERTICAUX = 3 
     
     # --- CHOIX DE L'ALGORITHME ---
-    choix_generateur = "kruskal" # Changer pour "prim" pour tester l'autre
+    choix_generateur = "kruskal"
 
     generateurs = {
         "kruskal": GenerateurKruskal(),
@@ -278,27 +309,47 @@ if __name__ == "__main__":
     }
 
     if choix_generateur not in generateurs:
-        print(f"Erreur: Le générateur '{choix_generateur}' n'existe pas.")
+        if MODE_API:
+            print(json.dumps({"error": f"Générateur '{choix_generateur}' inconnu"}), file=sys.stderr)
+            sys.exit(1)
+        else:
+            print(f"Erreur: Le générateur '{choix_generateur}' n'existe pas.")
     else:
         # 1. Instancier les classes
         generateur = generateurs[choix_generateur]
         imperfecteur = Imperfecteur()
-        print(f"🚀 Génération avec l'algorithme de {choix_generateur.capitalize()}...")
+        
+        if not MODE_API:
+            print(f"🚀 Génération avec l'algorithme de {choix_generateur.capitalize()}...")
 
         # 2. Générer le labyrinthe parfait
         labyrinthe_parfait, murs_restants = generateur.generer(LARGEUR, HAUTEUR)
 
         # 3. Rendre imparfait ET créer les tunnels
-        print("🌀 Ajout d'imperfections et de tunnels...")
+        if not MODE_API:
+            print("🌀 Ajout d'imperfections et de tunnels...")
+        
         labyrinthe_imparfait, tunnels_h, tunnels_v = imperfecteur.rendre_imparfait(
             labyrinthe_parfait, 
             murs_restants, 
             NIVEAU_IMPERFECTION,
-            LARGEUR, HAUTEUR, # On passe maintenant largeur/hauteur
+            LARGEUR, HAUTEUR,
             NB_TUNNELS_HORIZONTAUX,
             NB_TUNNELS_VERTICAUX
         )
 
-        # 4. Afficher le résultat final
-        print("✅ Labyrinthe final généré :")
-        afficher_labyrinthe(labyrinthe_imparfait, LARGEUR, HAUTEUR, tunnels_h, tunnels_v)
+        # 4. Sortie selon le mode
+        if MODE_API:
+            # Mode API : retourner du JSON pour Node.js
+            resultat = {
+                'labyrinthe': labyrinthe_imparfait,
+                'largeur': LARGEUR,
+                'hauteur': HAUTEUR,
+                'nb_lignes': len(labyrinthe_imparfait),
+                'murs_restants': len(murs_restants)
+            }
+            print(json.dumps(resultat))
+        else:
+            # Mode Normal : affichage visuel
+            print("✅ Labyrinthe final généré :")
+            afficher_labyrinthe(labyrinthe_imparfait, LARGEUR, HAUTEUR, tunnels_h, tunnels_v)

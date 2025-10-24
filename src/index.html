@@ -317,8 +317,9 @@
       ctx.fillStyle = '#060821';
       ctx.fillRect(0, 0, mazeCanvas.width, mazeCanvas.height);
 
-      const wallColor = '#040404';
-      const pathColor = '#171c85';
+  // Inversion des couleurs : murs <-> couloirs
+  const wallColor = '#171c85'; // anciennement couleur des couloirs
+  const pathColor = '#040404'; // anciennement couleur des murs
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -378,8 +379,9 @@
       ctx.fillStyle = '#060821';
       ctx.fillRect(0, 0, mazeCanvas.width, mazeCanvas.height);
 
-      const wallColor = '#040404';
-      const pathColor = '#171c85';
+  // Inversion des couleurs : murs <-> couloirs
+  const wallColor = '#171c85'; // anciennement couleur des couloirs
+  const pathColor = '#040404'; // anciennement couleur des murs
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
