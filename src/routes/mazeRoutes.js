@@ -5,7 +5,8 @@
 
 const express = require('express');
 const router = express.Router();
-const generationController = require('../controllers/generationController');
+// Extension explicite pour éviter les collisions avec les anciens fichiers sans export
+const generationController = require('../controllers/generationController.js');
 
 // Génère un labyrinthe avec les dimensions spécifiées
 router.get('/generate', generationController.generateMaze);
