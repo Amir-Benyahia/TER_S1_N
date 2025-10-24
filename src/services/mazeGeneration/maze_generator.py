@@ -146,8 +146,25 @@ class Imperfecteur:
 
     def rendre_imparfait(self, labyrinthe, murs_restants, niveau_imperfection, largeur, hauteur, nb_tunnels_horizontaux=1, nb_tunnels_verticaux=0):
         """Rend le labyrinthe imparfait ET y ajoute des tunnels symétriques."""
+        # Autoriser deux formats pour niveau_imperfection :
+        # - fraction entre 0.0 et 1.0 (ex. 0.3)
+        # - pourcentage entier/float > 1 (ex. 30 ou 30.0)
+        if niveau_imperfection is None:
+            niveau_imperfection = 0
+        if niveau_imperfection > 1:
+            niveau_imperfection = float(niveau_imperfection) / 100.0
+
+        # Calculer le nombre de murs à casser en garantissant une borne valide
         nb_murs_a_casser = int(len(murs_restants) * niveau_imperfection)
-        if len(murs_restants) > nb_murs_a_casser:
+        # Si l'utilisateur demande une imperfection non nulle mais que l'arrondi donne 0,
+        # casser au moins un mur si des murs existent.
+        if niveau_imperfection > 0 and nb_murs_a_casser == 0 and len(murs_restants) > 0:
+            nb_murs_a_casser = 1
+
+        # S'assurer que k pour random.sample est dans les bornes [0, len(murs_restants)]
+        nb_murs_a_casser = max(0, min(nb_murs_a_casser, len(murs_restants)))
+
+        if nb_murs_a_casser > 0:
             murs_a_casser = random.sample(murs_restants, nb_murs_a_casser)
             for (y, x), type_mur in murs_a_casser:
                 if type_mur == 'H':
