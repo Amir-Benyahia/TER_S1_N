@@ -22,33 +22,33 @@ Le code final est dans le fichier maze_tester.py, et il est maintenant compatibl
 
 # Rapport d'activité — Jour 3  
 
-###  Objectif du jour :  
+Objectif du jour :  
 Finaliser et valider la communication entre le serveur Express.js et le script Python, afin d’obtenir un flux complet de génération de labyrinthes côté backend.
 
 
-###  Travail effectué :  
+Travail effectué :  
 
-1. **Refactorisation du contrôleur (`generationController.js`)**  
+1. Refactorisation du contrôleur (`generationController.js`)  
    - Analyse et réécriture du contrôleur pour le rendre asynchrone et plus robuste.  
    - Suppression du code de communication directe avec Python (`child_process.spawn`) au profit d’un service dédié (`pythonBridge.js`).  
    - Ajout de logs détaillés pour suivre le déroulement complet du processus côté serveur.  
 
-2. **Gestion des retours et erreurs Python**  
+2. Gestion des retours et erreurs Python  
    - Mise en place d’un système centralisé de capture des erreurs (`stderr`).  
    - Envoi d’une réponse HTTP 500 avec message explicite en cas d’échec du script Python.  
    - Vérification et parsing des données JSON renvoyées par Python avant leur traitement.  
 
-3. **Validation et standardisation des réponses Express**  
+3. Validation et standardisation des réponses Express 
    - Vérification du format JSON avant envoi au client, avec gestion d’erreurs via `try/catch`.  
    - Mise en place d’un format de réponse unifié (succès/erreur) pour faciliter l’intégration front-end.  
    - Contrôle des statuts HTTP : `200` pour succès, `400` pour erreur de paramètre, `500` pour erreur interne.  
 
-4. **Tests et validation du flux complet**  
+4. Tests et validation du flux complet 
    - Tests réalisés avec différentes tailles de labyrinthes pour vérifier la stabilité du service.  
    - Validation du comportement du serveur après exécution du script Python.  
    - Vérification de la cohérence des logs et du respect des statuts HTTP attendus.  
 
 
-### ✅ Résultat :  
+Résultat :  
 La communication entre Express et Python est désormais fonctionnelle, claire et maintenable.  
 Le contrôleur `generationController.js`, associé au service `pythonBridge.js`, constitue une base solide pour la suite du projet et le futur déploiement du web service REST.
