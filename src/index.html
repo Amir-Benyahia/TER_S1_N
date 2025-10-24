@@ -188,13 +188,42 @@
      */
     function afficherMatrice(labyrinthe) {
       const mazeDisplay = document.getElementById('mazeDisplay');
+
+      if (!Array.isArray(labyrinthe) || labyrinthe.length === 0) {
+        mazeDisplay.textContent = 'Labyrinthe vide';
+        return;
+      }
+
+      // Déduction des dimensions à partir de la représentation booléenne
+      const hauteur = Math.floor((labyrinthe.length + 1) / 2);
+      const largeur = labyrinthe[1] ? labyrinthe[1].length : (labyrinthe[0].length + 1);
+
       let output = '';
-      
-      labyrinthe.forEach((ligne) => {
-        const ligneStr = ligne.map(val => val ? '1' : '0').join(' ');
-        output += ligneStr + '\n';
-      });
-      
+
+      const topBorder = '+' + Array.from({ length: largeur }).map(() => '---+').join('');
+      output += topBorder + '\n';
+
+      for (let y = 0; y < hauteur; y++) {
+        let cellLine = '|';
+        for (let x = 0; x < largeur; x++) {
+          const eastWall = x < largeur - 1 ? Boolean(labyrinthe[2 * y]?.[x]) : true;
+          cellLine += '   ' + (eastWall ? '|' : ' ');
+        }
+        output += cellLine + '\n';
+
+        if (y < hauteur - 1) {
+          let wallLine = '+';
+          for (let x = 0; x < largeur; x++) {
+            const southWall = Boolean(labyrinthe[2 * y + 1]?.[x]);
+            wallLine += (southWall ? '---' : '   ') + '+';
+          }
+          output += wallLine + '\n';
+        }
+      }
+
+      const bottomBorder = '+' + Array.from({ length: largeur }).map(() => '---+').join('');
+      output += bottomBorder;
+
       mazeDisplay.textContent = output;
     }
     
