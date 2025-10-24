@@ -58,3 +58,25 @@ Limitations et décisions en suspens
 ----------------------------------
 - Représentation : j'ai testé plusieurs variantes (par ex. utiliser uniquement des listes de longueur uniforme) mais j'ai conservé la représentation décrite ci-dessus car elle est claire et correspond bien aux algorithmes.
 - Critères de comparaison des générateurs : il faut définir des métriques (temps d'exécution, longueur moyenne des couloirs, nombre de cycles générés après imperfection) pour construire un "leaderboard" fiable pour m'aider a choisir la strategie de generation selon les different parametres.
+
+## Rapport d'activité — Jour 3
+
+Résumé
+------
+J'ai recentré la journée sur la mise en place de la couche serveur et sur l'intégration front/back. L'objectif était de valider qu'Express peut servir de passerelle légère pour exposer les services de génération Python et d'en déduire une architecture propre pour la suite du projet.
+
+Objectifs du jour
+-----------------
+- Valider l'utilisation d'Express comme couche web pour piloter la génération de labyrinthes.
+- Définir un canal de communication fiable entre Express et les scripts Python existants.
+- Structurer le projet selon un pattern MVC pour faciliter l'évolution des fonctionnalités (API REST, interface web interactive, etc.).
+
+Travaux réalisés
+----------------
+1. Rédaction d'une note d'intention et présentation au groupe sur l'intérêt d'Express (rapidité de mise en place, familiarité de l'équipe, facilité de déploiement). Les arguments retenus : simplicité de la stack Node.js, middleware riche, réutilisation de compétences acquises en cours.
+2. Conception d'un médiateur Express ↔ Python : choix d'une approche par exécution de scripts Python depuis Express dans un premier temps, avec la piste d'un canal HTTP local (Flask/FastAPI) si les performances deviennent un frein.
+3. Élaboration et documentation de l'architecture MVC : découpage en `controllers/`, `services/`, `routes/` et `models/`, définition des responsabilités de chaque couche et des conventions de nommage.
+4. Initialisation d'un squelette Express conforme à cette architecture (hello world contrôlé par `generationController`) et création des premiers fichiers (`routes`, `controllers`, `services`).
+5. Refactoring du code existant pour isoler la logique de génération Python dans `services/mazeGeneration` et préparer la future orchestration par Express.
+
+
