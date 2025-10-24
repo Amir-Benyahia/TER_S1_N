@@ -80,3 +80,8 @@ Travaux réalisés
 5. Refactoring du code existant pour isoler la logique de génération Python dans `services/mazeGeneration` et préparer la future orchestration par Express.
 
 
+## Rapport d'activité — Jour 4
+
+- j'ai modifié le layout du front end (UI/UX) pour que ca affiche une labyraithe effectif et non pas des 0s et 1s, en utilisant les canva et un theme unifié
+
+- added pipeline 
