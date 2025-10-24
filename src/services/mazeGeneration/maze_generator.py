@@ -248,8 +248,7 @@ def printMazeArray(labyrinthe):
         return
 
     # Déterminer la largeur maximale d'une colonne (ici éléments sont '0' ou '1')
-    # mais on calcule par sécurité pour garder l'alignement si la représentation
-    # change.
+    # mais on calcule par sécurité pour garder l'alignement si la représentation change.
     max_width = 1
     for r in rows:
         for c in r:
@@ -260,17 +259,32 @@ def printMazeArray(labyrinthe):
     for r in rows:
         print(" ".join(c.rjust(max_width) for c in r))
 if __name__ == "__main__":
-
-    LARGEUR = 28
-    HAUTEUR = 15
-    NIVEAU_IMPERFECTION = 0.30
+    import sys
+    import json
     
-    # Nouveaux paramètres pour les tunnels
+    # Mode API : arguments en ligne de commande (largeur hauteur)
+    # Mode Normal : utilise les valeurs par défaut
+    if len(sys.argv) == 3:
+        # Mode API : appelé depuis Node.js avec arguments
+        try:
+            LARGEUR = int(sys.argv[1])
+            HAUTEUR = int(sys.argv[2])
+            MODE_API = True
+        except ValueError:
+            print(json.dumps({"error": "Arguments invalides"}), file=sys.stderr)
+            sys.exit(1)
+    else:
+        # Mode Normal : test local
+        LARGEUR = 28
+        HAUTEUR = 15
+        MODE_API = False
+    
+    NIVEAU_IMPERFECTION = 0.30
     NB_TUNNELS_HORIZONTAUX = 5
     NB_TUNNELS_VERTICAUX = 3 
     
     # --- CHOIX DE L'ALGORITHME ---
-    choix_generateur = "kruskal" # Changer pour "prim" pour tester l'autre
+    choix_generateur = "kruskal"
 
     generateurs = {
         "kruskal": GenerateurKruskal(),
@@ -278,27 +292,47 @@ if __name__ == "__main__":
     }
 
     if choix_generateur not in generateurs:
-        print(f"Erreur: Le générateur '{choix_generateur}' n'existe pas.")
+        if MODE_API:
+            print(json.dumps({"error": f"Générateur '{choix_generateur}' inconnu"}), file=sys.stderr)
+            sys.exit(1)
+        else:
+            print(f"Erreur: Le générateur '{choix_generateur}' n'existe pas.")
     else:
         # 1. Instancier les classes
         generateur = generateurs[choix_generateur]
         imperfecteur = Imperfecteur()
-        print(f"🚀 Génération avec l'algorithme de {choix_generateur.capitalize()}...")
+        
+        if not MODE_API:
+            print(f"🚀 Génération avec l'algorithme de {choix_generateur.capitalize()}...")
 
         # 2. Générer le labyrinthe parfait
         labyrinthe_parfait, murs_restants = generateur.generer(LARGEUR, HAUTEUR)
 
         # 3. Rendre imparfait ET créer les tunnels
-        print("🌀 Ajout d'imperfections et de tunnels...")
+        if not MODE_API:
+            print("🌀 Ajout d'imperfections et de tunnels...")
+        
         labyrinthe_imparfait, tunnels_h, tunnels_v = imperfecteur.rendre_imparfait(
             labyrinthe_parfait, 
             murs_restants, 
             NIVEAU_IMPERFECTION,
-            LARGEUR, HAUTEUR, # On passe maintenant largeur/hauteur
+            LARGEUR, HAUTEUR,
             NB_TUNNELS_HORIZONTAUX,
             NB_TUNNELS_VERTICAUX
         )
 
-        # 4. Afficher le résultat final
-        print("✅ Labyrinthe final généré :")
-        afficher_labyrinthe(labyrinthe_imparfait, LARGEUR, HAUTEUR, tunnels_h, tunnels_v)
+        # 4. Sortie selon le mode
+        if MODE_API:
+            # Mode API : retourner du JSON pour Node.js
+            resultat = {
+                'labyrinthe': labyrinthe_imparfait,
+                'largeur': LARGEUR,
+                'hauteur': HAUTEUR,
+                'nb_lignes': len(labyrinthe_imparfait),
+                'murs_restants': len(murs_restants)
+            }
+            print(json.dumps(resultat))
+        else:
+            # Mode Normal : affichage visuel
+            print("✅ Labyrinthe final généré :")
+            afficher_labyrinthe(labyrinthe_imparfait, LARGEUR, HAUTEUR, tunnels_h, tunnels_v)

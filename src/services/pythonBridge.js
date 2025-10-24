@@ -91,34 +91,10 @@ class PythonBridge {
         // Validation des dimensions
         if (largeur < 3 || largeur > 50 || hauteur < 3 || hauteur > 50) {
             throw new Error('Les dimensions doivent être entre 3 et 50');
-        }
-        
-        // Code Python exécuté directement (utilise GenerateurKruskal)
-        const pythonCode = `
-import sys
-import json
-sys.path.insert(0, '${path.join(__dirname, 'mazeGeneration').replace(/\\/g, '/')}')
-from maze_generator import GenerateurKruskal
-
-largeur = ${largeur}
-hauteur = ${hauteur}
-
-generateur = GenerateurKruskal()
-labyrinthe, murs_restants = generateur.generer(largeur, hauteur)
-
-resultat = {
-    'labyrinthe': labyrinthe,
-    'largeur': largeur,
-    'hauteur': hauteur,
-    'nb_lignes': len(labyrinthe),
-    'murs_restants': len(murs_restants)
-}
-
-print(json.dumps(resultat))
-`;
-        
-        // Exécution du code Python et retour du résultat
-        const result = await this.executeScript(null, ['-c', pythonCode]);
+        }   
+        // Appel direct du générateur principal avec arguments
+        const scriptPath = path.join(__dirname, 'mazeGeneration', 'maze_generator.py');
+        const result = await this.executeScript(scriptPath, [largeur.toString(), hauteur.toString()]);
         return result;
     }
 }
