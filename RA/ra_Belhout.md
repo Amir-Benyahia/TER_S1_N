@@ -83,5 +83,5 @@ Travaux réalisés
 ## Rapport d'activité — Jour 4
 
 - j'ai modifié le layout du front end (UI/UX) pour que ca affiche une labyraithe effectif et non pas des 0s et 1s, en utilisant les canva et un theme unifié
-
-- added pipeline 
+kjnkln
+- added pipeline CI/CD for 
