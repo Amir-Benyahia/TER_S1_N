@@ -14,16 +14,26 @@ const pythonBridge = require('../services/pythonBridge');
  */
 async function generateMaze(req, res) {
     try {
-        // Récupération et conversion des paramètres
-        const largeur = parseInt(req.query.largeur) || 10;
-        const hauteur = parseInt(req.query.hauteur) || 8;
+        // Récupération des paramètres bruts
+        const largeurParam = req.query.largeur;
+        const hauteurParam = req.query.hauteur;
         
-        // Validation des types
-        if (isNaN(largeur) || isNaN(hauteur)) {
+        // Validation des types AVANT conversion
+        // Si les paramètres sont fournis, ils doivent être numériques
+        if (largeurParam !== undefined && isNaN(Number(largeurParam))) {
             return res.status(400).json({
-                error: 'Les paramètres largeur et hauteur doivent être des nombres'
+                error: 'Le paramètre largeur doit être un nombre'
             });
         }
+        if (hauteurParam !== undefined && isNaN(Number(hauteurParam))) {
+            return res.status(400).json({
+                error: 'Le paramètre hauteur doit être un nombre'
+            });
+        }
+        
+        // Conversion avec valeurs par défaut
+        const largeur = largeurParam !== undefined ? parseInt(largeurParam) : 10;
+        const hauteur = hauteurParam !== undefined ? parseInt(hauteurParam) : 8;
         
         // Validation des bornes (min: 3 - max: 50)
         if (largeur < 3 || largeur > 50 || hauteur < 3 || hauteur > 50) {
