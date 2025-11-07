@@ -57,4 +57,31 @@ Restructuration de l'interface utilisateur qui affichait au debut qu'un simple m
 - Affichage de la matrice au format initiale pour l'instant 0/1
 - Messages de succès et d'erreur
 
+# Rapport d'activité — Jour 4
+## Objectif du jour :
+- Finaliser le web service "maze Pacman" avec API REST déployée sur Render.
+- Configuration GitHub Actions pour tests automatisés
+- Intégration des métriques `TesteurLabyrinthe` dans le pipeline
+
+
+## Travail effectué :
+
+### 1. Correction des erreurs de déploiement
+- Suppression d'un ancien fichier `generationController` en conflit
+- Redéploiement réussi sur Render
+
+### 2. Refactorisation de pythonBridge.js
+- Remplacement du code Python inline par un appel direct au script
+- Amélioration de la séparation JavaScript/Python
+
+### 3. Adaptation de maze_generator.py
+- Ajout du support des arguments en ligne de commande
+- Validation des dimensions et sortie JSON
+
+
+## Résultat :
+- Web service opérationnel consultable sur l'URL : https://pacmaz-s1-n.onrender.com/
+
+
+
 
