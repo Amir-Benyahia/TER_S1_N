@@ -1,0 +1,175 @@
+{
+  "info": {
+    "name": "Maze Pacman API",
+    "description": "Collection complète de tests pour l'API Maze Pacman",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Génération de labyrinthes",
+      "item": [
+        {
+          "name": "1. Génération valide (10x8)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generate?largeur=10&hauteur=8",
+              "host": ["{{base_url}}"],
+              "path": ["api", "generate"],
+              "query": [
+                {"key": "largeur", "value": "10"},
+                {"key": "hauteur", "value": "8"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Génération minimale (3x3)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generate?largeur=3&hauteur=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "generate"],
+              "query": [
+                {"key": "largeur", "value": "3"},
+                {"key": "hauteur", "value": "3"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Génération maximale (50x50)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generate?largeur=50&hauteur=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "generate"],
+              "query": [
+                {"key": "largeur", "value": "50"},
+                {"key": "hauteur", "value": "50"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Paramètres par défaut",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "generate"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Validation des erreurs",
+      "item": [
+        {
+          "name": "5. Largeur trop petite (< 3)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generate?largeur=2&hauteur=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "generate"],
+              "query": [
+                {"key": "largeur", "value": "2"},
+                {"key": "hauteur", "value": "5"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Largeur trop grande (> 50)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generate?largeur=51&hauteur=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "generate"],
+              "query": [
+                {"key": "largeur", "value": "51"},
+                {"key": "hauteur", "value": "10"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Hauteur trop petite (< 3)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generate?largeur=10&hauteur=2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "generate"],
+              "query": [
+                {"key": "largeur", "value": "10"},
+                {"key": "hauteur", "value": "2"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Hauteur trop grande (> 50)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generate?largeur=10&hauteur=51",
+              "host": ["{{base_url}}"],
+              "path": ["api", "generate"],
+              "query": [
+                {"key": "largeur", "value": "10"},
+                {"key": "hauteur", "value": "51"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Paramètres non numériques",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/generate?largeur=abc&hauteur=xyz",
+              "host": ["{{base_url}}"],
+              "path": ["api", "generate"],
+              "query": [
+                {"key": "largeur", "value": "abc"},
+                {"key": "hauteur", "value": "xyz"}
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://pacmaz-s1-n.onrender.com",
+      "type": "string"
+    }
+  ]
+}
