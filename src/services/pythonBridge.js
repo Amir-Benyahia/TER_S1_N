@@ -91,10 +91,14 @@ class PythonBridge {
         // Validation des dimensions
         if (largeur < 3 || largeur > 50 || hauteur < 3 || hauteur > 50) {
             throw new Error('Les dimensions doivent être entre 3 et 50');
-        }   
+        }
+        
         // Appel direct du générateur principal avec arguments
         const scriptPath = path.join(__dirname, 'mazeGeneration', 'maze_generator.py');
-        const result = await this.executeScript(scriptPath, [largeur.toString(), hauteur.toString()]);
+        const result = await this.executeScript(scriptPath, [
+            largeur.toString(), 
+            hauteur.toString()
+        ]);
         return result;
     }
 }
