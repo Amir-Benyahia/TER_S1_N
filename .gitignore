@@ -1,0 +1,12 @@
+node_modules/
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.png
+*.jpeg
+*.jpg
+.DS_Store
+

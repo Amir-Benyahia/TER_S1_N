@@ -1,11 +1,25 @@
 {
   "name": "ter_s1_n",
   "version": "1.0.0",
+  "description": "Maze generation API with MongoDB Atlas storage",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "dev": "node src/index.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
-  }
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.3"
+  },
+  "keywords": [
+    "maze",
+    "labyrinth",
+    "generator",
+    "mongodb",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC"
 }
