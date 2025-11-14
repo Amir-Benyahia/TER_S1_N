@@ -79,4 +79,10 @@ Travaux réalisés
 4. Initialisation d'un squelette Express conforme à cette architecture (hello world contrôlé par `generationController`) et création des premiers fichiers (`routes`, `controllers`, `services`).
 5. Refactoring du code existant pour isoler la logique de génération Python dans `services/mazeGeneration` et préparer la future orchestration par Express.
 
+## Rapport d'activité — Jour 4
+- Le REST API (a detailler)
+- CI/CD avec github actions (a detailler)
 
+## Rapport d'activité — Jour 5
+- integration du base de données (mongodb)
+- des refactorizations

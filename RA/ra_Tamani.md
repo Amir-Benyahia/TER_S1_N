@@ -83,5 +83,29 @@ Restructuration de l'interface utilisateur qui affichait au debut qu'un simple m
 - Web service opérationnel consultable sur l'URL : https://pacmaz-s1-n.onrender.com/
 
 
+# Rapport d'activité — Jour 5
+
+## Travail effectué :
+
+### 1. Création d'un script de tests automatisés (test_api.sh)
+Développement d'un script Bash pour automatiser les tests de l'API :
+- 10 scénarios de test couvrant tous les cas d'usage
+- Support de plusieurs environnements (local/Render)
+- Affichage coloré des résultats (PASS/FAIL)
+- Gestion dynamique des timeouts selon l'environnement
+
+### 2. Développement de la collection Postman
+Création d'une collection complète pour tests manuels :
+- 9 requêtes organisées en 2 dossiers (Génération/Validation)
+- Variables d'environnement pour basculer entre local et Render
+- Tests des cas valides et invalides
+
+### 4. Découverte et correction d'un bug de validation
+Identification d'un problème dans `generationController.js` :
+- **Bug** : Paramètres non numériques acceptés silencieusement
+- **Cause** : `parseInt("abc") || 10` appliquait la valeur par défaut sans erreur
+- **Solution** : Validation avec `isNaN()` AVANT l'application des valeurs par défaut
+- Ajout de messages d'erreur explicites (400 Bad Request)
+
 
 
