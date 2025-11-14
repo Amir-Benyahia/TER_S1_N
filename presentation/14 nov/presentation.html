@@ -457,19 +457,19 @@ TER_S1_N/
                 <div class="card">
                     <h4>Métriques de base</h4>
                     <ul>
-                        <li>Ratio jouabilité </li>
-                        <li>Nb culs-de-sac </li>
-                        <li>Densité murs </li>
+                        <li>Ratio jouabilité (>0.9)</li>
+                        <li>Nb culs-de-sac (12–25)</li>
+                        <li>Densité murs (0.4–0.6)</li>
                         <li>Nb intersections</li>
                     </ul>
                 </div>
                 <div class="card">
                     <h4>Métriques avancées</h4>
                     <ul>
-                        <li>Score difficulté</li>
-                        <li>Longueur chemin max </li>
-                        <li>Distance moy. intersections</li>
-                        <li>Culs-de-sac sûrs</li>
+                        <li>Score difficulté (0–10)</li>
+                        <li>Longueur chemin max (BFS)</li>
+                        <li>Distance moy. intersections (4–6)</li>
+                        <li>Culs-de-sac sûrs (refuges)</li>
                     </ul>
                 </div>
                 <div class="card">
@@ -485,20 +485,24 @@ TER_S1_N/
 
         <!-- Slide 11: Unit Tests -->
         <div class="slide">
-            <h2>INTERFACE — Notation & feedback</h2>
+            <h2>⭐ INTERFACE — Notation & feedback</h2>
 
             <div class="grid">
                 <div class="card">
                     <h4>Affichage métriques</h4>
                     <ul>
                         <li>Grille responsive 10 cartes</li>
+                        <li>Icônes dédiées (🎮🎯🛡️🚫🔀)</li>
+                        <li>Coloration : vert/orange/rouge</li>
                     </ul>
                 </div>
                 <div class="card">
                     <h4>Système de notation</h4>
                     <ul>
                         <li>5 étoiles cliquables (1–5)</li>
+                        <li>Fonction rateLabyrinthe()</li>
                         <li>Feedback visuel immédiat</li>
+                        <li>CSS interactif (hover, transitions)</li>
                     </ul>
                 </div>
                 <div class="card">
@@ -509,6 +513,10 @@ TER_S1_N/
                         <li>Export métriques JSON</li>
                     </ul>
                 </div>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <img src="metrics-screenshot.png" alt="Interface de notation et métriques" style="max-width: 95%; height: auto; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
             </div>
         </div>
 
@@ -661,7 +669,6 @@ curl "https://pacmaz-s1-n.onrender.com/api/stats"
                 <li>Collection Postman (9 requêtes) avec environnements Local / Render.</li>
                 <li>Assertions automatiques (status, temps < 5s, structure JSON).</li>
                 <li>Monitoring manuel Render + MongoDB dashboards à chaque livraison importante.</li>
-            </ul>
         </div>
 
         <!-- Slide8: Daily Routine -->
