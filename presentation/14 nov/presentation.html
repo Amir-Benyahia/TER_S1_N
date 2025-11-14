@@ -280,10 +280,6 @@
 
             <div class="team-grid">
                 <div class="team-card">
-                    <h3>Belhout — Lead Génération</h3>
-                    <p>Implémentation Kruskal/Prim, architecture MVC Express, médiation Node ↔ Python.</p>
-                </div>
-                <div class="team-card">
                     <h3>Oussama — Architecte</h3>
                     <p>Design applicatif, REST API, CI/CD, intégration MongoDB.</p>
                 </div>
@@ -296,12 +292,11 @@
                     <p>Bridge multi-processus, debug (threads/process/kill), déploiement Render, validation REST.</p>
                 </div>
             </div>
-            <p class="footnote">Plan de parole : un bloc par membre (≤ 4 min) + démo collective.</p>
         </div>
 
         <!-- Slide 2: Overview Evolution -->
         <div class="slide">
-            <h2>📊 OVERVIEW — Évolution (1/2)</h2>
+            <h2>📊 OVERVIEW — Évolution</h2>
             <span class="tag">Roadmap produit</span>
 
             <div class="timeline">
@@ -392,7 +387,7 @@ TER_S1_N/
 
             <div class="grid">
                 <div class="card">
-                    <h4>Models (Mongoose)</h4>
+                    <h4>Models</h4>
                     <p>Schéma `Maze` : dimensions, matrice, métriques, tags, timestamps. Validation côté DB pour éviter données incomplètes.</p>
                 </div>
                 <div class="card">
@@ -403,52 +398,30 @@ TER_S1_N/
                     <h4>Services</h4>
                     <p>`pythonBridge` encapsule `child_process.spawn`, timeouts, kill, parsing JSON, remontée d'erreurs.</p>
                 </div>
-                <div class="card">
-                    <h4>Front de validation</h4>
-                    <p>`src/index.html` consomme l'API, affiche grille, métriques et feedback utilisateur (notation étoilée).</p>
-                </div>
+
             </div>
         </div>
 
         <!-- Slide 6: REST API 1 -->
         <div class="slide">
-            <h2>🌐 REST API — Migration & robustesse (1/2)</h2>
+            <h2>🌐 REST API — Migration & robustesse </h2>
             <span class="tag">Référents : Oussama + Ahmed</span>
-
+            <div class="code">
+                GET /api/generate?largeur=15&hauteur=10&save=true&name=pacmaz
+                GET /api/mazes            # liste (pagination WIP)
+                GET /api/mazes/:id        # détail + métriques
+                DELETE /api/mazes/:id     # suppression sécurisée
+                GET /api/stats            # volumes, moyennes, dernières notes
+                            </div>
+            <br><br>
             <ul>
                 <li><strong>Migration prototype → Express:</strong> séparation routes/contrôleurs, middlewares, validation stricte.</li>
                 <li><strong>Validation des requêtes:</strong> largeur/hauteur 3–50, `isNaN` + messages HTTP 400 dédiés.</li>
                 <li><strong>Gestion erreurs Python:</strong> stderr capturé, code retour ≠0 → HTTP 500 documenté.</li>
-                <li><strong>Logging:</strong> corrélation requête → exécution Python → réponse; support debug Render.</li>
             </ul>
         </div>
 
-        <!-- Slide 7: REST API 2 -->
-        <div class="slide">
-            <h2>🌐 REST API — Contrats & observabilité (2/2)</h2>
-            <div class="code">
-GET /api/generate?largeur=15&hauteur=10&save=true&name=pacmaz
-GET /api/mazes            # liste (pagination WIP)
-GET /api/mazes/:id        # détail + métriques
-DELETE /api/mazes/:id     # suppression sécurisée
-GET /api/stats            # volumes, moyennes, dernières notes
-            </div>
 
-            <div class="grid">
-                <div class="card">
-                    <h4>Contrats stables</h4>
-                    <p>Payload JSON typé (dimensions, matrice, métriques, metadata). Version implicite via en-tête.</p>
-                </div>
-                <div class="card">
-                    <h4>Observabilité</h4>
-                    <p>Temps d'exécution, status HTTP, ratio succès/erreur logués. Tests Postman + script shell.</p>
-                </div>
-                <div class="card">
-                    <h4>Sécurité</h4>
-                    <p>Filtrage de paramètres, fallback interdits, protection contre floods (timeouts, kill process).</p>
-                </div>
-            </div>
-        </div>
 
         <!-- Slide 8: CI/CD -->
         <div class="slide">
@@ -473,30 +446,11 @@ GET /api/stats            # volumes, moyennes, dernières notes
                     • Validation API (params, erreurs)<br>
                     • Scripts bash multi-env (local/Render)</p>
                 </div>
-                <div class="card">
-                    <h4>Résultat</h4>
-                    <p>Temps moyen: 3m40s. Failures bloquent merge. Historique public dans Actions + badge README.</p>
-                </div>
+
             </div>
         </div>
 
-        <!-- Slide 9: Database 1 -->
-        <div class="slide">
-            <h2>💾 DATABASE — Intégration (1/2)</h2>
-            <span class="tag">Motivations MongoDB</span>
 
-            <ul>
-                <li>Format JSON natif ⇒ stockage direct de matrices et métriques.</li>
-                <li>Cluster Atlas M0 (gratuit, TLS, backups gérés).</li>
-                <li>Connexion gérée via `config/database.js` (retry, logs).</li>
-                <li>Indices sur `createdAt`, `tags` pour futures analyses.</li>
-            </ul>
-        </div>
-
-        <!-- Slide 10: Database 2 -->
-        <div class="slide">
-            <h2>💾 DATABASE — Schémas & flux (2/2)</h2>
-            <div class="code">
 {
   largeur: Number,
   hauteur: Number,
