@@ -281,7 +281,7 @@ if __name__ == "__main__":
     
     # Mode API : arguments en ligne de commande (largeur hauteur)
     # Mode Normal : utilise les valeurs par défaut
-    if len(sys.argv) == 3:
+    if len(sys.argv) >= 3:
         # Mode API : appelé depuis Node.js avec arguments
         try:
             LARGEUR = int(sys.argv[1])
@@ -296,9 +296,10 @@ if __name__ == "__main__":
         HAUTEUR = 15
         MODE_API = False
     
-    NIVEAU_IMPERFECTION = 0.30
+    # Paramètres par défaut (moyen)
+    NIVEAU_IMPERFECTION = 0.40
     NB_TUNNELS_HORIZONTAUX = 5
-    NB_TUNNELS_VERTICAUX = 3 
+    NB_TUNNELS_VERTICAUX = 3
     
     # --- CHOIX DE L'ALGORITHME ---
     choix_generateur = "kruskal"
@@ -338,15 +339,28 @@ if __name__ == "__main__":
             NB_TUNNELS_VERTICAUX
         )
 
-        # 4. Sortie selon le mode
+        # 4. Calculer les métriques avec le TesteurLabyrinthe
+        import os
+        # Ajouter le répertoire racine au path pour permettre l'import de test.maze_tester
+        sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+        from test.maze_tester import TesteurLabyrinthe
+        
+        testeur = TesteurLabyrinthe(labyrinthe_imparfait, LARGEUR, HAUTEUR)
+        metriques = testeur.qualifier()
+        
+        # 5. Sortie selon le mode
         if MODE_API:
-            # Mode API : retourner du JSON pour Node.js
+            # Mode API : retourner du JSON pour Node.js avec les métriques
             resultat = {
                 'labyrinthe': labyrinthe_imparfait,
                 'largeur': LARGEUR,
                 'hauteur': HAUTEUR,
                 'nb_lignes': len(labyrinthe_imparfait),
-                'murs_restants': len(murs_restants)
+                'murs_restants': len(murs_restants),
+                'niveau_imperfection': NIVEAU_IMPERFECTION,
+                'tunnels_horizontaux': NB_TUNNELS_HORIZONTAUX,
+                'tunnels_verticaux': NB_TUNNELS_VERTICAUX,
+                'metriques': metriques  # Métriques calculées (incluant score de difficulté)
             }
             print(json.dumps(resultat))
         else:
