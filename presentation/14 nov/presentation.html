@@ -423,113 +423,167 @@ TER_S1_N/
 
 
 
-        <!-- Slide: CI/CD -->
+        <!-- Slide 8: CI/CD -->
         <div class="slide">
-            <h2>🔄 CI/CD — GitHub Actions & tests</h2>
-            <span class="tag">Pipeline automatisé</span>
-
-            <div class="grid">
-                <div class="card">
-                    <h4>Workflow</h4>
-                    <ol>
-                        <li>Checkout, Node + Python setup.</li>
-                        <li>Installation deps (`npm ci`, `pip install -r`).</li>
-                        <li>Tests Python (maze_tester) & script `test_api.sh` (10 scénarios).</li>
-                        <li>Lint + build statique.</li>
-                        <li>Artefacts, badge, notifications.</li>
-                    </ol>
-                </div>
-                <div class="card">
-                    <h4>Couverture</h4>
-                    <p>• Génération parfaite + imparfaite<br>
-                    • Bridge Node/Python (mock spawn)<br>
-                    • Validation API (params, erreurs)<br>
-                    • Scripts bash multi-env (local/Render)</p>
-                </div>
-
-            </div>
-        </div>
-
-
-{
-  largeur: Number,
-  hauteur: Number,
-  labyrinthe: [[0|1]],
-  metriques: {
-    ratioJouabilite: Number,
-    nbCulsDeSac: Number,
-    scoreDifficulte: Number,
-    ...
-  },
-  tags: [String],
-  ratingUtilisateur: Number,
-  generatedAt: Date
-}
-            </div>
-            <p>Flux: API → validation → génération Python → métriques → sauvegarde MongoDB → restitution via `/api/mazes` & `/api/stats`. Les migrations se limitent à l'ajout de champs optionnels (compatibles backward).</p>
-        </div>
-
-        <!-- Slide1: Unit Tests -->
-        <div class="slide">
-            <h2>🧪 TESTS UNITAIRES — Génération</h2>
+            <h2>🧪 TESTS UNITAIRES — Validation génération</h2>
             <span class="tag">Référent : Amir</span>
 
             <div class="grid">
                 <div class="card">
-                    <h4>Connexité</h4>
-                    <p>BFS garantit une seule composante; échec → rejet API.</p>
+                    <h4>Tests de base</h4>
+                    <ul>
+                        <li>Connexité (BFS) : une seule zone jouable.</li>
+                        <li>Symétrie horizontale/verticale.</li>
+                        <li>Validation format grille.</li>
+                    </ul>
                 </div>
                 <div class="card">
-                    <h4>Symétrie</h4>
-                    <p>Tests horizontaux/verticaux pour détecter biais d'algorithme.</p>
+                    <h4>Tests imperfecteur</h4>
+                    <ul>
+                        <li>Normalisation paramètre </li>
+                        <li>Vérification murs cassés </li>
+                        <li>Protection random.sample.</li>
+                    </ul>
                 </div>
                 <div class="card">
-                    <h4>Imperfecteur</h4>
-                    <p>Vérifie l'augmentation contrôlée des murs cassés.</p>
+                    <h4>Module maze_tester.py</h4>
+                    <ul>
+                        <li>Compatible format générateur.</li>
+                        <li>Conversion automatique des structures.</li>
+                        <li>Import dynamique dans générateur.</li>
+                    </ul>
                 </div>
             </div>
-            <p>Le module `maze_tester.py` est réutilisé à chaud par `maze_generator.py` pour enrichir la réponse JSON.</p>
+        </div>
+        <!-- Slide 9: Métriques -->
+        <div class="slide">
+            <h2>📊 MÉTRIQUES — 10 indicateurs Pac-Man</h2>
+            <span class="tag">Évaluation automatique</span>
+
+            <div class="grid">
+                <div class="card">
+                    <h4>Métriques de base</h4>
+                    <ul>
+                        <li>Ratio jouabilité </li>
+                        <li>Nb culs-de-sac </li>
+                        <li>Densité murs </li>
+                        <li>Nb intersections</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Métriques avancées</h4>
+                    <ul>
+                        <li>Score difficulté</li>
+                        <li>Longueur chemin max </li>
+                        <li>Distance moy. intersections</li>
+                        <li>Culs-de-sac sûrs</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Algorithmes</h4>
+                    <ul>
+                        <li>BFS pour graphe & distances</li>
+                        <li>Calcul automatique post-génération</li>
+                        <li>Export JSON enrichi</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
-        <!-- Slide2: Integration Tests -->
+        <!-- Slide 11: Unit Tests -->
         <div class="slide">
-            <h2>🔗 TESTS D'INTÉGRATION — Flux complet</h2>
+            <h2>⭐ INTERFACE — Notation & feedback</h2>
+
+            <div class="grid">
+                <div class="card">
+                    <h4>Affichage métriques</h4>
+                    <ul>
+                        <li>Grille responsive 10 cartes</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Système de notation</h4>
+                    <ul>
+                        <li>5 étoiles cliquables (1–5)</li>
+                        <li>Feedback visuel immédiat</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Visualisation</h4>
+                    <ul>
+                        <li>Inversion couleurs (murs sombres)</li>
+                        <li>Canvas responsive</li>
+                        <li>Export métriques JSON</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Integration Tests -->
+        <div class="slide">
+            <h2>🔗 FLUX COMPLET — Architecture QA</h2>
+            <span class="tag">De la requête à la notation</span>
+
             <div class="architecture">
-Client HTTP
-  ↓
-Express (routes)
-  ↓
-generationController
-  ↓
-pythonBridge (spawn)
-  ↓
-Python main.py → maze_generator → maze_tester
-  ↓
-Réponse JSON + MongoDB
-  ↓
-Client / Monitoring
+Client → Express routes
+          ↓
+  generationController (validation params)
+          ↓
+  pythonBridge (spawn asynchrone)
+          ↓
+  maze_generator.py (Kruskal/Prim)
+          ↓
+  maze_tester.py (10 métriques)
+          ↓
+  Réponse JSON enrichie
+          ↓
+  Interface (affichage + notation ⭐)
             </div>
-            <ul>
-                <li>Scénarios Render & local via `test_api.sh` (10 cas : succès/erreur).</li>
-                <li>Timeouts + kill process pour éviter zombies.</li>
-                <li>Validation JSON + statuts HTTP (200/400/500).</li>
-            </ul>
+
+            <p style="margin-top: 20px;"><strong>Validation multi-niveaux:</strong> paramètres (largeur/hauteur 3–50) → génération (tests unitaires) → métriques (calcul automatique) → interface (feedback utilisateur).</p>
         </div>
 
-        <!-- Slide3: Front Validation -->
+        <!-- Slide 13: Front Validation -->
         <div class="slide">
-            <h2>🖥️ TEST DE VALIDATION — Frontend</h2>
-            <ul>
-                <li>UI HTML/CSS modernisée (contrastes, grille responsive, palette sombre).</li>
-                <li>Scenario QA : saisie tailles limites, sauvegarde, lecture métriques, notation étoilée.</li>
-                <li>Évaluation manuelle croisée (Amir + Belhout) pour confirmer cohérence visuelle / métriques.</li>
-                <li>Feedback utilisateur affiché en direct pour repérer anomalies.</li>
-            </ul>
+            <h2>🖥️ VALIDATION — Interface & tests manuels</h2>
+            <span class="tag">QA complète</span>
+
+            <div class="grid">
+                <div class="card">
+                    <h4>Tests interface</h4>
+                    <ul>
+                        <li>Saisie tailles limites (3–50)</li>
+                        <li>Sauvegarde & tags</li>
+                        <li>Lecture métriques</li>
+                        <li>Notation étoilée fonctionnelle</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Validation croisée</h4>
+                    <ul>
+                        <li>Tests Amir + Belhout</li>
+                        <li>Cohérence visuelle/métriques</li>
+                        <li>Détection anomalies</li>
+                        <li>Feedback temps réel</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Design</h4>
+                    <ul>
+                        <li>UI modernisée (contrastes)</li>
+                        <li>Grille responsive</li>
+                        <li>Palette sombre</li>
+                        <li>Accessibilité visuelle</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
-        <!-- Slide4: Evaluation -->
+        <!-- Slide 14: Evaluation -->
         <div class="slide">
-            <h2>📈 EVALUATION — Métriques</h2>
+            <h2>📈 ÉVALUATION — Métriques détaillées</h2>
+            <span class="tag">Objectifs & usage</span>
+
             <table>
                 <tr>
                     <th>Métrique</th>
@@ -559,7 +613,7 @@ Client / Monitoring
                 <tr>
                     <td>Distance moy. intersections</td>
                     <td>4–6 cases</td>
-                    <td>Evaluations rythme de jeu.</td>
+                    <td>Évaluer rythme de jeu.</td>
                 </tr>
                 <tr>
                     <td>Note utilisateur</td>
@@ -569,7 +623,7 @@ Client / Monitoring
             </table>
         </div>
 
-        <!-- Slide5: Specs Techniques -->
+        <!-- Slide 15: Specs Techniques -->
         <div class="slide">
             <h2>⚙️ SPÉCIFICATIONS TECHNIQUES — Bridge & debug</h2>
             <span class="tag">Référent : Ahmed</span>
