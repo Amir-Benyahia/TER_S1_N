@@ -273,11 +273,11 @@
     </div>
 
     <div class="presentation">
-        <!-- Slide 1: Title -->
+        <!-- Slide: Title -->
         <div class="slide title-slide">
             <h1>🎮 TER S1 — Pacman Maze Platform</h1>
             <div class="subtitle">Bilan d'avancement — 14 novembre 2025</div>
-
+            <br><br><br><br><br><br>
             <div class="team-grid">
                 <div class="team-card">
                     <h3>Oussama — Architecte</h3>
@@ -285,16 +285,16 @@
                 </div>
                 <div class="team-card">
                     <h3>Amir — Quality Assurance</h3>
-                    <p>Validation génération, tests d'intégration, métriques & évaluation manuelle.</p>
+                    <p>Validation génération, tests d'intégration, métriques</p>
                 </div>
                 <div class="team-card">
                     <h3>Ahmed — DevOps</h3>
-                    <p>Bridge multi-processus, debug (threads/process/kill), déploiement Render, validation REST.</p>
+                    <p>Bridge multi-processus, debug, déploiement Render, validation REST.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 2: Overview Evolution -->
+        <!-- Slide: Overview Evolution -->
         <div class="slide">
             <h2>📊 OVERVIEW — Évolution</h2>
             <span class="tag">Roadmap produit</span>
@@ -327,7 +327,7 @@
             </div>
         </div>
 
-        <!-- Slide 3: Overview Final -->
+        <!-- Slide: Overview Final -->
         <div class="slide">
             <h2>📊 OVERVIEW — Résultat final (2/2)</h2>
             <span class="tag">Livrables et KPI</span>
@@ -359,7 +359,7 @@
             </div>
         </div>
 
-        <!-- Slide 4: Architecture 1 -->
+        <!-- Slide: Architecture 1 -->
         <div class="slide">
             <h2>🏗️ CONCEPTION & ARCHITECTURE — Vue globale (1/2)</h2>
             <span class="tag">Référent : Oussama</span>
@@ -380,7 +380,7 @@ TER_S1_N/
             <p><strong>MVC Express</strong> découple les responsabilités : routes minimalistes, contrôleurs focalisés sur la logique métier, services spécialisés (bridge, génération, métriques). Cette modularité a permis les refactorings rapides et le passage en production sans dette majeure.</p>
         </div>
 
-        <!-- Slide 5: Architecture 2 -->
+        <!-- Slide: Architecture 2 -->
         <div class="slide">
             <h2>🏗️ CONCEPTION & ARCHITECTURE — Implémentation (2/2)</h2>
             <span class="tag">MVC, Express, Models</span>
@@ -402,7 +402,7 @@ TER_S1_N/
             </div>
         </div>
 
-        <!-- Slide 6: REST API 1 -->
+        <!-- Slide: REST API 1 -->
         <div class="slide">
             <h2>🌐 REST API — Migration & robustesse </h2>
             <span class="tag">Référents : Oussama + Ahmed</span>
@@ -423,7 +423,7 @@ TER_S1_N/
 
 
 
-        <!-- Slide 8: CI/CD -->
+        <!-- Slide: CI/CD -->
         <div class="slide">
             <h2>🔄 CI/CD — GitHub Actions & tests</h2>
             <span class="tag">Pipeline automatisé</span>
@@ -469,7 +469,7 @@ TER_S1_N/
             <p>Flux: API → validation → génération Python → métriques → sauvegarde MongoDB → restitution via `/api/mazes` & `/api/stats`. Les migrations se limitent à l'ajout de champs optionnels (compatibles backward).</p>
         </div>
 
-        <!-- Slide 11: Unit Tests -->
+        <!-- Slide1: Unit Tests -->
         <div class="slide">
             <h2>🧪 TESTS UNITAIRES — Génération</h2>
             <span class="tag">Référent : Amir</span>
@@ -491,7 +491,7 @@ TER_S1_N/
             <p>Le module `maze_tester.py` est réutilisé à chaud par `maze_generator.py` pour enrichir la réponse JSON.</p>
         </div>
 
-        <!-- Slide 12: Integration Tests -->
+        <!-- Slide2: Integration Tests -->
         <div class="slide">
             <h2>🔗 TESTS D'INTÉGRATION — Flux complet</h2>
             <div class="architecture">
@@ -516,7 +516,7 @@ Client / Monitoring
             </ul>
         </div>
 
-        <!-- Slide 13: Front Validation -->
+        <!-- Slide3: Front Validation -->
         <div class="slide">
             <h2>🖥️ TEST DE VALIDATION — Frontend</h2>
             <ul>
@@ -527,7 +527,7 @@ Client / Monitoring
             </ul>
         </div>
 
-        <!-- Slide 14: Evaluation -->
+        <!-- Slide4: Evaluation -->
         <div class="slide">
             <h2>📈 EVALUATION — Métriques</h2>
             <table>
@@ -569,7 +569,7 @@ Client / Monitoring
             </table>
         </div>
 
-        <!-- Slide 15: Specs Techniques -->
+        <!-- Slide5: Specs Techniques -->
         <div class="slide">
             <h2>⚙️ SPÉCIFICATIONS TECHNIQUES — Bridge & debug</h2>
             <span class="tag">Référent : Ahmed</span>
@@ -581,7 +581,7 @@ Client / Monitoring
             </ul>
         </div>
 
-        <!-- Slide 16: Deployment -->
+        <!-- Slide6: Deployment -->
         <div class="slide">
             <h2>🚀 DÉPLOIEMENT — Render & infra</h2>
             <div class="grid">
@@ -601,7 +601,7 @@ Client / Monitoring
             <p style="margin-top: 18px;">Infra nécessaire: 512 MB RAM Render (Free), 0.1 vCPU, quotas respectés (<5s CPU). Latence moyenne France → Render (US/EU) ≈ 200 ms.</p>
         </div>
 
-        <!-- Slide 17: Monitoring -->
+        <!-- Slide7: Monitoring -->
         <div class="slide">
             <h2>📡 MONITORING — cURL & Postman</h2>
             <div class="code">
@@ -621,7 +621,7 @@ curl "https://pacmaz-s1-n.onrender.com/api/stats"
             </ul>
         </div>
 
-        <!-- Slide 18: Daily Routine -->
+        <!-- Slide8: Daily Routine -->
         <div class="slide">
             <h2>📅 DAILY ROUTINE — Organisation & workflow</h2>
             <div class="grid">
@@ -648,8 +648,8 @@ curl "https://pacmaz-s1-n.onrender.com/api/stats"
     </div>
 
     <div class="navigation">
-        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Précédent</button>
-        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Suivant →</button>
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" style="display: none;">← Précédent</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" style="display: none;">Suivant →</button>
     </div>
 
     <script>
