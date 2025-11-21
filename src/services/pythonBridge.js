@@ -101,6 +101,28 @@ class PythonBridge {
         ]);
         return result;
     }
+    /**
+     * Calcule le prochain déplacement d'un fantôme via le script Python
+     * @param {Object} gameData - Données du jeu (grid, positions, strategy...)
+     * @returns {Promise<Object>} { nextMove: [y, x], sharedMemory: {...} }
+     */
+    async computeGhostMove(gameData) {
+        // Chemin vers ton nouveau script passerelle
+        const scriptPath = path.join(__dirname, 'mazeGeneration', 'ai_bridge.py');
+        
+        // On convertit l'objet JS en chaîne JSON pour l'envoyer à Python
+        // Attention : on doit passer un seul argument qui est la string JSON
+        const jsonArgs = JSON.stringify(gameData);
+        
+        try {
+            const result = await this.executeScript(scriptPath, [jsonArgs]);
+            return result;
+        } catch (error) {
+            console.error("Erreur Python Bridge:", error);
+            // Fallback de sécurité : si Python plante, le fantôme ne bouge pas
+            return { nextMove: gameData.ghostPos, sharedMemory: gameData.sharedMemory };
+        }
+    }
 }
 
 // Export d'une instance unique (pattern Singleton)

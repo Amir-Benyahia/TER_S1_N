@@ -2,11 +2,11 @@
  * mazeRoutes.js
  * Définit les endpoints API pour la génération de labyrinthes
  */
-
+// Import des dépendances
 const express = require('express');
 const router = express.Router();
-// Extension explicite pour éviter les collisions avec les anciens fichiers sans export
-const generationController = require('../controllers/generationController.js');
+const generationController = require('../controllers/generationController');
+const aiController = require('../controllers/aiController'); 
 
 // ========== Routes de génération ==========
 // Génère un labyrinthe avec les dimensions spécifiées
@@ -32,5 +32,9 @@ router.get('/stats', generationController.getMazeStats);
 // Supprime un labyrinthe par ID
 // Exemple: DELETE /api/mazes/673c5f8e9a1234567890abcd
 router.delete('/mazes/:id', generationController.deleteMaze);
+
+// ========== Routes IA ==========
+// Nouvelle route pour calculer le mouvement du fantôme
+router.post('/move', aiController.getNextMove);
 
 module.exports = router;
