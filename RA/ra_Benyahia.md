@@ -61,3 +61,39 @@ Aujourd'hui, j’ai :
 Résultat :  
 La communication entre Express et Python est désormais fonctionnelle, claire et maintenable.  
 Le contrôleur `generationController.js`, associé au service `pythonBridge.js`, constitue une base solide pour la suite du projet et le futur déploiement du web service REST.
+
+## Rapport d'activité – Jour 5
+
+Aujourd'hui, j'ai :
+
+- **Étendu le module de test** (`test/maze_tester.py`) avec 10 métriques d'évaluation des labyrinthes :
+  - Métriques existantes : ratio de jouabilité, symétrie horizontale/verticale
+  - Nouvelles métriques : nombre de culs-de-sac, nombre d'intersections, densité de murs, longueur du chemin le plus long, score de difficulté (0-10)
+  - **Métriques avancées Pac-Man** : distance moyenne entre intersections (mesure le rythme du jeu), culs-de-sac sûrs (zones de refuge stratégiques)
+  - Algorithmes utilisés : BFS pour explorer le graphe du labyrinthe et calculer les distances maximales
+
+- **Intégré les métriques dans le générateur Python** (`src/services/mazeGeneration/maze_generator.py`) :
+  - Import dynamique du testeur via ajustement du `sys.path`
+  - Calcul automatique des métriques après génération
+  - Enrichissement du JSON retourné avec le champ `metriques`
+  - Création de `test/__init__.py` pour rendre le module importable
+
+- **Créé un système de notation par étoiles** dans l'interface (`src/index.html`) :
+  - Section de notation affichée après génération du labyrinthe
+  - 5 étoiles cliquables (1-5) pour que l'utilisateur évalue la difficulté perçue
+  - Fonction `rateLabyrinthe()` avec feedback visuel (étoiles dorées + message de confirmation)
+  - CSS interactif : effet hover, transitions fluides
+
+- **Amélioré l'affichage des métriques** :
+  - Section `#metricsContainer` avec grille responsive
+  - 10 cartes de métriques avec icônes (🎮, 🎯, 🛡️, 🚫, 🔀, etc.)
+  - Coloration conditionnelle : vert (bon), orange (moyen), rouge (problématique)
+  - Logique spécifique pour chaque métrique (ex: distance intersections idéale = 4-6 cases)
+
+- **Testé et validé** :
+  - Tests en ligne de commande : génération avec différentes tailles
+  - Vérification du JSON retourné (10 métriques présentes)
+  - Validation de l'affichage dans l'interface web
+
+Résultat :  
+Le système d'évaluation et de notation est opérationnel. L'utilisateur peut générer un labyrinthe, consulter 10 métriques détaillées, et noter sa difficulté perçue. L'architecture est prête pour stocker ces données dans MongoDB et analyser la corrélation entre métriques calculées et notes utilisateurs.
