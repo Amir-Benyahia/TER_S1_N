@@ -140,10 +140,3 @@ Aujourd'hui, j'ai :
 Résultat :
 L'intelligence artificielle est entièrement connectée au projet global. L'API est prête à être consommée par l'interface utilisateur pour animer les fantômes. La supériorité de l'approche collaborative a été démontrée et quantifiée via le framework de benchmark.
 
-- **Testé et validé** :
-  - Tests en ligne de commande : génération avec différentes tailles
-  - Vérification du JSON retourné (10 métriques présentes)
-  - Validation de l'affichage dans l'interface web
-
-Résultat :  
-Le système d'évaluation et de notation est opérationnel. L'utilisateur peut générer un labyrinthe, consulter 10 métriques détaillées, et noter sa difficulté perçue. L'architecture est prête pour stocker ces données dans MongoDB et analyser la corrélation entre métriques calculées et notes utilisateurs.
