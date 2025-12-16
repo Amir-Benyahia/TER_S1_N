@@ -5,25 +5,27 @@ services:
   - type: web
     name: pacman-lab
     env: node
-    region: frankfurt
+    region: frankfurt  # Change to your preferred region
     plan: free
-    buildCommand: |
-      npm install
-      pip install -r requirements.txt
+    rootDir: .
+    buildCommand: npm install && pip install -r requirements.txt
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false
+        sync: false  # Set this in Render Dashboard
       - key: PYTHON_PATH
         value: python3
       - key: PORT
         value: 3000
+      - key: CORS_ORIGIN
+        value: "*"
     healthCheckPath: /api/health
     autoDeploy: true
-    
-databases:
-  # MongoDB (you'll need to set this up separately on MongoDB Atlas)
-  # Add connection string to MONGODB_URI environment variable
+
+# MongoDB Database
+# Set up MongoDB Atlas (free tier) separately and add connection string to MONGODB_URI env var
+# Connection string format:
+# mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/pacman-lab?retryWrites=true&w=majority
 
