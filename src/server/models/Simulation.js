@@ -47,6 +47,58 @@ const simulationSchema = new mongoose.Schema({
     },
     catchTime: Number,
     totalFrames: Number,
+    // Métriques principales
+    duration: {
+      type: Number, // Durée totale en millisecondes
+      default: 0
+    },
+    score: {
+      type: Number, // Score final (basé sur pellets, temps, évitement)
+      default: 0
+    },
+    // Métriques de performance par entité
+    performanceMetrics: {
+      pacman: {
+        memoryUsage: {
+          type: Number, // En bytes (estimation)
+          default: 0
+        },
+        timeComplexity: {
+          type: String, // Ex: O(n), O(n²), O(log n)
+          default: 'O(1)'
+        },
+        avgDecisionTime: {
+          type: Number, // Temps moyen de décision en ms
+          default: 0
+        }
+      },
+      ghosts: [{
+        type: {
+          type: String,
+          enum: ['blinky', 'pinky', 'inky', 'clyde']
+        },
+        algorithm: {
+          type: String,
+          enum: ['astar', 'bfs']
+        },
+        memoryUsage: {
+          type: Number, // En bytes
+          default: 0
+        },
+        timeComplexity: {
+          type: String,
+          default: 'O(1)'
+        },
+        avgDecisionTime: {
+          type: Number, // ms
+          default: 0
+        },
+        pathNodesExplored: {
+          type: Number, // Nœuds explorés durant la simulation
+          default: 0
+        }
+      }]
+    },
     frames: [{
       timestamp: Number,
       pacman: {

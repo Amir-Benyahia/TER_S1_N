@@ -1,0 +1,203 @@
+{
+  "simulation_example": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "Test Simulation - Blinky A* vs Pinky BFS",
+    "trajectoryId": "507f191e810c19729de860ea",
+    "mazeId": "507f191e810c19729de860eb",
+    "ghostConfigs": [
+      {
+        "ghostType": "blinky",
+        "algorithm": "astar",
+        "startPosition": { "x": 1, "y": 1 }
+      },
+      {
+        "ghostType": "pinky",
+        "algorithm": "bfs",
+        "startPosition": { "x": 10, "y": 10 }
+      }
+    ],
+    "results": {
+      "caught": false,
+      "catchPosition": null,
+      "catchTime": null,
+      "totalFrames": 156,
+      "duration": 3245.67,
+      "score": 4850,
+      "performanceMetrics": {
+        "pacman": {
+          "memoryUsage": 2048,
+          "timeComplexity": "O(1)",
+          "avgDecisionTime": 0.15
+        },
+        "ghosts": [
+          {
+            "type": "blinky",
+            "algorithm": "astar",
+            "memoryUsage": 524288,
+            "timeComplexity": "O(b^d)",
+            "avgDecisionTime": 8.45,
+            "pathNodesExplored": 1247
+          },
+          {
+            "type": "pinky",
+            "algorithm": "bfs",
+            "memoryUsage": 786432,
+            "timeComplexity": "O(V + E)",
+            "avgDecisionTime": 12.78,
+            "pathNodesExplored": 2134
+          }
+        ]
+      },
+      "frames": [
+        {
+          "timestamp": 0,
+          "pacman": { "x": 5, "y": 5 },
+          "ghosts": [
+            { "type": "blinky", "position": { "x": 1, "y": 1 } },
+            { "type": "pinky", "position": { "x": 10, "y": 10 } }
+          ],
+          "caught": false
+        }
+      ]
+    },
+    "createdAt": "2025-12-16T10:00:00.000Z",
+    "updatedAt": "2025-12-16T10:00:00.000Z"
+  },
+  
+  "batch_statistics_example": {
+    "_id": "507f1f77bcf86cd799439012",
+    "name": "Batch Performance Analysis - Algorithm Comparison",
+    "description": "Comparing A* vs BFS performance across 50 simulations",
+    "simulations": ["507f1f77bcf86cd799439011", "..."],
+    "stats": {
+      "totalSimulations": 50,
+      "escapedCount": 32,
+      "caughtCount": 18,
+      "escapeRate": 64.0,
+      
+      "duration": {
+        "mean": 3456.78,
+        "median": 3398.45,
+        "stdDev": 456.23,
+        "min": 2145.67,
+        "max": 5234.89,
+        "count": 50
+      },
+      
+      "score": {
+        "mean": 4523,
+        "median": 4489,
+        "stdDev": 678,
+        "min": 2134,
+        "max": 7845,
+        "count": 50
+      },
+      
+      "frames": {
+        "mean": 145.6,
+        "median": 142.0,
+        "stdDev": 23.4,
+        "min": 89,
+        "max": 234,
+        "count": 50
+      },
+      
+      "performance": {
+        "pacman": {
+          "avgMemoryUsage": 2156.34,
+          "avgDecisionTime": 0.18
+        },
+        "ghosts": {
+          "avgMemoryUsage": 645234.56,
+          "avgDecisionTime": 10.45,
+          "avgNodesExplored": 1678.34
+        }
+      },
+      
+      "algorithmDistribution": [
+        {
+          "algorithm": "astar",
+          "count": 100,
+          "avgPerformance": {
+            "memoryUsage": 534567.89,
+            "decisionTime": 8.67,
+            "nodesExplored": 1345.67
+          }
+        },
+        {
+          "algorithm": "bfs",
+          "count": 100,
+          "avgPerformance": {
+            "memoryUsage": 755901.23,
+            "decisionTime": 12.23,
+            "nodesExplored": 2011.01
+          }
+        }
+      ],
+      
+      "meanDuration": 3456.78,
+      "minDuration": 2145.67,
+      "maxDuration": 5234.89,
+      "meanFrames": 145.6
+    },
+    "createdAt": "2025-12-16T10:00:00.000Z",
+    "updatedAt": "2025-12-16T10:05:00.000Z"
+  },
+  
+  "interpretation": {
+    "description": "Comment interpréter ces données",
+    "metrics_explanation": {
+      "duration_ms": "Durée totale de la simulation en millisecondes",
+      "score": "Score calculé basé sur survie, pellets, et efficacité",
+      "memory_bytes": "Occupation mémoire moyenne en bytes (affichée en KB/MB dans l'UI)",
+      "decision_time_ms": "Temps moyen pour prendre une décision en millisecondes",
+      "nodes_explored": "Nombre total de nœuds explorés durant le pathfinding",
+      "time_complexity": "Complexité temporelle théorique en notation Big-O"
+    },
+    "statistical_measures": {
+      "mean": "Moyenne arithmétique - valeur typique",
+      "median": "Valeur centrale - résistante aux outliers",
+      "stdDev": "Écart-type - mesure de la dispersion",
+      "min_max": "Valeurs extrêmes observées"
+    },
+    "performance_comparison": {
+      "astar_vs_bfs": {
+        "memory": "A* utilise généralement moins de mémoire (534 KB vs 755 KB)",
+        "time": "A* est plus rapide (8.67 ms vs 12.23 ms)",
+        "nodes": "A* explore moins de nœuds grâce à l'heuristique (1345 vs 2011)",
+        "conclusion": "A* est plus efficace mais les deux garantissent l'optimalité"
+      }
+    },
+    "quality_indicators": {
+      "excellent_performance": {
+        "memory": "< 1 MB",
+        "decision_time": "< 10 ms",
+        "score": "> 5000",
+        "low_variability": "CV < 15%"
+      },
+      "warning_signs": {
+        "high_memory": "> 10 MB (possible memory leak)",
+        "slow_decisions": "> 100 ms (inefficient algorithm)",
+        "high_variability": "CV > 50% (unstable behavior)"
+      }
+    }
+  },
+  
+  "api_endpoints": {
+    "get_simulation": {
+      "method": "GET",
+      "url": "/api/simulations/:id",
+      "response": "Simulation object with full metrics"
+    },
+    "get_batch": {
+      "method": "GET",
+      "url": "/api/batches/:id",
+      "response": "Batch object with aggregated statistics"
+    },
+    "get_all_batches": {
+      "method": "GET",
+      "url": "/api/batches?page=1&limit=20",
+      "response": "Paginated list of batches with summary stats"
+    }
+  }
+}

@@ -25,6 +25,7 @@ class BFS:
         self.grid = grid
         self.rows = len(grid)
         self.cols = len(grid[0]) if grid else 0
+        self.nodes_explored = 0  # Track nodes for performance metrics
     
     def find_path(self, start, goal):
         """
@@ -49,8 +50,12 @@ class BFS:
         queue = deque([start_pos])
         came_from = {start_pos: None}
         
+        # Reset nodes explored counter
+        self.nodes_explored = 0
+        
         while queue:
             current = queue.popleft()
+            self.nodes_explored += 1  # Count explored nodes
             
             # Goal reached
             if current == goal_pos:

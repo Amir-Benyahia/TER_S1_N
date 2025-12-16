@@ -40,6 +40,53 @@ const simulationBatchSchema = new mongoose.Schema(
         type: Number,
         default: 0
       },
+      // Statistiques de durée
+      duration: {
+        mean: { type: Number, default: 0 },
+        median: { type: Number, default: 0 },
+        stdDev: { type: Number, default: 0 },
+        min: { type: Number, default: 0 },
+        max: { type: Number, default: 0 }
+      },
+      // Statistiques de score
+      score: {
+        mean: { type: Number, default: 0 },
+        median: { type: Number, default: 0 },
+        stdDev: { type: Number, default: 0 },
+        min: { type: Number, default: 0 },
+        max: { type: Number, default: 0 }
+      },
+      // Statistiques de frames
+      frames: {
+        mean: { type: Number, default: 0 },
+        median: { type: Number, default: 0 },
+        stdDev: { type: Number, default: 0 },
+        min: { type: Number, default: 0 },
+        max: { type: Number, default: 0 }
+      },
+      // Métriques de performance moyennes
+      performance: {
+        pacman: {
+          avgMemoryUsage: { type: Number, default: 0 },
+          avgDecisionTime: { type: Number, default: 0 }
+        },
+        ghosts: {
+          avgMemoryUsage: { type: Number, default: 0 },
+          avgDecisionTime: { type: Number, default: 0 },
+          avgNodesExplored: { type: Number, default: 0 }
+        }
+      },
+      // Distribution des algorithmes utilisés
+      algorithmDistribution: [{
+        algorithm: String,
+        count: Number,
+        avgPerformance: {
+          memoryUsage: Number,
+          decisionTime: Number,
+          nodesExplored: Number
+        }
+      }],
+      // Anciens champs (pour compatibilité)
       meanDuration: {
         type: Number,
         default: 0

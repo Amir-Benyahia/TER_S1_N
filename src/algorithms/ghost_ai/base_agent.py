@@ -40,6 +40,7 @@ class GhostAgent(ABC):
         # State
         self.position = None
         self.mode = 'chase'  # 'chase', 'scatter', 'frightened'
+        self.last_nodes_explored = 0  # Track pathfinding nodes for metrics
     
     @abstractmethod
     def get_target(self, pacman_pos, pacman_dir=None, other_ghosts=None):
@@ -79,6 +80,9 @@ class GhostAgent(ABC):
         
         # Use pathfinding to determine next move
         next_pos = self.pathfinder.find_next_move(self.position, target)
+        
+        # Store nodes explored for performance metrics
+        self.last_nodes_explored = getattr(self.pathfinder, 'nodes_explored', 0)
         
         return next_pos
     

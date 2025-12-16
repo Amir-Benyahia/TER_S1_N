@@ -6,6 +6,7 @@
 const SimulationBatch = require('../models/SimulationBatch');
 const Simulation = require('../models/Simulation');
 const mongoose = require('mongoose');
+const { calculateSimulationStats, formatStats } = require('../utils/statistics');
 
 /**
  * Create a new simulation batch
@@ -187,6 +188,14 @@ exports.recalculateBatchStats = async (batchId) => {
         escapedCount: 0,
         caughtCount: 0,
         escapeRate: 0,
+        duration: { mean: 0, median: 0, stdDev: 0, min: 0, max: 0 },
+        score: { mean: 0, median: 0, stdDev: 0, min: 0, max: 0 },
+        frames: { mean: 0, median: 0, stdDev: 0, min: 0, max: 0 },
+        performance: {
+          pacman: { avgMemoryUsage: 0, avgDecisionTime: 0 },
+          ghosts: { avgMemoryUsage: 0, avgDecisionTime: 0, avgNodesExplored: 0 }
+        },
+        algorithmDistribution: [],
         meanDuration: 0,
         minDuration: 0,
         maxDuration: 0,
@@ -196,29 +205,13 @@ exports.recalculateBatchStats = async (batchId) => {
       return;
     }
 
-    const escapedCount = sims.filter(sim => !sim.results.caught).length;
-    const caughtCount = sims.filter(sim => sim.results.caught).length;
-
-    const durations = sims.map(sim => sim.results.duration || 0);
-    const frames = sims.map(sim => sim.results.totalFrames || 0);
-
-    const meanDuration = durations.reduce((a, b) => a + b, 0) / sims.length;
-    const minDuration = Math.min(...durations);
-    const maxDuration = Math.max(...durations);
-    const meanFrames = frames.reduce((a, b) => a + b, 0) / sims.length;
-
-    batch.stats = {
-      totalSimulations: sims.length,
-      escapedCount,
-      caughtCount,
-      escapeRate: (escapedCount / sims.length) * 100,
-      meanDuration: Math.round(meanDuration),
-      minDuration,
-      maxDuration,
-      meanFrames: Math.round(meanFrames)
-    };
-
+    // Calculer toutes les statistiques avec notre module scientifique
+    const stats = calculateSimulationStats(sims);
+    
+    // Formater et assigner les statistiques
+    batch.stats = formatStats(stats);
     batch.updatedAt = new Date();
+    
     await batch.save();
   } catch (error) {
     console.error('Error recalculating batch stats:', error);

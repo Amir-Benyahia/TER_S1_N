@@ -32,6 +32,7 @@ class AStar:
         self.grid = grid
         self.rows = len(grid)
         self.cols = len(grid[0]) if grid else 0
+        self.nodes_explored = 0  # Track nodes for performance metrics
     
     def find_path(self, start, goal):
         """
@@ -67,8 +68,12 @@ class AStar:
         # f_score: g_score + heuristic (estimated total cost)
         f_score = {start_pos: manhattan_distance(start_pos, goal_pos)}
         
+        # Reset nodes explored counter
+        self.nodes_explored = 0
+        
         while frontier:
             current_f, _, current = heapq.heappop(frontier)
+            self.nodes_explored += 1  # Count explored nodes
             
             # Goal reached
             if current == goal_pos:

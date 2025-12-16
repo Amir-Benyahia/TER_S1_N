@@ -1169,6 +1169,7 @@ class PacmanLabApp {
         <th>Name</th>
         <th>Simulations</th>
         <th>Escape Rate</th>
+        <th>Mean Score</th>
         <th>Mean Duration</th>
         <th>Created</th>
         <th>Actions</th>
@@ -1186,6 +1187,9 @@ class PacmanLabApp {
       const escapeRate = batch.stats.totalSimulations > 0 
         ? batch.stats.escapeRate.toFixed(1) 
         : 'N/A';
+      const meanScore = batch.stats.score?.mean 
+        ? batch.stats.score.mean.toFixed(0)
+        : 'N/A';
       const meanDuration = batch.stats.totalSimulations > 0
         ? Formatters.formatDuration(batch.stats.meanDuration)
         : 'N/A';
@@ -1199,6 +1203,7 @@ class PacmanLabApp {
             ${escapeRate}%
           </span>
         </td>
+        <td class="col-score"><strong>${meanScore}</strong></td>
         <td class="col-duration">${meanDuration}</td>
         <td class="col-created">${createdDate}</td>
         <td class="col-actions">
@@ -1230,6 +1235,18 @@ class PacmanLabApp {
       const stats = batch.stats;
       const escapeRate = stats.totalSimulations > 0 ? stats.escapeRate.toFixed(1) : 0;
       const meanDuration = stats.totalSimulations > 0 ? Formatters.formatDuration(stats.meanDuration) : 'N/A';
+      
+      // Performance statistics
+      const meanScore = stats.score?.mean?.toFixed(0) || 'N/A';
+      const medianScore = stats.score?.median?.toFixed(0) || 'N/A';
+      const stdDevScore = stats.score?.stdDev?.toFixed(1) || 'N/A';
+      
+      const durationMean = stats.duration?.mean ? Formatters.formatDuration(stats.duration.mean) : 'N/A';
+      const durationMedian = stats.duration?.median ? Formatters.formatDuration(stats.duration.median) : 'N/A';
+      
+      const pacmanMemoryMean = stats.performance?.pacman?.memoryUsage?.mean 
+        ? Formatters.formatBytes(stats.performance.pacman.memoryUsage.mean)
+        : 'N/A';
 
       container.innerHTML = `
         <div class="card">
@@ -1247,7 +1264,7 @@ class PacmanLabApp {
         <!-- Batch Statistics -->
         <div class="card" style="margin-top: 24px;">
           <div class="card-header">
-            <h3>Batch Statistics</h3>
+            <h3>📊 Batch Statistics - Overview</h3>
           </div>
           <div class="batch-stats-grid">
             <div class="stat-card">
@@ -1266,21 +1283,84 @@ class PacmanLabApp {
               <div class="stat-label">Escape Rate</div>
               <div class="stat-value">${escapeRate}%</div>
             </div>
+          </div>
+        </div>
+
+        <!-- Performance Metrics: Score -->
+        <div class="card" style="margin-top: 24px;">
+          <div class="card-header">
+            <h3>🎯 Score Statistics</h3>
+          </div>
+          <div class="batch-stats-grid">
             <div class="stat-card">
-              <div class="stat-label">Mean Duration</div>
-              <div class="stat-value">${meanDuration}</div>
+              <div class="stat-label">Mean Score</div>
+              <div class="stat-value">${meanScore}</div>
             </div>
             <div class="stat-card">
-              <div class="stat-label">Mean Frames</div>
-              <div class="stat-value">${stats.meanFrames}</div>
+              <div class="stat-label">Median Score</div>
+              <div class="stat-value">${medianScore}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Std Deviation</div>
+              <div class="stat-value">${stdDevScore}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Min Score</div>
+              <div class="stat-value">${stats.score?.min?.toFixed(0) || 'N/A'}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Max Score</div>
+              <div class="stat-value">${stats.score?.max?.toFixed(0) || 'N/A'}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Metrics: Duration -->
+        <div class="card" style="margin-top: 24px;">
+          <div class="card-header">
+            <h3>⏱️ Duration Statistics</h3>
+          </div>
+          <div class="batch-stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Mean Duration</div>
+              <div class="stat-value">${durationMean}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Median Duration</div>
+              <div class="stat-value">${durationMedian}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Min Duration</div>
-              <div class="stat-value">${Formatters.formatDuration(stats.minDuration)}</div>
+              <div class="stat-value">${stats.duration?.min ? Formatters.formatDuration(stats.duration.min) : 'N/A'}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Max Duration</div>
-              <div class="stat-value">${Formatters.formatDuration(stats.maxDuration)}</div>
+              <div class="stat-value">${stats.duration?.max ? Formatters.formatDuration(stats.duration.max) : 'N/A'}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Metrics: Memory & Complexity -->
+        <div class="card" style="margin-top: 24px;">
+          <div class="card-header">
+            <h3>💾 Memory & Complexity Statistics</h3>
+          </div>
+          <div class="batch-stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Pacman Mean Memory</div>
+              <div class="stat-value">${pacmanMemoryMean}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Pacman Avg Decision Time</div>
+              <div class="stat-value">${stats.performance?.pacman?.avgDecisionTime?.mean?.toFixed(2) || 'N/A'} ms</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Mean Frames</div>
+              <div class="stat-value">${stats.meanFrames || 'N/A'}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Frames Std Dev</div>
+              <div class="stat-value">${stats.frames?.stdDev?.toFixed(0) || 'N/A'}</div>
             </div>
           </div>
         </div>
@@ -1329,7 +1409,9 @@ class PacmanLabApp {
       <tr>
         <th>Name</th>
         <th>Outcome</th>
+        <th>Score</th>
         <th>Duration</th>
+        <th>Pac Memory</th>
         <th>Frames</th>
         <th>Maze</th>
         <th>Created</th>
@@ -1347,7 +1429,11 @@ class PacmanLabApp {
 
       const outcome = sim.results.caught ? 'Caught' : 'Escaped';
       const outcomeColor = sim.results.caught ? '#ff5252' : '#4caf50';
+      const score = sim.results.score || 0;
       const duration = Formatters.formatDuration(sim.results.duration || 0);
+      const pacmanMemory = sim.results.performanceMetrics?.pacman?.memoryUsage 
+        ? Formatters.formatBytes(sim.results.performanceMetrics.pacman.memoryUsage)
+        : 'N/A';
       const frames = sim.results.totalFrames || 0;
       const mazeIdStr = typeof sim.mazeId === 'string' ? sim.mazeId : (sim.mazeId?._id || sim.mazeId?.name || 'N/A');
       const mazeName = typeof sim.mazeId === 'object' ? sim.mazeId?.name : 'N/A';
@@ -1361,14 +1447,13 @@ class PacmanLabApp {
             ${outcome}
           </span>
         </td>
+        <td class="col-score"><strong>${score}</strong></td>
         <td class="col-duration">${duration}</td>
+        <td class="col-memory">${pacmanMemory}</td>
         <td class="col-frames">${frames}</td>
         <td class="col-maze" title="${mazeName || mazeIdStr}">${mazeId}</td>
         <td class="col-created">${createdDate}</td>
         <td class="col-actions">
-          <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); app.viewSimulationDetails('${sim._id}')">
-            Details
-          </button>
           <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); app.removeFromBatch('${this.currentBatchId}', '${sim._id}')">
             Remove
           </button>
@@ -1466,7 +1551,9 @@ class PacmanLabApp {
       <tr>
         <th>Name</th>
         <th>Outcome</th>
+        <th>Score</th>
         <th>Duration</th>
+        <th>Pac Memory</th>
         <th>Ghosts</th>
         <th>Maze ID</th>
         <th>Created</th>
@@ -1487,6 +1574,12 @@ class PacmanLabApp {
       const duration = Formatters.formatDuration(sim.results.duration || 0);
       const ghostCount = sim.ghostConfigs ? sim.ghostConfigs.length : 0;
       
+      // Performance metrics
+      const score = sim.results.score || 0;
+      const pacmanMemory = sim.results.performanceMetrics?.pacman?.memoryUsage 
+        ? Formatters.formatBytes(sim.results.performanceMetrics.pacman.memoryUsage)
+        : 'N/A';
+      
       // Handle mazeId - it can be a string or an object
       const mazeIdStr = typeof sim.mazeId === 'string' ? sim.mazeId : (sim.mazeId?._id || sim.mazeId?.name || 'N/A');
       const mazeName = typeof sim.mazeId === 'object' ? sim.mazeId?.name : 'N/A';
@@ -1506,14 +1599,13 @@ class PacmanLabApp {
             ${outcome}
           </span>
         </td>
+        <td class="col-score"><strong>${score}</strong></td>
         <td class="col-duration">${duration}</td>
+        <td class="col-memory">${pacmanMemory}</td>
         <td class="col-ghosts">${ghostCount}</td>
         <td class="col-maze" title="${mazeName || mazeIdStr}">${mazeId}</td>
         <td class="col-created">${createdDate}</td>
         <td class="col-actions">
-          <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); app.viewSimulationDetails('${sim._id}')">
-            Details
-          </button>
           <button class="btn btn-info btn-sm" onclick="event.stopPropagation(); app.showClassifyDialog('${sim._id}')">
             Classify
           </button>
@@ -1577,6 +1669,9 @@ class PacmanLabApp {
             <h3 style="color: ${outcomeColor}; margin-bottom: 10px;">${outcome}${caughtBy}</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
               <div>
+                <strong>Score:</strong> ${sim.results.score || 0}
+              </div>
+              <div>
                 <strong>Duration:</strong> ${Formatters.formatDuration(sim.results.duration || 0)}
               </div>
               <div>
@@ -1592,6 +1687,48 @@ class PacmanLabApp {
               ` : ''}
             </div>
           </div>
+          
+          <!-- Performance Metrics: Pacman -->
+          ${sim.results.performanceMetrics?.pacman ? `
+          <div style="background: rgba(255, 193, 7, 0.1); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 193, 7, 0.3); margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: #ffc107;">🎯 Pacman Performance</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+              <div>
+                <strong>Memory Usage:</strong><br/>
+                ${Formatters.formatBytes(sim.results.performanceMetrics.pacman.memoryUsage || 0)}
+              </div>
+              <div>
+                <strong>Time Complexity:</strong><br/>
+                ${sim.results.performanceMetrics.pacman.timeComplexity || 'N/A'}
+              </div>
+              <div>
+                <strong>Avg Decision Time:</strong><br/>
+                ${(sim.results.performanceMetrics.pacman.avgDecisionTime || 0).toFixed(3)} ms
+              </div>
+            </div>
+          </div>
+          ` : ''}
+          
+          <!-- Performance Metrics: Ghosts -->
+          ${sim.results.performanceMetrics?.ghosts && sim.results.performanceMetrics.ghosts.length > 0 ? `
+          <div style="background: rgba(99, 116, 255, 0.1); padding: 20px; border-radius: 8px; border: 1px solid rgba(99, 116, 255, 0.3); margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: #6f7dff;">👻 Ghost Performance Metrics</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+              ${sim.results.performanceMetrics.ghosts.map((ghost, idx) => `
+                <div style="background: rgba(10, 14, 48, 0.5); padding: 15px; border-radius: 8px; border: 1px solid rgba(99, 116, 255, 0.2);">
+                  <h4 style="color: #fff; margin-bottom: 10px;">${ghost.type ? ghost.type.toUpperCase() : `Ghost ${idx + 1}`}</h4>
+                  <div style="font-size: 14px; line-height: 1.8;">
+                    <p><strong>Algorithm:</strong> ${ghost.algorithm || 'N/A'}</p>
+                    <p><strong>Memory:</strong> ${Formatters.formatBytes(ghost.memoryUsage || 0)}</p>
+                    <p><strong>Time Complexity:</strong> ${ghost.timeComplexity || 'N/A'}</p>
+                    <p><strong>Avg Decision Time:</strong> ${(ghost.avgDecisionTime || 0).toFixed(3)} ms</p>
+                    <p><strong>Nodes Explored:</strong> ${ghost.pathNodesExplored || 0}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          ` : ''}
           
           <!-- Maze Information -->
           <div style="background: rgba(99, 116, 255, 0.05); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
