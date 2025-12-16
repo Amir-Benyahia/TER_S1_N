@@ -680,6 +680,12 @@ class PacmanLabApp {
             </div>
             
             <div class="form-group">
+              <label for="bot-max-duration">Max Duration (seconds)</label>
+              <input type="number" id="bot-max-duration" class="form-control" value="60" min="10" max="300" step="10" />
+              <small style="color: #9aa4ff;">Maximum simulation time before timeout (10-300 seconds)</small>
+            </div>
+            
+            <div class="form-group">
               <label for="bot-maze-select">Select Maze for Bot</label>
               <select id="bot-maze-select" class="form-control">
                 <option value="">Loading mazes...</option>
@@ -954,6 +960,18 @@ class PacmanLabApp {
       
       console.log('- Bot Mode:', isBotMode, '| Algorithm:', botAlgorithm);
       
+      // Get max duration from config panel (in seconds, convert to ms)
+      // Only read from input if in bot mode, otherwise use default
+      let maxDuration = 60000; // Default 60 seconds
+      if (isBotMode) {
+        const durationInput = document.getElementById('bot-max-duration');
+        const durationSeconds = durationInput ? parseInt(durationInput.value) : 60;
+        maxDuration = durationSeconds * 1000; // Convert to milliseconds
+        console.log('- Max Duration:', maxDuration, 'ms (', durationSeconds, 'seconds)');
+      } else {
+        console.log('- Trajectory mode - no duration limit');
+      }
+      
       // Create simulation viewer
       this.simulationViewer = new SimulationViewer(
         'simulation-canvas',
@@ -961,7 +979,8 @@ class PacmanLabApp {
         this.lastRecordedTrajectory.moves,
         ghostConfigs,
         isBotMode,
-        botAlgorithm
+        botAlgorithm,
+        maxDuration
       );
       
       // Callback when simulation completes
@@ -990,12 +1009,19 @@ class PacmanLabApp {
       // Update stats periodically
       setInterval(() => {
         if (this.simulationViewer) {
-          document.getElementById('sim-frame').textContent = this.simulationViewer.currentFrame;
-          const progress = this.simulationViewer.getProgress().toFixed(1);
-          document.getElementById('sim-progress').textContent = `${progress}%`;
+          const frameEl = document.getElementById('sim-frame');
+          const progressEl = document.getElementById('sim-progress');
+          const progressBarEl = document.getElementById('replay-progress-bar');
           
-          // Update progress bar
-          document.getElementById('replay-progress-bar').style.width = `${progress}%`;
+          if (frameEl) frameEl.textContent = this.simulationViewer.currentFrame;
+          if (progressEl) {
+            const progress = this.simulationViewer.getProgress().toFixed(1);
+            progressEl.textContent = `${progress}%`;
+          }
+          if (progressBarEl) {
+            const progress = this.simulationViewer.getProgress().toFixed(1);
+            progressBarEl.style.width = `${progress}%`;
+          }
         }
       }, 100);
 
@@ -1411,7 +1437,7 @@ class PacmanLabApp {
         <th>Outcome</th>
         <th>Score</th>
         <th>Duration</th>
-        <th>Pac Memory</th>
+        <th title="Memory usage rate (bytes/second) - normalized for fair comparison">Pac Memory Rate</th>
         <th>Frames</th>
         <th>Maze</th>
         <th>Created</th>
@@ -1431,9 +1457,15 @@ class PacmanLabApp {
       const outcomeColor = sim.results.caught ? '#ff5252' : '#4caf50';
       const score = sim.results.score || 0;
       const duration = Formatters.formatDuration(sim.results.duration || 0);
-      const pacmanMemory = sim.results.performanceMetrics?.pacman?.memoryUsage 
-        ? Formatters.formatBytes(sim.results.performanceMetrics.pacman.memoryUsage)
-        : 'N/A';
+      const pacmanMemoryRaw = sim.results.performanceMetrics?.pacman?.memoryUsage || 0;
+      const pacmanMemoryPerSec = sim.results.performanceMetrics?.pacman?.memoryPerSecond || 0;
+      const pacmanMemory = pacmanMemoryPerSec > 0 
+        ? `${Formatters.formatBytes(pacmanMemoryPerSec)}/s`
+        : (pacmanMemoryRaw > 0 ? Formatters.formatBytes(pacmanMemoryRaw) : 'N/A');
+      const pacmanMemoryTitle = pacmanMemoryRaw > 0 
+        ? `Total: ${Formatters.formatBytes(pacmanMemoryRaw)}, Rate: ${Formatters.formatBytes(pacmanMemoryPerSec)}/s`
+        : 'No memory data';
+      
       const frames = sim.results.totalFrames || 0;
       const mazeIdStr = typeof sim.mazeId === 'string' ? sim.mazeId : (sim.mazeId?._id || sim.mazeId?.name || 'N/A');
       const mazeName = typeof sim.mazeId === 'object' ? sim.mazeId?.name : 'N/A';
@@ -1449,7 +1481,7 @@ class PacmanLabApp {
         </td>
         <td class="col-score"><strong>${score}</strong></td>
         <td class="col-duration">${duration}</td>
-        <td class="col-memory">${pacmanMemory}</td>
+        <td class="col-memory" title="${pacmanMemoryTitle}">${pacmanMemory}</td>
         <td class="col-frames">${frames}</td>
         <td class="col-maze" title="${mazeName || mazeIdStr}">${mazeId}</td>
         <td class="col-created">${createdDate}</td>
@@ -1553,7 +1585,7 @@ class PacmanLabApp {
         <th>Outcome</th>
         <th>Score</th>
         <th>Duration</th>
-        <th>Pac Memory</th>
+        <th title="Memory usage rate (bytes/second) - normalized for comparison">Pac Memory Rate</th>
         <th>Ghosts</th>
         <th>Maze ID</th>
         <th>Created</th>
@@ -1576,9 +1608,14 @@ class PacmanLabApp {
       
       // Performance metrics
       const score = sim.results.score || 0;
-      const pacmanMemory = sim.results.performanceMetrics?.pacman?.memoryUsage 
-        ? Formatters.formatBytes(sim.results.performanceMetrics.pacman.memoryUsage)
-        : 'N/A';
+      const pacmanMemoryRaw = sim.results.performanceMetrics?.pacman?.memoryUsage || 0;
+      const pacmanMemoryPerSec = sim.results.performanceMetrics?.pacman?.memoryPerSecond || 0;
+      const pacmanMemory = pacmanMemoryPerSec > 0 
+        ? `${Formatters.formatBytes(pacmanMemoryPerSec)}/s`
+        : (pacmanMemoryRaw > 0 ? Formatters.formatBytes(pacmanMemoryRaw) : 'N/A');
+      const pacmanMemoryTitle = pacmanMemoryRaw > 0 
+        ? `Total: ${Formatters.formatBytes(pacmanMemoryRaw)}, Rate: ${Formatters.formatBytes(pacmanMemoryPerSec)}/s`
+        : 'No memory data';
       
       // Handle mazeId - it can be a string or an object
       const mazeIdStr = typeof sim.mazeId === 'string' ? sim.mazeId : (sim.mazeId?._id || sim.mazeId?.name || 'N/A');
@@ -1601,7 +1638,7 @@ class PacmanLabApp {
         </td>
         <td class="col-score"><strong>${score}</strong></td>
         <td class="col-duration">${duration}</td>
-        <td class="col-memory">${pacmanMemory}</td>
+        <td class="col-memory" title="${pacmanMemoryTitle}">${pacmanMemory}</td>
         <td class="col-ghosts">${ghostCount}</td>
         <td class="col-maze" title="${mazeName || mazeIdStr}">${mazeId}</td>
         <td class="col-created">${createdDate}</td>
@@ -1689,13 +1726,13 @@ class PacmanLabApp {
           </div>
           
           <!-- Performance Metrics: Pacman -->
-          ${sim.results.performanceMetrics?.pacman ? `
+          ${sim.results.performanceMetrics?.pacman && sim.results.performanceMetrics.pacman.memoryUsage > 0 ? `
           <div style="background: rgba(255, 193, 7, 0.1); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 193, 7, 0.3); margin-bottom: 20px;">
             <h3 style="margin-bottom: 15px; color: #ffc107;">🎯 Pacman Performance</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
               <div>
                 <strong>Memory Usage:</strong><br/>
-                ${Formatters.formatBytes(sim.results.performanceMetrics.pacman.memoryUsage || 0)}
+                ${Formatters.formatBytes(sim.results.performanceMetrics.pacman.memoryUsage)}
               </div>
               <div>
                 <strong>Time Complexity:</strong><br/>
@@ -1707,7 +1744,18 @@ class PacmanLabApp {
               </div>
             </div>
           </div>
-          ` : ''}
+          ` : `
+          <div style="background: rgba(255, 152, 0, 0.1); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 152, 0, 0.3); margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px; color: #ff9800;">ℹ️ Performance Metrics Not Available</h3>
+            <p style="color: #9aa4ff; margin-bottom: 10px;">
+              This simulation preview doesn't include detailed performance metrics yet.
+            </p>
+            <p style="color: #9aa4ff; font-size: 14px;">
+              <strong>For Trajectory mode:</strong> Save the simulation - backend will calculate full metrics (memory, decision time, complexity).<br/>
+              <strong>For Bot mode:</strong> Basic metrics only (bot simulations can't recalculate with backend).
+            </p>
+          </div>
+          `}
           
           <!-- Performance Metrics: Ghosts -->
           ${sim.results.performanceMetrics?.ghosts && sim.results.performanceMetrics.ghosts.length > 0 ? `
@@ -1736,11 +1784,11 @@ class PacmanLabApp {
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
               <div>
                 <strong>Maze ID:</strong><br/>
-                <code style="color: #9aa4ff; word-break: break-all;">${sim.mazeId || 'N/A'}</code>
+                <code style="color: #9aa4ff; word-break: break-all;">${typeof sim.mazeId === 'string' ? sim.mazeId : (sim.mazeId?._id || sim.mazeId?.name || 'N/A')}</code>
               </div>
               <div>
                 <strong>Trajectory ID:</strong><br/>
-                <code style="color: #9aa4ff; word-break: break-all;">${sim.trajectoryId || 'N/A'}</code>
+                <code style="color: #9aa4ff; word-break: break-all;">${typeof sim.trajectoryId === 'string' ? sim.trajectoryId : (sim.trajectoryId?._id || sim.trajectoryId?.name || 'N/A')}</code>
               </div>
             </div>
           </div>
@@ -1857,16 +1905,23 @@ class PacmanLabApp {
           // Ensure results are properly structured (deep clone to avoid reference issues)
           const cleanResults = JSON.parse(JSON.stringify(results));
           
-          // Add duration if not present
-          if (!cleanResults.duration && cleanResults.catchTime) {
-            cleanResults.duration = cleanResults.catchTime;
-          } else if (!cleanResults.duration) {
-            cleanResults.duration = Date.now() - this.simulationViewer.simulationStartTime;
+          // Use duration from results (already calculated in SimulationViewer)
+          if (!cleanResults.duration) {
+            cleanResults.duration = this.simulationViewer.simulationElapsedTime || 0;
           }
           
           // Ensure trajectoryId is set
-          const trajectoryId = this.lastRecordedTrajectory.trajectoryId || 'demo-trajectory';
+          let trajectoryId = this.lastRecordedTrajectory.trajectoryId || 'demo-trajectory';
           
+          // Check if this is a bot simulation (no real trajectory)
+          const isBotSimulation = trajectoryId === 'bot-simulation' || trajectoryId === 'demo-trajectory';
+          
+          if (isBotSimulation) {
+            console.log('Bot simulation detected - using demo-trajectory placeholder');
+            trajectoryId = 'demo-trajectory';
+          }
+          
+          // Save with performance metrics from frontend
           const simulationData = {
             name,
             trajectoryId: trajectoryId,
@@ -1876,15 +1931,15 @@ class PacmanLabApp {
               algorithm: config.algorithm || 'astar',
               startPos: config.startPos
             })),
-            results: cleanResults
+            results: cleanResults // Includes frontend-calculated performance metrics
           };
           
-          console.log('Saving simulation:', simulationData);
+          console.log('Saving simulation with performance metrics:', simulationData);
           
           const response = await GameAPI.saveSimulation(simulationData);
           
           Formatters.showLoading(false);
-          Formatters.showToast(`Simulation saved: ${name}`, 'success');
+          Formatters.showToast(`Simulation saved with performance metrics!`, 'success');
         } catch (error) {
           Formatters.showLoading(false);
           console.error('Error saving simulation:', error);

@@ -238,7 +238,7 @@ CV = ──── × 100%
 │ Mémoire        │   534 KB    │   755 KB    │   A*     │
 │ Temps décision │   8.67 ms   │  12.23 ms   │   A*     │
 │ Nœuds explorés │    1345     │    2011     │   A*     │
-│ Optimalité     │     ✓       │      ✓      │   Égal   │
+│ Optimalité     │     ✓       │      ✓     │   Égal   │
 └────────────────┴─────────────┴─────────────┴──────────┘
 
 Conclusion: A* est plus efficace grâce à son heuristique Manhattan,

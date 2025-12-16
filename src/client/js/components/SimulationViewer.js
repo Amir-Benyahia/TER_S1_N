@@ -3,7 +3,7 @@
  */
 
 class SimulationViewer {
-  constructor(canvasId, grid, trajectory, ghostConfigs, botMode = false, botAlgorithm = null) {
+  constructor(canvasId, grid, trajectory, ghostConfigs, botMode = false, botAlgorithm = null, maxDuration = 60000) {
     this.canvas = document.getElementById(canvasId);
     if (!this.canvas) {
       throw new Error(`Canvas with id "${canvasId}" not found`);
@@ -23,6 +23,9 @@ class SimulationViewer {
     this.ghostConfigs = ghostConfigs;
     this.botMode = botMode;
     this.botAlgorithm = botAlgorithm;
+    this.maxDuration = maxDuration; // Maximum duration in milliseconds
+    
+    console.log('[SimulationViewer] Constructor - Bot Mode:', botMode, '| Max Duration:', maxDuration, 'ms');
     
     this.currentFrame = 0;
     this.isPlaying = false;
@@ -39,8 +42,20 @@ class SimulationViewer {
     this.remainingPellets = this.countPellets();
     this.maxFrames = 1000; // Maximum frames for bot simulation
     
+    // Performance tracking
+    this.performanceTracker = new BrowserPerformanceTracker();
+    this.performanceTracker.startTracking('pacman');
+    
+    // Start tracking for each ghost
+    this.ghostConfigs.forEach((config, idx) => {
+      const ghostId = `${config.type || 'ghost'}_${idx}`;
+      this.performanceTracker.startTracking(ghostId);
+    });
+    
     // Simulation results
     this.simulationStartTime = Date.now();
+    this.simulationElapsedTime = 0;
+    this.lastFrameTime = Date.now();
     this.caughtFrame = null;
     this.caughtTime = null;
     this.caughtByGhost = null;
@@ -96,6 +111,29 @@ class SimulationViewer {
   animate() {
     if (!this.isPlaying) return;
 
+    // Track elapsed time
+    const now = Date.now();
+    this.simulationElapsedTime += (now - this.lastFrameTime);
+    this.lastFrameTime = now;
+
+    // Check time limit for bot mode (convert to milliseconds if needed)
+    const maxDurationMs = this.maxDuration < 1000 ? this.maxDuration * 1000 : this.maxDuration;
+    
+    // Debug logging every 100 frames
+    if (this.botMode && this.currentFrame % 100 === 0) {
+      console.log(`[Duration Check] Frame ${this.currentFrame}: Elapsed=${this.simulationElapsedTime}ms, Max=${maxDurationMs}ms, BotMode=${this.botMode}`);
+    }
+    
+    if (this.botMode && this.simulationElapsedTime >= maxDurationMs) {
+      console.log(`[TIMEOUT] Simulation timeout: ${this.simulationElapsedTime}ms >= ${maxDurationMs}ms`);
+      this.pause();
+      Formatters.showToast(`Simulation timeout - ${Math.round(maxDurationMs/1000)}s reached`, 'warning');
+      if (this.onSimulationComplete) {
+        this.onSimulationComplete(this.getResults());
+      }
+      return;
+    }
+
     // Check max frames limit for bot mode
     if (this.botMode && this.currentFrame >= this.maxFrames) {
       this.pause();
@@ -110,7 +148,9 @@ class SimulationViewer {
     
     if (this.botMode) {
       // Bot mode: generate next move dynamically
+      const decisionStart = performance.now();
       pacmanPos = this.generateBotMove();
+      this.performanceTracker.recordDecision('pacman', 0, decisionStart);
       
       if (!pacmanPos) {
         // No valid move found
@@ -122,10 +162,15 @@ class SimulationViewer {
         return;
       }
       
-      // Check if Pacman collected a pellet
-      if (this.grid[pacmanPos.y][pacmanPos.x] === 3 || this.grid[pacmanPos.y][pacmanPos.x] === 4) {
+      // Check if Pacman collected a pellet (cell type 2 or 3)
+      const cellType = this.grid[pacmanPos.y][pacmanPos.x];
+      if (cellType === 2 || cellType === 3) {
         this.grid[pacmanPos.y][pacmanPos.x] = 0; // Remove pellet
         this.remainingPellets--;
+        // Update the maze canvas grid
+        if (this.mazeCanvas && this.mazeCanvas.updateGrid) {
+          this.mazeCanvas.updateGrid(this.grid);
+        }
       }
       
       // Check win condition
@@ -141,7 +186,10 @@ class SimulationViewer {
       this.currentPacmanPos = pacmanPos;
     } else {
       // Normal mode: read from trajectory
+      const decisionStart = performance.now();
       const move = this.trajectory[this.currentFrame];
+      this.performanceTracker.recordDecision('pacman', 0, decisionStart);
+      
       if (!move || !move.position) {
         // End of trajectory - Pacman escaped!
         this.pause();
@@ -154,6 +202,17 @@ class SimulationViewer {
         return;
       }
       pacmanPos = move.position;
+      
+      // Check if Pacman collected a pellet in normal mode too
+      const cellType = this.grid[pacmanPos.y][pacmanPos.x];
+      if (cellType === 2 || cellType === 3) {
+        this.grid[pacmanPos.y][pacmanPos.x] = 0; // Remove pellet
+        this.remainingPellets--;
+        // Update the maze canvas grid
+        if (this.mazeCanvas && this.mazeCanvas.updateGrid) {
+          this.mazeCanvas.updateGrid(this.grid);
+        }
+      }
     }
 
     // Update ghost positions
@@ -343,24 +402,56 @@ class SimulationViewer {
 
   updateGhostPositions(pacmanPos) {
     // Simple AI: each ghost moves towards Pacman
-    this.ghostPositions.forEach(ghost => {
+    this.ghostPositions.forEach((ghost, idx) => {
+      const ghostId = `${ghost.type}_${idx}`;
+      const decisionStart = performance.now();
+      
       const dx = pacmanPos.x - ghost.position.x;
       const dy = pacmanPos.y - ghost.position.y;
 
       // Move one step towards Pacman
       let newPos = { ...ghost.position };
+      let nodesExplored = 1; // Simple pathfinding explores at least 1 node
+      let moved = false;
 
-      if (Math.abs(dx) > Math.abs(dy)) {
-        // Move horizontally
-        newPos.x += dx > 0 ? 1 : -1;
-      } else if (dy !== 0) {
-        // Move vertically
-        newPos.y += dy > 0 ? 1 : -1;
+      // Try horizontal movement first
+      if (Math.abs(dx) > Math.abs(dy) && dx !== 0) {
+        const testPos = { x: ghost.position.x + (dx > 0 ? 1 : -1), y: ghost.position.y };
+        if (this.isWalkable(testPos)) {
+          newPos = testPos;
+          moved = true;
+          nodesExplored += Math.abs(dx);
+        }
+      }
+      
+      // Try vertical movement if horizontal failed or vertical is preferred
+      if (!moved && dy !== 0) {
+        const testPos = { x: ghost.position.x, y: ghost.position.y + (dy > 0 ? 1 : -1) };
+        if (this.isWalkable(testPos)) {
+          newPos = testPos;
+          moved = true;
+          nodesExplored += Math.abs(dy);
+        }
+      }
+      
+      // If preferred direction blocked, try the other direction
+      if (!moved && Math.abs(dy) >= Math.abs(dx) && dx !== 0) {
+        const testPos = { x: ghost.position.x + (dx > 0 ? 1 : -1), y: ghost.position.y };
+        if (this.isWalkable(testPos)) {
+          newPos = testPos;
+          moved = true;
+          nodesExplored += Math.abs(dx);
+        }
       }
 
-      // Check if move is valid
-      if (this.isWalkable(newPos)) {
+      // Only update position if a valid move was found
+      if (moved) {
         ghost.position = newPos;
+      }
+      
+      // Record performance metrics
+      if (this.performanceTracker) {
+        this.performanceTracker.recordDecision(ghostId, nodesExplored, decisionStart);
       }
     });
   }
@@ -395,14 +486,55 @@ class SimulationViewer {
   }
   
   getResults() {
-    // Return results without frames to avoid serialization issues
-    // Frames are optional and can be very large
+    // Get performance metrics
+    const pacmanMetrics = this.performanceTracker.getMetrics('pacman');
+    
+    const ghostMetrics = this.ghostPositions.map((ghost, idx) => {
+      const ghostId = `${ghost.type}_${idx}`;
+      const metrics = this.performanceTracker.getMetrics(ghostId);
+      const algorithm = this.ghostConfigs[idx]?.algorithm || 'astar';
+      
+      return {
+        type: ghost.type,
+        algorithm: algorithm,
+        memoryUsage: metrics.memoryUsage,
+        timeComplexity: this.performanceTracker.getComplexity(algorithm),
+        avgDecisionTime: metrics.avgDecisionTime,
+        pathNodesExplored: metrics.pathNodesExplored
+      };
+    });
+    
+    // Calculate normalized metrics (memory per second for fair comparison)
+    const durationInSeconds = this.simulationElapsedTime / 1000;
+    const pacmanMemoryPerSecond = durationInSeconds > 0 ? pacmanMetrics.memoryUsage / durationInSeconds : 0;
+    
+    const ghostsAvgMemory = ghostMetrics.length > 0 
+      ? ghostMetrics.reduce((sum, g) => sum + g.memoryUsage, 0) / ghostMetrics.length 
+      : 0;
+    const ghostsMemoryPerSecond = durationInSeconds > 0 ? ghostsAvgMemory / durationInSeconds : 0;
+    
+    // Return results with performance metrics
     return {
       caught: this.caughtFrame !== null,
       catchPosition: this.caughtFrame !== null ? this.trajectory[this.caughtFrame].position : null,
       catchTime: this.caughtTime,
       caughtByGhost: this.caughtByGhost,
-      totalFrames: this.allFrames.length
+      totalFrames: this.allFrames.length,
+      duration: this.simulationElapsedTime, // Actual elapsed time in milliseconds
+      performanceMetrics: {
+        pacman: {
+          memoryUsage: pacmanMetrics.memoryUsage,
+          memoryPerSecond: pacmanMemoryPerSecond, // Normalized metric for fair comparison
+          timeComplexity: 'O(1)', // Replay/bot is simple decision
+          avgDecisionTime: pacmanMetrics.avgDecisionTime
+        },
+        ghosts: ghostMetrics,
+        // Aggregate ghost metrics
+        ghostsAverage: {
+          memoryUsage: ghostsAvgMemory,
+          memoryPerSecond: ghostsMemoryPerSecond // Normalized metric
+        }
+      }
       // frames: [] - intentionally omitted to avoid data corruption issues
     };
   }

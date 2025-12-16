@@ -11,8 +11,7 @@ const simulationSchema = new mongoose.Schema({
     trim: true
   },
   trajectoryId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Trajectory',
+    type: mongoose.Schema.Types.Mixed, // Allow both ObjectId and string for demo mode
     required: true
   },
   mazeId: {
@@ -63,6 +62,10 @@ const simulationSchema = new mongoose.Schema({
           type: Number, // En bytes (estimation)
           default: 0
         },
+        memoryPerSecond: {
+          type: Number, // Memory usage normalized by time (bytes/second) - fair comparison metric
+          default: 0
+        },
         timeComplexity: {
           type: String, // Ex: O(n), O(n²), O(log n)
           default: 'O(1)'
@@ -97,7 +100,18 @@ const simulationSchema = new mongoose.Schema({
           type: Number, // Nœuds explorés durant la simulation
           default: 0
         }
-      }]
+      }],
+      // Aggregate metrics for ghosts
+      ghostsAverage: {
+        memoryUsage: {
+          type: Number,
+          default: 0
+        },
+        memoryPerSecond: {
+          type: Number, // Normalized metric for fair comparison
+          default: 0
+        }
+      }
     },
     frames: [{
       timestamp: Number,

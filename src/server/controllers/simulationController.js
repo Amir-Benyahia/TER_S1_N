@@ -84,24 +84,49 @@ exports.runSimulation = async (req, res) => {
       });
     }
     
-    // Fetch trajectory
-    trajectory = await Trajectory.findById(trajectoryId).populate('mazeId');
+    // Check if this is a bot simulation (no real trajectory)
+    const isBotSimulation = trajectoryId === 'demo-trajectory' || trajectoryId === 'bot-simulation';
     
-    if (!trajectory) {
-      return res.status(404).json({
-        error: 'Trajectory not found'
-      });
-    }
-
-    maze = trajectory.mazeId;
-    if (!maze) {
-      return res.status(404).json({
-        error: 'Associated maze not found'
-      });
-    }
-
     // If simulation results are already provided (from frontend simulation)
     if (simulationResults) {
+      let finalTrajectoryId = trajectoryId; // Use a new variable to avoid const reassignment
+      
+      // For bot simulations, use the provided mazeId directly
+      if (isBotSimulation) {
+        if (!req.body.mazeId) {
+          return res.status(400).json({
+            error: 'mazeId is required for bot simulations'
+          });
+        }
+        
+        // Verify maze exists
+        maze = await Maze.findById(req.body.mazeId);
+        if (!maze) {
+          return res.status(404).json({
+            error: 'Maze not found'
+          });
+        }
+        
+        // Use demo-trajectory as placeholder
+        finalTrajectoryId = 'demo-trajectory';
+      } else {
+        // Fetch trajectory for normal simulations
+        trajectory = await Trajectory.findById(trajectoryId).populate('mazeId');
+        
+        if (!trajectory) {
+          return res.status(404).json({
+            error: 'Trajectory not found'
+          });
+        }
+
+        maze = trajectory.mazeId;
+        if (!maze) {
+          return res.status(404).json({
+            error: 'Associated maze not found'
+          });
+        }
+      }
+      
       // Transform ghost configs to match schema
       const transformedGhostConfigs = ghostConfigs.map(config => ({
         ghostType: config.type || config.ghostType,
@@ -111,7 +136,7 @@ exports.runSimulation = async (req, res) => {
       
       const simulation = new Simulation({
         name,
-        trajectoryId,
+        trajectoryId: finalTrajectoryId,
         mazeId: maze._id,
         ghostConfigs: transformedGhostConfigs,
         results: simulationResults

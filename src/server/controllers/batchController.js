@@ -123,10 +123,15 @@ exports.addSimulationsToBatch = async (req, res) => {
     batch.updatedAt = new Date();
     await batch.save();
 
-    // Recalculate statistics
+    // Recalculate statistics (ensure this completes)
     await exports.recalculateBatchStats(batch._id);
 
-    const updatedBatch = await SimulationBatch.findById(batch._id);
+    // Fetch updated batch with recalculated stats
+    const updatedBatch = await SimulationBatch.findById(batch._id).populate({
+      path: 'simulations',
+      select: 'name results createdAt'
+    });
+    
     res.json({
       message: 'Simulations added to batch',
       batch: updatedBatch
@@ -157,10 +162,15 @@ exports.removeSimulationFromBatch = async (req, res) => {
     batch.updatedAt = new Date();
     await batch.save();
 
-    // Recalculate statistics
+    // Recalculate statistics (ensure this completes before returning)
     await exports.recalculateBatchStats(batch._id);
 
-    const updatedBatch = await SimulationBatch.findById(batch._id);
+    // Fetch updated batch with recalculated stats
+    const updatedBatch = await SimulationBatch.findById(batch._id).populate({
+      path: 'simulations',
+      select: 'name results createdAt'
+    });
+    
     res.json({
       message: 'Simulation removed from batch',
       batch: updatedBatch
