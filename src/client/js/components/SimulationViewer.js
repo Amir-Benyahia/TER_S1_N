@@ -41,6 +41,7 @@ class SimulationViewer {
     // Pellets tracking for bot mode
     this.remainingPellets = this.countPellets();
     this.maxFrames = 1000; // Maximum frames for bot simulation
+    this.score = 0; // Track game score
     
     // Performance tracking
     this.performanceTracker = new BrowserPerformanceTracker();
@@ -162,12 +163,21 @@ class SimulationViewer {
         return;
       }
       
-      // Check if Pacman collected a pellet (cell type 2 or 3)
+      // Check if Pacman collected a pellet (cell type 2 = normal pellet, 3 = power pellet)
       const cellType = this.grid[pacmanPos.y][pacmanPos.x];
-      if (cellType === 2 || cellType === 3) {
-        this.grid[pacmanPos.y][pacmanPos.x] = 0; // Remove pellet
+      if (cellType === 2) {
+        this.grid[pacmanPos.y][pacmanPos.x] = 0; // Remove normal pellet
         this.remainingPellets--;
-        // Update the maze canvas grid
+        this.score += 10; // Normal pellet = 10 points
+        // Update the maze canvas grid to make pellet disappear
+        if (this.mazeCanvas && this.mazeCanvas.updateGrid) {
+          this.mazeCanvas.updateGrid(this.grid);
+        }
+      } else if (cellType === 3) {
+        this.grid[pacmanPos.y][pacmanPos.x] = 0; // Remove power pellet
+        this.remainingPellets--;
+        this.score += 50; // Power pellet = 50 points
+        // Update the maze canvas grid to make pellet disappear
         if (this.mazeCanvas && this.mazeCanvas.updateGrid) {
           this.mazeCanvas.updateGrid(this.grid);
         }
@@ -203,12 +213,21 @@ class SimulationViewer {
       }
       pacmanPos = move.position;
       
-      // Check if Pacman collected a pellet in normal mode too
+      // Check if Pacman collected a pellet in replay mode (cell type 2 = normal pellet, 3 = power pellet)
       const cellType = this.grid[pacmanPos.y][pacmanPos.x];
-      if (cellType === 2 || cellType === 3) {
-        this.grid[pacmanPos.y][pacmanPos.x] = 0; // Remove pellet
+      if (cellType === 2) {
+        this.grid[pacmanPos.y][pacmanPos.x] = 0; // Remove normal pellet
         this.remainingPellets--;
-        // Update the maze canvas grid
+        this.score += 10; // Normal pellet = 10 points
+        // Update the maze canvas grid to make pellet disappear
+        if (this.mazeCanvas && this.mazeCanvas.updateGrid) {
+          this.mazeCanvas.updateGrid(this.grid);
+        }
+      } else if (cellType === 3) {
+        this.grid[pacmanPos.y][pacmanPos.x] = 0; // Remove power pellet
+        this.remainingPellets--;
+        this.score += 50; // Power pellet = 50 points
+        // Update the maze canvas grid to make pellet disappear
         if (this.mazeCanvas && this.mazeCanvas.updateGrid) {
           this.mazeCanvas.updateGrid(this.grid);
         }
@@ -521,6 +540,7 @@ class SimulationViewer {
       caughtByGhost: this.caughtByGhost,
       totalFrames: this.allFrames.length,
       duration: this.simulationElapsedTime, // Actual elapsed time in milliseconds
+      score: this.score || 0, // Final game score
       performanceMetrics: {
         pacman: {
           memoryUsage: pacmanMetrics.memoryUsage,
