@@ -2,13 +2,13 @@
   "name": "pacman-lab",
   "version": "1.0.0",
   "description": "A platform for studying Pacman game algorithms and AI behavior",
-  "main": "src/server/index.js",
+  "main": "server/index.js",
   "scripts": {
-    "start": "node src/server/index.js",
-    "dev": "nodemon src/server/index.js",
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint server/**/*.js",
     "test:python": "pytest tests/algorithms -v"
   },
   "keywords": [

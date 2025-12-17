@@ -7,8 +7,13 @@ services:
     env: node
     region: frankfurt  # Change to your preferred region
     plan: free
+<<<<<<< HEAD
     buildCommand: cd .. && npm install && pip install -r requirements.txt
     startCommand: cd .. && npm start
+=======
+    buildCommand: cd src && npm install && pip install -r ../requirements.txt
+    startCommand: cd src && npm start
+>>>>>>> 4349a75193229896a893bf85751960d79393f581
     envVars:
       - key: NODE_ENV
         value: production
