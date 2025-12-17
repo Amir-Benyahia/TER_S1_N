@@ -7,8 +7,8 @@ services:
     env: node
     region: frankfurt  # Change to your preferred region
     plan: free
-    rootDir: .
-    buildCommand: npm install && pip install -r requirements.txt
+    rootDir: src
+    buildCommand: npm install && pip install -r ../requirements.txt
     startCommand: npm start
     envVars:
       - key: NODE_ENV
