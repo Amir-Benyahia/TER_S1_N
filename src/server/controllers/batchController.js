@@ -308,3 +308,63 @@ exports.clearBatch = async (req, res) => {
     res.status(500).json({ error: 'Failed to clear batch' });
   }
 };
+
+/**
+ * Run batch simulations (automation endpoint)
+ * POST /api/batches/run-batch
+ */
+exports.runBatchSimulations = async (req, res) => {
+  try {
+    const {
+      batchName,
+      mazeId,
+      pacmanAlgorithm,
+      ghostConfigs,
+      iterations = 1,
+      maxDuration = 60
+    } = req.body;
+
+    // Validation
+    if (!batchName || !mazeId || !pacmanAlgorithm || !ghostConfigs) {
+      return res.status(400).json({
+        error: 'Missing required fields: batchName, mazeId, pacmanAlgorithm, ghostConfigs'
+      });
+    }
+
+    if (!Array.isArray(ghostConfigs) || ghostConfigs.length === 0) {
+      return res.status(400).json({
+        error: 'ghostConfigs must be a non-empty array'
+      });
+    }
+
+    // Verify maze exists
+    const Maze = require('../models/Maze');
+    const maze = await Maze.findById(mazeId);
+    if (!maze) {
+      return res.status(404).json({ error: 'Maze not found' });
+    }
+
+    // Create or get batch
+    let batch = await SimulationBatch.findOne({ name: batchName });
+    if (!batch) {
+      batch = new SimulationBatch({
+        name: batchName,
+        description: `Automated batch: ${pacmanAlgorithm} vs ${ghostConfigs.map(g => g.algorithm).join(', ')}`,
+        simulations: []
+      });
+      await batch.save();
+    }
+
+    res.status(202).json({
+      message: 'Batch simulations accepted for processing',
+      batchId: batch._id,
+      batchName: batch.name,
+      iterations,
+      note: 'Simulations must be run client-side. Use the returned configuration to run simulations in the browser and POST results back to /api/simulations'
+    });
+
+  } catch (error) {
+    console.error('Error running batch simulations:', error);
+    res.status(500).json({ error: 'Failed to run batch simulations' });
+  }
+};

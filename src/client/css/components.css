@@ -646,3 +646,119 @@
   border-radius: var(--border-radius);
   padding: 24px;
 }
+
+/* API Documentation Styles */
+.api-section {
+  margin-bottom: 32px;
+}
+
+.api-endpoint {
+  background: rgba(10, 14, 48, 0.6);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(111, 125, 255, 0.2);
+}
+
+.endpoint-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(111, 125, 255, 0.1);
+  border-bottom: 1px solid rgba(111, 125, 255, 0.2);
+}
+
+.http-method {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.http-method.get {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+.http-method.post {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  border: 1px solid #2196f3;
+}
+
+.http-method.put {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ff9800;
+  border: 1px solid #ff9800;
+}
+
+.http-method.delete {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid #f44336;
+}
+
+.endpoint-header code {
+  color: #e6e8ff;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.endpoint-desc {
+  color: var(--text-secondary);
+  margin-left: auto;
+  font-size: 0.9rem;
+}
+
+.endpoint-body {
+  padding: 20px;
+  color: var(--text-secondary);
+}
+
+.endpoint-body h4 {
+  color: var(--accent-blue);
+  margin: 16px 0 8px 0;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.endpoint-body h4:first-child {
+  margin-top: 0;
+}
+
+.endpoint-body pre {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(111, 125, 255, 0.3);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.endpoint-body code {
+  color: #61dafb;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.endpoint-body ul {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.endpoint-body li {
+  margin: 4px 0;
+}
+
+.endpoint-body li code {
+  background: rgba(111, 125, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.85rem;
+}

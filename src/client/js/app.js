@@ -56,6 +56,9 @@ class PacmanLabApp {
       case 'results':
         await this.renderResults(container);
         break;
+      case 'api':
+        await this.renderAPI(container);
+        break;
     }
   }
 
@@ -2038,8 +2041,444 @@ class PacmanLabApp {
       Formatters.showToast(`Error adding simulation to batch: ${error.message}`, 'error');
     }
   }
+
+  async renderAPI(container) {
+    const baseUrl = window.location.origin;
+    
+    container.innerHTML = `
+      <div class="card">
+        <div class="card-header">
+          <h2>API Documentation</h2>
+          <p>Automate simulations and batch operations via REST API</p>
+        </div>
+        
+        <div style="background: rgba(99, 116, 255, 0.1); border-radius: 8px; padding: 16px; margin-bottom: 24px; border-left: 4px solid #6374ff;">
+          <h3 style="margin: 0 0 8px 0; color: #6374ff;">Base URL</h3>
+          <code style="background: rgba(10, 14, 48, 0.6); padding: 8px 12px; border-radius: 4px; display: block; color: #e6e8ff;">${baseUrl}/api</code>
+        </div>
+
+        <!-- Mazes Section -->
+        <div class="api-section">
+          <h3 style="color: #6374ff; margin-top: 32px;">🗺️ Mazes</h3>
+          
+          <div class="api-endpoint">
+            <div class="endpoint-header">
+              <span class="http-method get">GET</span>
+              <code>/mazes</code>
+              <span class="endpoint-desc">Get all mazes</span>
+            </div>
+            <div class="endpoint-body">
+              <h4>Query Parameters:</h4>
+              <ul>
+                <li><code>page</code> (optional): Page number (default: 1)</li>
+                <li><code>limit</code> (optional): Results per page (default: 20)</li>
+              </ul>
+              <h4>Example (cURL):</h4>
+              <pre><code>curl "${baseUrl}/api/mazes?page=1&limit=10"</code></pre>
+              <h4>Example (JavaScript):</h4>
+              <pre><code>fetch('${baseUrl}/api/mazes?page=1&limit=10')
+  .then(res => res.json())
+  .then(data => console.log(data.mazes));</code></pre>
+            </div>
+          </div>
+
+          <div class="api-endpoint">
+            <div class="endpoint-header">
+              <span class="http-method get">GET</span>
+              <code>/mazes/:id</code>
+              <span class="endpoint-desc">Get maze by ID</span>
+            </div>
+            <div class="endpoint-body">
+              <h4>Example (cURL):</h4>
+              <pre><code>curl "${baseUrl}/api/mazes/{MAZE_ID}"</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Batches Section -->
+        <div class="api-section">
+          <h3 style="color: #6374ff; margin-top: 32px;">📦 Batches</h3>
+          
+          <div class="api-endpoint">
+            <div class="endpoint-header">
+              <span class="http-method post">POST</span>
+              <code>/batches</code>
+              <span class="endpoint-desc">Create a new batch</span>
+            </div>
+            <div class="endpoint-body">
+              <h4>Request Body:</h4>
+              <pre><code>{
+  "name": "a_star_batch",
+  "description": "A* ghost algorithm tests"
+}</code></pre>
+              <h4>Example (cURL):</h4>
+              <pre><code>curl -X POST "${baseUrl}/api/batches" \\
+  -H "Content-Type: application/json" \\
+  -d '{"name":"a_star_batch","description":"A* tests"}'</code></pre>
+            </div>
+          </div>
+
+          <div class="api-endpoint">
+            <div class="endpoint-header">
+              <span class="http-method get">GET</span>
+              <code>/batches</code>
+              <span class="endpoint-desc">Get all batches</span>
+            </div>
+            <div class="endpoint-body">
+              <h4>Example (JavaScript):</h4>
+              <pre><code>fetch('${baseUrl}/api/batches')
+  .then(res => res.json())
+  .then(data => console.log(data.batches));</code></pre>
+            </div>
+          </div>
+
+          <div class="api-endpoint">
+            <div class="endpoint-header">
+              <span class="http-method get">GET</span>
+              <code>/batches/:id</code>
+              <span class="endpoint-desc">Get batch with simulations</span>
+            </div>
+            <div class="endpoint-body">
+              <h4>Example:</h4>
+              <pre><code>curl "${baseUrl}/api/batches/{BATCH_ID}"</code></pre>
+            </div>
+          </div>
+
+          <div class="api-endpoint">
+            <div class="endpoint-header">
+              <span class="http-method post">POST</span>
+              <code>/batches/:id/add-simulations</code>
+              <span class="endpoint-desc">Add simulations to batch</span>
+            </div>
+            <div class="endpoint-body">
+              <h4>Request Body:</h4>
+              <pre><code>{
+  "simulationIds": ["sim_id_1", "sim_id_2"]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulations Section -->
+        <div class="api-section">
+          <h3 style="color: #6374ff; margin-top: 32px;">🎮 Simulations</h3>
+          
+          <div class="api-endpoint">
+            <div class="endpoint-header">
+              <span class="http-method post">POST</span>
+              <code>/simulations</code>
+              <span class="endpoint-desc">Save simulation results</span>
+            </div>
+            <div class="endpoint-body">
+              <h4>Request Body:</h4>
+              <pre><code>{
+  "name": "A* Test Run 1",
+  "mazeId": "maze_id_here",
+  "trajectoryId": "bot-simulation",
+  "ghostConfigs": [
+    {
+      "type": "blinky",
+      "algorithm": "astar",
+      "startPosition": { "x": 1, "y": 1 }
+    }
+  ],
+  "results": {
+    "caught": false,
+    "duration": 45000,
+    "score": 280,
+    "totalFrames": 450
+  }
+}</code></pre>
+              <h4>Example (JavaScript):</h4>
+              <pre><code>fetch('${baseUrl}/api/simulations', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    name: 'Test Simulation',
+    mazeId: mazeId,
+    trajectoryId: 'bot-simulation',
+    ghostConfigs: ghostConfigs,
+    results: simulationResults
+  })
+})
+  .then(res => res.json())
+  .then(data => console.log('Saved:', data.simulation._id));</code></pre>
+            </div>
+          </div>
+
+          <div class="api-endpoint">
+            <div class="endpoint-header">
+              <span class="http-method get">GET</span>
+              <code>/simulations</code>
+              <span class="endpoint-desc">Get all simulations</span>
+            </div>
+            <div class="endpoint-body">
+              <h4>Example:</h4>
+              <pre><code>curl "${baseUrl}/api/simulations?page=1&limit=20"</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Automation Script Example -->
+        <div class="api-section" style="background: rgba(255, 152, 0, 0.1); border-radius: 8px; padding: 20px; margin-top: 32px; border-left: 4px solid #ff9800;">
+          <h3 style="color: #ff9800; margin-top: 0;">🤖 Automation Script Example</h3>
+          <p style="color: #9aa4ff;">Complete Node.js script for running 5 A* batch simulations:</p>
+          <pre style="max-height: 500px; overflow-y: auto;"><code>// batch_simulation.js
+// Run with: node batch_simulation.js
+
+const API_BASE = '${baseUrl}/api';
+
+async function runBatchSimulations() {
+  try {
+    // 1. Get first available maze
+    const mazesRes = await fetch(\`\${API_BASE}/mazes?limit=1\`);
+    const mazesData = await mazesRes.json();
+    
+    if (!mazesData.mazes || mazesData.mazes.length === 0) {
+      throw new Error('No mazes available');
+    }
+    
+    const maze = mazesData.mazes[0];
+    console.log(\`Using maze: \${maze.name} (\${maze._id})\`);
+    
+    // 2. Create batch
+    const batchRes = await fetch(\`\${API_BASE}/batches\`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'a_star_batch',
+        description: 'A* ghost algorithm - 5 simulations with greedy pacman'
+      })
+    });
+    
+    const batchData = await batchRes.json();
+    const batchId = batchData.batch._id;
+    console.log(\`Created batch: \${batchData.batch.name} (\${batchId})\`);
+    
+    // 3. Run 5 simulations (client-side simulation required)
+    const simulationIds = [];
+    
+    for (let i = 0; i < 5; i++) {
+      console.log(\`\\nRunning simulation \${i + 1}/5...\`);
+      
+      // Ghost configs: 4 ghosts all using A*
+      const ghostConfigs = [
+        { type: 'blinky', algorithm: 'astar', startPosition: { x: 1, y: 1 } },
+        { type: 'pinky', algorithm: 'astar', startPosition: { x: maze.config.width - 2, y: 1 } },
+        { type: 'inky', algorithm: 'astar', startPosition: { x: 1, y: maze.config.height - 2 } },
+        { type: 'clyde', algorithm: 'astar', startPosition: { x: maze.config.width - 2, y: maze.config.height - 2 } }
+      ];
+      
+      // NOTE: Actual simulation must be run in browser
+      // This is a placeholder for demonstration
+      const mockResults = {
+        caught: Math.random() > 0.5,
+        duration: 30000 + Math.random() * 20000,
+        score: Math.floor(200 + Math.random() * 200),
+        totalFrames: Math.floor(300 + Math.random() * 200)
+      };
+      
+      // Save simulation
+      const simRes = await fetch(\`\${API_BASE}/simulations\`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: \`A* Batch Test \${i + 1}\`,
+          mazeId: maze._id,
+          trajectoryId: 'bot-simulation',
+          ghostConfigs: ghostConfigs,
+          results: mockResults
+        })
+      });
+      
+      const simData = await simRes.json();
+      simulationIds.push(simData.simulation._id);
+      console.log(\`  ✓ Saved simulation: \${simData.simulation._id}\`);
+    }
+    
+    // 4. Add all simulations to batch
+    console.log(\`\\nAdding \${simulationIds.length} simulations to batch...\`);
+    const addRes = await fetch(\`\${API_BASE}/batches/\${batchId}/add-simulations\`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ simulationIds })
+    });
+    
+    const finalBatch = await addRes.json();
+    console.log(\`\\n✓ Batch complete!\`);
+    console.log(\`  Batch ID: \${batchId}\`);
+    console.log(\`  Total simulations: \${finalBatch.batch.simulations.length}\`);
+    console.log(\`  View at: ${baseUrl}/#results\`);
+    
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
+
+// Run the batch
+runBatchSimulations();</code></pre>
+          <div class="action-buttons" style="margin-top: 16px;">
+            <button class="btn btn-primary" onclick="app.downloadAutomationScript()">
+              ⬇ Download Script
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px; padding: 16px; background: rgba(76, 175, 80, 0.1); border-radius: 8px; border-left: 4px solid #4caf50;">
+          <h4 style="color: #4caf50; margin: 0 0 8px 0;">💡 Pro Tips</h4>
+          <ul style="color: #9aa4ff; margin: 0; padding-left: 20px;">
+            <li>Always create a batch before running simulations for easier organization</li>
+            <li>Use descriptive batch names to track different algorithm combinations</li>
+            <li>Simulations require browser execution - you can't run physics simulations purely server-side</li>
+            <li>Use the automation script as a template for your custom testing scenarios</li>
+            <li>Check the Results page to view batch statistics and compare algorithm performance</li>
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+
+  downloadAutomationScript() {
+    const baseUrl = window.location.origin;
+    const scriptContent = `// batch_simulation.js
+// Pacman Lab - Batch Simulation Automation Script
+// Run with: node batch_simulation.js
+
+const API_BASE = '${baseUrl}/api';
+
+async function runBatchSimulations() {
+  try {
+    // 1. Get first available maze
+    const mazesRes = await fetch(\`\${API_BASE}/mazes?limit=1\`);
+    const mazesData = await mazesRes.json();
+    
+    if (!mazesData.mazes || mazesData.mazes.length === 0) {
+      throw new Error('No mazes available. Please create a maze first.');
+    }
+    
+    const maze = mazesData.mazes[0];
+    console.log(\`Using maze: \${maze.name} (\${maze._id})\`);
+    
+    // 2. Create batch
+    const batchRes = await fetch(\`\${API_BASE}/batches\`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'a_star_batch',
+        description: 'A* ghost algorithm - 5 simulations with greedy pacman'
+      })
+    });
+    
+    const batchData = await batchRes.json();
+    const batchId = batchData.batch._id;
+    console.log(\`Created batch: \${batchData.batch.name} (\${batchId})\`);
+    
+    // 3. Run 5 simulations
+    // NOTE: In production, you should run actual simulations in the browser
+    // This script uses mock data for demonstration
+    const simulationIds = [];
+    
+    for (let i = 0; i < 5; i++) {
+      console.log(\`\\nRunning simulation \${i + 1}/5...\`);
+      
+      // Ghost configs: 4 ghosts all using A*
+      const ghostConfigs = [
+        { type: 'blinky', algorithm: 'astar', startPosition: { x: 1, y: 1 } },
+        { type: 'pinky', algorithm: 'astar', startPosition: { x: maze.config.width - 2, y: 1 } },
+        { type: 'inky', algorithm: 'astar', startPosition: { x: 1, y: maze.config.height - 2 } },
+        { type: 'clyde', algorithm: 'astar', startPosition: { x: maze.config.width - 2, y: maze.config.height - 2 } }
+      ];
+      
+      // Mock simulation results (replace with actual simulation in production)
+      const mockResults = {
+        caught: Math.random() > 0.5,
+        duration: 30000 + Math.random() * 20000,
+        score: Math.floor(200 + Math.random() * 200),
+        totalFrames: Math.floor(300 + Math.random() * 200),
+        catchPosition: null,
+        catchTime: null,
+        frames: []
+      };
+      
+      // Save simulation
+      const simRes = await fetch(\`\${API_BASE}/simulations\`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: \`A* Batch Test \${i + 1}\`,
+          mazeId: maze._id,
+          trajectoryId: 'bot-simulation',
+          ghostConfigs: ghostConfigs,
+          results: mockResults
+        })
+      });
+      
+      if (!simRes.ok) {
+        throw new Error(\`Failed to save simulation: \${simRes.statusText}\`);
+      }
+      
+      const simData = await simRes.json();
+      simulationIds.push(simData.simulation._id);
+      console.log(\`  ✓ Saved simulation: \${simData.simulation._id}\`);
+      
+      // Small delay between simulations
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    
+    // 4. Add all simulations to batch
+    console.log(\`\\nAdding \${simulationIds.length} simulations to batch...\`);
+    const addRes = await fetch(\`\${API_BASE}/batches/\${batchId}/add-simulations\`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ simulationIds })
+    });
+    
+    if (!addRes.ok) {
+      throw new Error(\`Failed to add simulations to batch: \${addRes.statusText}\`);
+    }
+    
+    const finalBatch = await addRes.json();
+    console.log(\`\\n✅ Batch complete!\`);
+    console.log(\`  Batch ID: \${batchId}\`);
+    console.log(\`  Batch Name: \${finalBatch.batch.name}\`);
+    console.log(\`  Total simulations: \${finalBatch.batch.simulations.length}\`);
+    console.log(\`\\n  View results at: ${baseUrl}/#results\`);
+    
+  } catch (error) {
+    console.error('❌ Error:', error.message);
+    process.exit(1);
+  }
+}
+
+// Run the batch
+console.log('🚀 Starting batch simulation automation...\\n');
+runBatchSimulations()
+  .then(() => {
+    console.log('\\n✅ Script completed successfully!');
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error('\\n❌ Script failed:', error);
+    process.exit(1);
+  });
+`;
+
+    // Create download
+    const blob = new Blob([scriptContent], { type: 'text/javascript' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'batch_simulation.js';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    Formatters.showToast('Script downloaded! Run with: node batch_simulation.js', 'success');
+  }
 }
 
 // Initialize app
 const app = new PacmanLabApp();
+
 

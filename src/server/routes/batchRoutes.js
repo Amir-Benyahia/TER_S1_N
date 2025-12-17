@@ -9,6 +9,10 @@ const batchController = require('../controllers/batchController');
 // Batch operations
 router.post('/', batchController.createBatch);
 router.get('/', batchController.getAllBatches);
+
+// Automation endpoint (must be before :id routes)
+router.post('/run-batch', batchController.runBatchSimulations);
+
 router.get('/:id', batchController.getBatchById);
 router.put('/:id', batchController.updateBatch);
 router.delete('/:id', batchController.deleteBatch);
