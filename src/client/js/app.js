@@ -1968,7 +1968,7 @@ class PacmanLabApp {
           <!-- Performance Metrics: Pacman -->
           ${sim.results.performanceMetrics?.pacman && sim.results.performanceMetrics.pacman.memoryUsage > 0 ? `
           <div style="background: rgba(255, 193, 7, 0.1); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 193, 7, 0.3); margin-bottom: 20px;">
-            <h3 style="margin-bottom: 15px; color: #ffc107;">🎯 Pacman Performance</h3>
+            <h3 style="margin-bottom: 15px; color: #ffc107;">Pacman Performance</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
               <div>
                 <strong>Memory Usage:</strong><br/>
@@ -2000,7 +2000,7 @@ class PacmanLabApp {
           <!-- Performance Metrics: Ghosts -->
           ${sim.results.performanceMetrics?.ghosts && sim.results.performanceMetrics.ghosts.length > 0 ? `
           <div style="background: rgba(99, 116, 255, 0.1); padding: 20px; border-radius: 8px; border: 1px solid rgba(99, 116, 255, 0.3); margin-bottom: 20px;">
-            <h3 style="margin-bottom: 15px; color: #6f7dff;">👻 Ghost Performance Metrics</h3>
+            <h3 style="margin-bottom: 15px; color: #6f7dff;">Ghost Performance Metrics</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
               ${sim.results.performanceMetrics.ghosts.map((ghost, idx) => `
                 <div style="background: rgba(10, 14, 48, 0.5); padding: 15px; border-radius: 8px; border: 1px solid rgba(99, 116, 255, 0.2);">
