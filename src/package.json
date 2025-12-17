@@ -38,12 +38,13 @@
     "testEnvironment": "node",
     "coverageDirectory": "coverage",
     "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/server/index.js"
+      "server/**/*.js",
+      "!server/index.js"
     ],
     "testMatch": [
-      "**/tests/**/*.test.js"
-    ]
+      "../tests/**/*.test.js"
+    ],
+    "rootDir": "."
   }
 
 }
