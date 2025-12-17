@@ -2481,4 +2481,256 @@ runBatchSimulations()
 // Initialize app
 const app = new PacmanLabApp();
 
+// Modal Management
+class ModalManager {
+  constructor() {
+    this.modalContainer = document.getElementById('modal-container');
+    this.modalBody = document.getElementById('modal-body');
+    this.modalOverlay = this.modalContainer.querySelector('.modal-overlay');
+    this.closeBtn = document.getElementById('modal-close-btn');
+    
+    this.setupEventListeners();
+  }
+
+  setupEventListeners() {
+    // Close button
+    this.closeBtn.addEventListener('click', () => this.close());
+    
+    // Click outside to close
+    this.modalOverlay.addEventListener('click', () => this.close());
+    
+    // Escape key to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.modalContainer.style.display !== 'none') {
+        this.close();
+      }
+    });
+    
+    // Modal links
+    document.querySelectorAll('[data-modal]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const modalType = link.getAttribute('data-modal');
+        this.open(modalType);
+      });
+    });
+  }
+
+  open(type) {
+    this.modalBody.innerHTML = this.getContent(type);
+    this.modalContainer.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  close() {
+    this.modalContainer.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  getContent(type) {
+    const baseUrl = window.location.origin;
+    
+    switch(type) {
+      case 'documentation':
+        return `
+          <h2>Documentation</h2>
+          <p>Welcome to Pacman Lab documentation. This platform provides comprehensive tools for analyzing AI algorithms in a game-theoretic environment.</p>
+          
+          <h3>Getting Started</h3>
+          <p>Follow these steps to begin your AI research journey:</p>
+          <ul>
+            <li><strong>Generate a Maze:</strong> Use the Maze Generator to create custom labyrinths with different algorithms (Recursive Backtracker, Kruskal's, Prim's, Wilson's)</li>
+            <li><strong>Play Mode:</strong> Record human gameplay trajectories by playing mazes with keyboard controls (Arrow keys or WASD)</li>
+            <li><strong>AI Simulation:</strong> Test ghost algorithms (A*, BFS) against Pacman AIs (Greedy, Defensive, Aggressive, Random Walker)</li>
+            <li><strong>Analyze Results:</strong> View detailed performance metrics, batch statistics, and algorithm comparisons</li>
+          </ul>
+          
+          <h3>Features</h3>
+          <ul>
+            <li><strong>Maze Generation:</strong> 5 different algorithms with customizable parameters (size, density, pellet placement)</li>
+            <li><strong>Human Gameplay Recording:</strong> Record your own trajectories for later AI replay</li>
+            <li><strong>Bot Simulations:</strong> Run automated tests with configurable Pacman and Ghost AIs</li>
+            <li><strong>Performance Metrics:</strong> Memory usage, decision times, nodes explored, time complexity analysis</li>
+            <li><strong>Batch Management:</strong> Group simulations for statistical analysis and comparison</li>
+            <li><strong>API Automation:</strong> REST API endpoints for programmatic control and batch processing</li>
+          </ul>
+          
+          <h3>Algorithm Support</h3>
+          <p><strong>Ghost Algorithms:</strong></p>
+          <ul>
+            <li>A* (A-Star): Optimal pathfinding with heuristic</li>
+            <li>BFS (Breadth-First Search): Guaranteed shortest path</li>
+          </ul>
+          <p><strong>Pacman Algorithms:</strong></p>
+          <ul>
+            <li>Greedy: Moves toward nearest pellet</li>
+            <li>Defensive: Prioritizes avoiding ghosts</li>
+            <li>Aggressive: Focuses on fast pellet collection</li>
+            <li>Random Walker: Random movement with ghost avoidance</li>
+          </ul>
+          
+          <h3>API Documentation</h3>
+          <p>Access the <strong>API Docs</strong> page from the sidebar for complete REST API reference, automation scripts, and integration examples.</p>
+          
+          <h3>Performance Analysis</h3>
+          <p>The Results page provides:</p>
+          <ul>
+            <li>Individual simulation details with performance metrics</li>
+            <li>Batch statistics with mean, median, standard deviation</li>
+            <li>Escape/catch rates and duration analysis</li>
+            <li>Algorithm distribution charts</li>
+            <li>Memory and decision time comparisons</li>
+          </ul>
+          
+          <h3>Tips for Best Results</h3>
+          <ul>
+            <li>Start with smaller mazes (15x15) for faster simulations</li>
+            <li>Use batch simulations to compare algorithms statistically</li>
+            <li>Record multiple human trajectories for varied AI testing</li>
+            <li>Check the API Docs for automation scripts to run large-scale tests</li>
+            <li>Save important mazes and trajectories with descriptive names</li>
+          </ul>
+        `;
+        
+      case 'about':
+        return `
+          <h2>About Us</h2>
+          <p>Pacman Lab is an advanced theoretical game analysis platform developed for research and education in artificial intelligence, pathfinding algorithms, and game theory.</p>
+          
+          <h3>Mission</h3>
+          <p>Our mission is to provide researchers, students, and AI enthusiasts with a powerful yet accessible platform for exploring and comparing different AI algorithms in a controlled, game-based environment. Pacman Lab bridges the gap between theoretical algorithm knowledge and practical implementation analysis.</p>
+          
+          <h3>Key Objectives</h3>
+          <ul>
+            <li><strong>Educational Tool:</strong> Help students understand pathfinding algorithms through visual, interactive demonstrations</li>
+            <li><strong>Research Platform:</strong> Enable researchers to conduct reproducible experiments on AI behavior and performance</li>
+            <li><strong>Algorithm Comparison:</strong> Provide objective metrics for comparing different algorithmic approaches</li>
+            <li><strong>Open Science:</strong> Promote transparent, data-driven analysis of AI systems</li>
+          </ul>
+          
+          <h3>Team</h3>
+          <div class="contact-info">
+            <div class="contact-card">
+              <h4>Oussama BELHOUT</h4>
+              <p style="color: var(--text-secondary);">Lead Developer & AI Researcher</p>
+              <p style="font-size: 0.9rem; color: var(--text-dim);">Specializes in pathfinding algorithms and game AI</p>
+            </div>
+            <div class="contact-card">
+              <h4>Amir BENYAHIA</h4>
+              <p style="color: var(--text-secondary);">Backend Architect & Database Engineer</p>
+              <p style="font-size: 0.9rem; color: var(--text-dim);">Expert in performance optimization and data analysis</p>
+            </div>
+            <div class="contact-card">
+              <h4>Nafissa TAMANI</h4>
+              <p style="color: var(--text-secondary);">UI/UX Designer & Frontend Developer</p>
+              <p style="font-size: 0.9rem; color: var(--text-dim);">Creates intuitive interfaces for complex systems</p>
+            </div>
+          </div>
+          
+          <h3>Technology Stack</h3>
+          <ul>
+            <li><strong>Frontend:</strong> Vanilla JavaScript, HTML5 Canvas, CSS3</li>
+            <li><strong>Backend:</strong> Node.js, Express.js, MongoDB</li>
+            <li><strong>Algorithms:</strong> Python (NumPy, Matplotlib for analysis)</li>
+            <li><strong>Deployment:</strong> Render (Web Services), MongoDB Atlas</li>
+          </ul>
+          
+          <h3>License & Usage</h3>
+          <p>Pacman Lab is developed for educational and research purposes. Feel free to use this platform for:</p>
+          <ul>
+            <li>Academic research and publications</li>
+            <li>Classroom demonstrations and assignments</li>
+            <li>Algorithm benchmarking and comparison studies</li>
+            <li>Personal learning and experimentation</li>
+          </ul>
+          <p style="margin-top: 20px; padding: 16px; background: rgba(111, 125, 255, 0.1); border-radius: 8px; border-left: 4px solid var(--accent-blue);">
+            <strong>Citation:</strong> If you use Pacman Lab in your research, please cite this platform and reference our GitHub repository.
+          </p>
+          
+          <h3>Future Roadmap</h3>
+          <ul>
+            <li>Additional pathfinding algorithms (Dijkstra's, JPS, Theta*)</li>
+            <li>Machine learning integration for adaptive ghost behavior</li>
+            <li>Multi-player support for competitive AI testing</li>
+            <li>Real-time collaboration features</li>
+            <li>Export capabilities for research papers (LaTeX, CSV)</li>
+          </ul>
+        `;
+        
+      case 'contact':
+        return `
+          <h2>Contact Us</h2>
+          <p>We'd love to hear from you! Whether you have questions, feedback, or collaboration ideas, feel free to reach out.</p>
+          
+          <h3>Get in Touch</h3>
+          <div class="contact-info">
+            <div class="contact-card">
+              <h4>Email</h4>
+              <p><a href="mailto:oussama.belhout@example.com">oussama.belhout@univ-angers.fr</a></p>
+              <p><a href="mailto:amir.benyahia@example.com">amir.benyahia@univ-angers.fr</a></p>
+              <p><a href="mailto:nafissa.tamani@example.com">nafissa.tamani@univ-angers.fr</a></p>
+            </div>
+            <div class="contact-card">
+              <h4>GitHub</h4>
+              <p><a href="https://github.com/Amir-Benyahia/TER_S1_N" target="_blank">github.com/Amir-Benyahia/TER_S1_N</a></p>
+              <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 8px;">View source code, report issues, contribute</p>
+            </div>
+            <div class="contact-card">
+              <h4>Platform</h4>
+              <p><a href="${baseUrl}" target="_blank">${baseUrl}</a></p>
+              <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 8px;">Live demo and testing environment</p>
+            </div>
+          </div>
+          
+          <h3>Collaboration Opportunities</h3>
+          <p>We welcome collaborations in the following areas:</p>
+          <ul>
+            <li><strong>Research Partnerships:</strong> Joint studies on AI algorithms and game theory</li>
+            <li><strong>Educational Use:</strong> Integration into university courses and curriculum</li>
+            <li><strong>Open Source Contributions:</strong> Code improvements, new features, bug fixes</li>
+            <li><strong>Algorithm Development:</strong> Implementing new pathfinding or decision-making algorithms</li>
+            <li><strong>Data Science:</strong> Statistical analysis and visualization of simulation results</li>
+          </ul>
+          
+          <h3>Report Issues</h3>
+          <p>Found a bug or have a feature request? Please submit an issue on our GitHub repository:</p>
+          <p style="margin-top: 12px;">
+            <a href="https://github.com/Amir-Benyahia/TER_S1_N/issues" target="_blank" style="display: inline-block; padding: 12px 24px; background: rgba(111, 125, 255, 0.2); border: 1px solid var(--accent-blue); border-radius: 8px; text-decoration: none; transition: var(--transition);">
+              Submit an Issue
+            </a>
+          </p>
+          
+          <h3>Community</h3>
+          <p>Join our community to discuss ideas, share results, and connect with other researchers:</p>
+          <ul>
+            <li>Star our GitHub repository to stay updated</li>
+            <li>Follow development progress and release notes</li>
+            <li>Participate in discussions and feature proposals</li>
+            <li>Share your research findings using Pacman Lab</li>
+          </ul>
+          
+          <h3>Acknowledgments</h3>
+          <p>Special thanks to:</p>
+          <ul>
+            <li>University of Angers - Department of Computer Science</li>
+            <li>Our academic supervisors and mentors</li>
+            <li>The open-source community for invaluable tools and libraries</li>
+            <li>Beta testers and early adopters who provided feedback</li>
+          </ul>
+          
+          <p style="margin-top: 32px; padding: 20px; background: rgba(76, 175, 80, 0.1); border-radius: 8px; border-left: 4px solid #4caf50; text-align: center;">
+            <strong style="color: #4caf50; font-size: 1.1rem;">Thank you for using Pacman Lab!</strong><br/>
+            <span style="color: var(--text-secondary); font-size: 0.95rem;">We appreciate your interest and support in advancing AI research and education.</span>
+          </p>
+        `;
+        
+      default:
+        return '<p>Content not found.</p>';
+    }
+  }
+}
+
+// Initialize modal manager
+const modalManager = new ModalManager();
+
 

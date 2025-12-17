@@ -10,6 +10,15 @@
   <link rel="stylesheet" href="css/performance-metrics.css">
 </head>
 <body>
+  <!-- Top Header (intersects with sidebar) -->
+  <header class="top-header">
+    <nav class="header-nav">
+      <a href="#" data-modal="documentation" class="header-link">Documentation</a>
+      <a href="#" data-modal="about" class="header-link">About Us</a>
+      <a href="#" data-modal="contact" class="header-link">Contact</a>
+    </nav>
+  </header>
+
   <!-- Navigation Sidebar -->
   <nav class="sidebar">
     <div class="logo">
@@ -58,6 +67,15 @@
 
   <!-- Toast Notifications -->
   <div id="toast-container" class="toast-container"></div>
+
+  <!-- Modal Container -->
+  <div id="modal-container" class="modal-container" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close-btn">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="js/utils/validators.js"></script>
