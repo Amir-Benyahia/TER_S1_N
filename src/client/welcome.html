@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <ti  <title>Welcome to Pacman Lab</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23ffeb3b'/%3E%3Cpath d='M50 20 L50 50 L75 65 Z' fill='%23050616'/%3E%3Ccircle cx='50' cy='35' r='5' fill='%23050616'/%3E%3C/svg%3E">
+  <title>Welcome to Pacman Lab</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,10 A40,40 0 1,1 50,90 L50,50 Z' fill='%23ffeb3b'/%3E%3Ccircle cx='50' cy='30' r='4' fill='%23000'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/welcome.css">
 </head>
 <body>
@@ -17,16 +17,17 @@
       <!-- Logo and Title -->
       <div class="hero-section">
         <div class="logo-animation">
-          <svg class="pacman-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <svg class="pacman-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="pacmanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" style="stop-color:#ffeb3b;stop-opacity:1" />
                 <stop offset="100%" style="stop-color:#ffc107;stop-opacity:1" />
               </linearGradient>
             </defs>
-            <circle cx="50" cy="50" r="45" fill="url(#pacmanGradient)"/>
-            <path class="mouth" d="M50 20 L50 50 L75 65 Z" fill="#050616"/>
-            <circle cx="50" cy="35" r="6" fill="#050616"/>
+            <!-- Pacman body with mouth -->
+            <path class="pacman-body" d="M100,20 A80,80 0 1,1 100,180 L140,130 L100,100 L140,70 Z" fill="url(#pacmanGradient)"/>
+            <!-- Eye -->
+            <circle cx="100" cy="60" r="8" fill="#050616"/>
           </svg>
         </div>
         
@@ -61,7 +62,6 @@
           </svg>
         </button>
         
-
       </div>
       
       <!-- Footer -->
@@ -119,14 +119,12 @@
     
     function showDocumentation(event) {
       event.preventDefault();
-      // Store intent to show documentation modal
       sessionStorage.setItem('showModal', 'documentation');
       enterLab();
     }
     
     function showAbout(event) {
       event.preventDefault();
-      // Store intent to show about modal
       sessionStorage.setItem('showModal', 'about');
       enterLab();
     }

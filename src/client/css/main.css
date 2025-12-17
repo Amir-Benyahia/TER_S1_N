@@ -168,15 +168,32 @@ body {
   font-size: 1.3rem;
 }
 
+/* Navigation Icons */
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  stroke: currentColor;
+  transition: var(--transition);
+}
+
 .nav-link:hover {
   background: rgba(111, 125, 255, 0.1);
   color: var(--text-primary);
+}
+
+.nav-link:hover .nav-icon {
+  transform: scale(1.1);
 }
 
 .nav-link.active {
   background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%);
   color: white;
   box-shadow: var(--shadow-md);
+}
+
+.nav-link.active .nav-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 /* Main Content */

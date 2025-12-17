@@ -44,10 +44,19 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve frontend for all other routes (SPA fallback)
-app.get('*', (req, res) => {
+// ROOT - Welcome page (landing page)
+app.get('/', (req, res) => {
+  console.log('✓ Serving welcome page at /');
+  res.sendFile(path.join(__dirname, '..', 'client', 'welcome.html'));
+});
+
+// APP - Main application dashboard
+app.get('/app', (req, res) => {
+  console.log('✓ Serving main app at /app');
   res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
 });
+
+// No wildcard redirect - let 404s happen naturally for missing files
 
 // Error handling middleware (must be last)
 app.use(errorHandler);
