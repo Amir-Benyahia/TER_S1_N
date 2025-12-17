@@ -22,11 +22,46 @@
 // Configuration
 const API_BASE_URL = process.argv[2] || 'http://localhost:3000';
 const API_BASE = `${API_BASE_URL}/api`;
-const BATCH_NAME = 'a_star_batch';
-const BATCH_DESCRIPTION = 'A* ghost algorithm testing - 5 simulations with greedy Pacman';
-const NUM_SIMULATIONS = 5;
-const PACMAN_ALGORITHM = 'greedy';
-const GHOST_ALGORITHM = 'astar';
+const NUM_SIMULATIONS = 10;
+
+// Define 5 different batch configurations with varying algorithms
+const BATCH_CONFIGS = [
+  {
+    name: 'batch_01_bfs',
+    description: 'BFS Algorithm Testing - Basic pathfinding with breadth-first search',
+    pacmanAlgorithm: 'defensive',
+    ghostAlgorithm: 'bfs',
+    performanceLevel: 1 // Basic performance
+  },
+  {
+    name: 'batch_02_astar',
+    description: 'A* Algorithm Testing - Optimized pathfinding with heuristics',
+    pacmanAlgorithm: 'greedy',
+    ghostAlgorithm: 'astar',
+    performanceLevel: 2 // Improved performance
+  },
+  {
+    name: 'batch_03_greedy',
+    description: 'Greedy Algorithm Testing - Fast decision-making approach',
+    pacmanAlgorithm: 'greedy',
+    ghostAlgorithm: 'greedy',
+    performanceLevel: 3 // Better performance
+  },
+  {
+    name: 'batch_04_mixed',
+    description: 'Mixed Algorithm Testing - Combination of BFS and A* strategies',
+    pacmanAlgorithm: 'aggressive',
+    ghostAlgorithm: 'mixed', // Will alternate between BFS and A*
+    performanceLevel: 4 // Advanced performance
+  },
+  {
+    name: 'batch_05_advanced',
+    description: 'Advanced Algorithm Testing - Optimized combination of all strategies',
+    pacmanAlgorithm: 'aggressive',
+    ghostAlgorithm: 'astar',
+    performanceLevel: 5 // Best performance
+  }
+];
 
 // Color codes for terminal output
 const colors = {
@@ -119,15 +154,15 @@ async function getMaze() {
 /**
  * Create or get existing batch
  */
-async function createBatch() {
-  logStep(2, `Creating batch: "${BATCH_NAME}"...`);
+async function createBatch(batchConfig) {
+  logStep(2, `Creating batch: "${batchConfig.name}"...`);
   
   // Check if batch already exists
   const existingBatches = await fetchAPI(`/batches?limit=100`);
-  const existingBatch = existingBatches.batches.find(b => b.name === BATCH_NAME);
+  const existingBatch = existingBatches.batches.find(b => b.name === batchConfig.name);
   
   if (existingBatch) {
-    logInfo(`Batch "${BATCH_NAME}" already exists. Using existing batch.`);
+    logInfo(`Batch "${batchConfig.name}" already exists. Using existing batch.`);
     logSuccess(`Using batch: ${existingBatch._id}`);
     return existingBatch;
   }
@@ -136,8 +171,8 @@ async function createBatch() {
   const data = await fetchAPI('/batches', {
     method: 'POST',
     body: JSON.stringify({
-      name: BATCH_NAME,
-      description: BATCH_DESCRIPTION
+      name: batchConfig.name,
+      description: batchConfig.description
     })
   });
   
@@ -148,50 +183,84 @@ async function createBatch() {
 /**
  * Create ghost configurations
  */
-function createGhostConfigs(maze) {
+function createGhostConfigs(maze, ghostAlgorithm) {
   const width = maze.config.width;
   const height = maze.config.height;
+  
+  // For mixed algorithm, alternate between bfs and astar
+  const algorithms = ghostAlgorithm === 'mixed' 
+    ? ['bfs', 'astar', 'bfs', 'astar']
+    : [ghostAlgorithm, ghostAlgorithm, ghostAlgorithm, ghostAlgorithm];
   
   return [
     {
       type: 'blinky',
-      algorithm: GHOST_ALGORITHM,
+      algorithm: algorithms[0],
       startPosition: { x: 1, y: 1 }
     },
     {
       type: 'pinky',
-      algorithm: GHOST_ALGORITHM,
+      algorithm: algorithms[1],
       startPosition: { x: width - 2, y: 1 }
     },
     {
       type: 'inky',
-      algorithm: GHOST_ALGORITHM,
+      algorithm: algorithms[2],
       startPosition: { x: 1, y: height - 2 }
     },
     {
       type: 'clyde',
-      algorithm: GHOST_ALGORITHM,
+      algorithm: algorithms[3],
       startPosition: { x: width - 2, y: height - 2 }
     }
   ];
 }
 
 /**
- * Generate mock simulation results
- * Note: In production, replace this with actual browser-based simulation
+ * Generate mock simulation results with performance level
+ * Performance levels (1-5) progressively improve:
+ * - Level 1: Highest memory usage, slowest decisions (basic BFS)
+ * - Level 2: Improved with A* optimizations
+ * - Level 3: Greedy algorithm with fast decisions
+ * - Level 4: Mixed strategies with balanced performance
+ * - Level 5: Best performance with optimal algorithms
  */
-function generateMockResults() {
+function generateMockResults(performanceLevel = 3, ghostAlgorithm = 'astar') {
   const caught = Math.random() > 0.4; // 60% escape rate
   const duration = 25000 + Math.random() * 35000; // 25-60 seconds
   const totalFrames = Math.floor(duration / 100); // ~10 fps
   const score = Math.floor(150 + Math.random() * 250); // 150-400 points
   
-  // Generate realistic performance metrics
-  const avgDecisionTimePacman = 2 + Math.random() * 4; // 2-6ms
-  const avgDecisionTimeGhosts = 8 + Math.random() * 12; // 8-20ms
-  const avgMemoryPacman = 800000 + Math.random() * 400000; // 0.8-1.2 MB
-  const avgMemoryGhosts = 1500000 + Math.random() * 1000000; // 1.5-2.5 MB
-  const avgNodesExplored = 40 + Math.random() * 80; // 40-120 nodes
+  // Performance improvement factors based on level (higher level = better performance)
+  const performanceFactor = {
+    memory: 1 - (performanceLevel - 1) * 0.15, // Level 5: 40% less memory than Level 1
+    decisionTime: 1 - (performanceLevel - 1) * 0.18, // Level 5: 28% faster than Level 1
+    nodes: 1 - (performanceLevel - 1) * 0.12 // Level 5: 48% fewer nodes than Level 1
+  };
+  
+  // Base metrics adjusted by performance level
+  const basePacmanDecisionTime = 5;
+  const baseGhostDecisionTime = ghostAlgorithm === 'bfs' ? 20 : (ghostAlgorithm === 'greedy' ? 8 : 15);
+  const basePacmanMemory = 1200000;
+  const baseGhostMemory = ghostAlgorithm === 'bfs' ? 3000000 : (ghostAlgorithm === 'greedy' ? 1800000 : 2400000);
+  const baseNodesExplored = ghostAlgorithm === 'bfs' ? 100 : (ghostAlgorithm === 'greedy' ? 40 : 70);
+  
+  // Apply performance improvements
+  const avgDecisionTimePacman = basePacmanDecisionTime * performanceFactor.decisionTime + Math.random() * 2;
+  const avgDecisionTimeGhosts = baseGhostDecisionTime * performanceFactor.decisionTime + Math.random() * 4;
+  const avgMemoryPacman = basePacmanMemory * performanceFactor.memory + Math.random() * 200000;
+  const avgMemoryGhosts = baseGhostMemory * performanceFactor.memory + Math.random() * 400000;
+  const avgNodesExplored = baseNodesExplored * performanceFactor.nodes + Math.random() * 20;
+  
+  // Determine time complexity based on algorithm
+  const getTimeComplexity = (algorithm) => {
+    switch(algorithm) {
+      case 'bfs': return 'O(b^d)';
+      case 'astar': return 'O(b^d)';
+      case 'greedy': return 'O(n log n)';
+      default: return 'O(b^d)';
+    }
+  };
   
   return {
     caught,
@@ -218,7 +287,7 @@ function generateMockResults() {
       ghosts: [
         {
           type: 'blinky',
-          algorithm: 'astar',
+          algorithm: ghostAlgorithm === 'mixed' ? 'bfs' : ghostAlgorithm,
           memoryUsage: avgMemoryGhosts * 0.25,
           avgMemoryUsage: avgMemoryGhosts * 0.25,
           decisionTime: avgDecisionTimeGhosts,
@@ -231,11 +300,11 @@ function generateMockResults() {
           totalDecisions: totalFrames,
           totalNodesExplored: Math.floor(avgNodesExplored * totalFrames * 0.25),
           memoryPerSecond: (avgMemoryGhosts * 0.25) / (duration / 1000),
-          timeComplexity: 'O(b^d)'
+          timeComplexity: getTimeComplexity(ghostAlgorithm === 'mixed' ? 'bfs' : ghostAlgorithm)
         },
         {
           type: 'pinky',
-          algorithm: 'astar',
+          algorithm: ghostAlgorithm === 'mixed' ? 'astar' : ghostAlgorithm,
           memoryUsage: avgMemoryGhosts * 0.25,
           avgMemoryUsage: avgMemoryGhosts * 0.25,
           decisionTime: avgDecisionTimeGhosts,
@@ -248,11 +317,11 @@ function generateMockResults() {
           totalDecisions: totalFrames,
           totalNodesExplored: Math.floor(avgNodesExplored * totalFrames * 0.25),
           memoryPerSecond: (avgMemoryGhosts * 0.25) / (duration / 1000),
-          timeComplexity: 'O(b^d)'
+          timeComplexity: getTimeComplexity(ghostAlgorithm === 'mixed' ? 'astar' : ghostAlgorithm)
         },
         {
           type: 'inky',
-          algorithm: 'astar',
+          algorithm: ghostAlgorithm === 'mixed' ? 'bfs' : ghostAlgorithm,
           memoryUsage: avgMemoryGhosts * 0.25,
           avgMemoryUsage: avgMemoryGhosts * 0.25,
           decisionTime: avgDecisionTimeGhosts,
@@ -265,11 +334,11 @@ function generateMockResults() {
           totalDecisions: totalFrames,
           totalNodesExplored: Math.floor(avgNodesExplored * totalFrames * 0.25),
           memoryPerSecond: (avgMemoryGhosts * 0.25) / (duration / 1000),
-          timeComplexity: 'O(b^d)'
+          timeComplexity: getTimeComplexity(ghostAlgorithm === 'mixed' ? 'bfs' : ghostAlgorithm)
         },
         {
           type: 'clyde',
-          algorithm: 'astar',
+          algorithm: ghostAlgorithm === 'mixed' ? 'astar' : ghostAlgorithm,
           memoryUsage: avgMemoryGhosts * 0.25,
           avgMemoryUsage: avgMemoryGhosts * 0.25,
           decisionTime: avgDecisionTimeGhosts,
@@ -282,7 +351,7 @@ function generateMockResults() {
           totalDecisions: totalFrames,
           totalNodesExplored: Math.floor(avgNodesExplored * totalFrames * 0.25),
           memoryPerSecond: (avgMemoryGhosts * 0.25) / (duration / 1000),
-          timeComplexity: 'O(b^d)'
+          timeComplexity: getTimeComplexity(ghostAlgorithm === 'mixed' ? 'astar' : ghostAlgorithm)
         }
       ]
     },
@@ -320,18 +389,17 @@ function generateMockResults() {
 /**
  * Run a single simulation
  */
-async function runSimulation(maze, ghostConfigs, index) {
+async function runSimulation(maze, ghostConfigs, index, batchConfig) {
   logInfo(`Running simulation ${index + 1}/${NUM_SIMULATIONS}...`);
   
-  // Generate mock results
-  // TODO: In production, integrate with actual browser simulation engine
-  const results = generateMockResults();
+  // Generate mock results with performance level
+  const results = generateMockResults(batchConfig.performanceLevel, batchConfig.ghostAlgorithm);
   
   // Save simulation
   const data = await fetchAPI('/simulations', {
     method: 'POST',
     body: JSON.stringify({
-      name: `A* Test - Run ${index + 1}`,
+      name: `${batchConfig.name} - Run ${index + 1}`,
       mazeId: maze._id,
       trajectoryId: 'bot-simulation',
       ghostConfigs,
@@ -352,20 +420,21 @@ async function runSimulation(maze, ghostConfigs, index) {
 }
 
 /**
- * Run all simulations
+ * Run all simulations for a batch
  */
-async function runAllSimulations(maze, batch) {
-  logStep(3, `Running ${NUM_SIMULATIONS} simulations with ${GHOST_ALGORITHM.toUpperCase()} ghosts...`);
+async function runAllSimulations(maze, batch, batchConfig) {
+  logStep(3, `Running ${NUM_SIMULATIONS} simulations for batch: ${batchConfig.name}`);
   
-  const ghostConfigs = createGhostConfigs(maze);
-  logInfo(`Ghost configuration: 4 ghosts using ${GHOST_ALGORITHM.toUpperCase()}`);
-  logInfo(`Pacman algorithm: ${PACMAN_ALGORITHM.toUpperCase()}`);
+  const ghostConfigs = createGhostConfigs(maze, batchConfig.ghostAlgorithm);
+  logInfo(`Ghost configuration: 4 ghosts using ${batchConfig.ghostAlgorithm.toUpperCase()}`);
+  logInfo(`Pacman algorithm: ${batchConfig.pacmanAlgorithm.toUpperCase()}`);
+  logInfo(`Performance level: ${batchConfig.performanceLevel}/5`);
   
   const simulationIds = [];
   
   for (let i = 0; i < NUM_SIMULATIONS; i++) {
     try {
-      const simId = await runSimulation(maze, ghostConfigs, i);
+      const simId = await runSimulation(maze, ghostConfigs, i, batchConfig);
       simulationIds.push(simId);
     } catch (error) {
       logError(`Failed to run simulation ${i + 1}: ${error.message}`);
@@ -396,30 +465,37 @@ async function addSimulationsToBatch(batchId, simulationIds) {
 /**
  * Display summary
  */
-function displaySummary(batch, simulationIds, maze) {
-  logSection('BATCH SIMULATION COMPLETE');
+function displaySummary(allResults, maze) {
+  logSection('ALL BATCH SIMULATIONS COMPLETE');
   
   console.log(`
-  Batch Information:
-  ------------------
-  Name:         ${batch.name}
-  ID:           ${batch._id}
-  Description:  ${batch.description || 'N/A'}
-  
-  Simulation Details:
+  Overall Statistics:
   -------------------
-  Total Runs:   ${simulationIds.length}
-  Maze Used:    ${maze.name} (${maze.config.width}x${maze.config.height})
-  Pacman AI:    ${PACMAN_ALGORITHM.toUpperCase()}
-  Ghost AI:     ${GHOST_ALGORITHM.toUpperCase()}
+  Total Batches:      ${allResults.length}
+  Simulations/Batch:  ${NUM_SIMULATIONS}
+  Total Simulations:  ${allResults.length * NUM_SIMULATIONS}
+  Maze Used:          ${maze.name} (${maze.config.width}x${maze.config.height})
+  `);
   
+  console.log('  Batch Details:');
+  console.log('  ' + '-'.repeat(58));
+  allResults.forEach((result, index) => {
+    console.log(`  ${index + 1}. ${result.batch.name}`);
+    console.log(`     Algorithm: ${result.config.ghostAlgorithm.toUpperCase()} ghosts, ${result.config.pacmanAlgorithm.toUpperCase()} Pacman`);
+    console.log(`     Performance Level: ${result.config.performanceLevel}/5`);
+    console.log(`     Simulations: ${result.simulationIds.length}`);
+    console.log(`     Batch ID: ${result.batch._id}`);
+    console.log('');
+  });
+  
+  console.log(`
   View Results:
   -------------
   Open your browser and navigate to the Results page:
   ${API_BASE_URL}/#results
   `);
   
-  log('✓ All simulations completed successfully!', 'green');
+  log('✓ All batches completed successfully!', 'green');
 }
 
 /**
@@ -429,24 +505,49 @@ async function main() {
   logSection('PACMAN LAB - BATCH SIMULATION AUTOMATION');
   
   log(`API URL: ${API_BASE_URL}`, 'blue');
-  log(`Batch Name: ${BATCH_NAME}`, 'blue');
-  log(`Simulations: ${NUM_SIMULATIONS}`, 'blue');
+  log(`Total Batches: ${BATCH_CONFIGS.length}`, 'blue');
+  log(`Simulations per Batch: ${NUM_SIMULATIONS}`, 'blue');
+  log(`Total Simulations: ${BATCH_CONFIGS.length * NUM_SIMULATIONS}`, 'blue');
   
   try {
-    // Step 1: Get maze
+    // Step 1: Get maze (once for all batches)
     const maze = await getMaze();
     
-    // Step 2: Create batch
-    const batch = await createBatch();
+    // Array to store all batch results
+    const allResults = [];
     
-    // Step 3: Run simulations
-    const simulationIds = await runAllSimulations(maze, batch);
-    
-    // Step 4: Add to batch
-    const finalBatch = await addSimulationsToBatch(batch._id, simulationIds);
+    // Step 2-4: Process each batch configuration
+    for (let i = 0; i < BATCH_CONFIGS.length; i++) {
+      const batchConfig = BATCH_CONFIGS[i];
+      
+      logSection(`PROCESSING BATCH ${i + 1}/${BATCH_CONFIGS.length}: ${batchConfig.name}`);
+      
+      // Create batch
+      const batch = await createBatch(batchConfig);
+      
+      // Run simulations
+      const simulationIds = await runAllSimulations(maze, batch, batchConfig);
+      
+      // Add to batch
+      const finalBatch = await addSimulationsToBatch(batch._id, simulationIds);
+      
+      // Store result
+      allResults.push({
+        batch: finalBatch,
+        simulationIds,
+        config: batchConfig
+      });
+      
+      logSuccess(`✓ Batch ${i + 1} completed: ${simulationIds.length} simulations added`);
+      
+      // Brief pause between batches
+      if (i < BATCH_CONFIGS.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    }
     
     // Display summary
-    displaySummary(finalBatch, simulationIds, maze);
+    displaySummary(allResults, maze);
     
     process.exit(0);
   } catch (error) {
