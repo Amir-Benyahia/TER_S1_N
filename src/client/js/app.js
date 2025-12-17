@@ -2398,7 +2398,7 @@ class PacmanLabApp {
 
         <!-- Simulations Section -->
         <div class="api-section">
-          <h3 style="color: #6374ff; margin-top: 32px;">🎮 Simulations</h3>
+          <h3 style="color: #6374ff; margin-top: 32px;">Simulations</h3>
           
           <div class="api-endpoint">
             <div class="endpoint-header">
@@ -2842,25 +2842,19 @@ class ModalManager {
             <li><strong>Educational Tool:</strong> Help students understand pathfinding algorithms through visual, interactive demonstrations</li>
             <li><strong>Research Platform:</strong> Enable researchers to conduct reproducible experiments on AI behavior and performance</li>
             <li><strong>Algorithm Comparison:</strong> Provide objective metrics for comparing different algorithmic approaches</li>
-            <li><strong>Open Science:</strong> Promote transparent, data-driven analysis of AI systems</li>
           </ul>
           
           <h3>Team</h3>
           <div class="contact-info">
             <div class="contact-card">
               <h4>Oussama BELHOUT</h4>
-              <p style="color: var(--text-secondary);">Lead Developer & AI Researcher</p>
-              <p style="font-size: 0.9rem; color: var(--text-dim);">Specializes in pathfinding algorithms and game AI</p>
+
             </div>
             <div class="contact-card">
               <h4>Amir BENYAHIA</h4>
-              <p style="color: var(--text-secondary);">Backend Architect & Database Engineer</p>
-              <p style="font-size: 0.9rem; color: var(--text-dim);">Expert in performance optimization and data analysis</p>
             </div>
             <div class="contact-card">
-              <h4>Nafissa TAMANI</h4>
-              <p style="color: var(--text-secondary);">UI/UX Designer & Frontend Developer</p>
-              <p style="font-size: 0.9rem; color: var(--text-dim);">Creates intuitive interfaces for complex systems</p>
+              <h4>Ahmed TAMANI</h4>
             </div>
           </div>
           
@@ -2903,20 +2897,16 @@ class ModalManager {
           <div class="contact-info">
             <div class="contact-card">
               <h4>Email</h4>
-              <p><a href="mailto:oussama.belhout@example.com">oussama.belhout@univ-angers.fr</a></p>
-              <p><a href="mailto:amir.benyahia@example.com">amir.benyahia@univ-angers.fr</a></p>
-              <p><a href="mailto:nafissa.tamani@example.com">nafissa.tamani@univ-angers.fr</a></p>
+              <p><a href="mailto:oussama.belhout@example.com">oussama.belhout@etu.unice.fr</a></p>
+              <p><a href="mailto:amir.benyahia@example.com">amir.benyahia@etu.unice.fr</a></p>
+              <p><a href="mailto:nafissa.tamani@example.com">nafissa.tamani@etu.unice.fr</a></p>
             </div>
             <div class="contact-card">
               <h4>GitHub</h4>
               <p><a href="https://github.com/Amir-Benyahia/TER_S1_N" target="_blank">github.com/Amir-Benyahia/TER_S1_N</a></p>
               <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 8px;">View source code, report issues, contribute</p>
             </div>
-            <div class="contact-card">
-              <h4>Platform</h4>
-              <p><a href="${baseUrl}" target="_blank">${baseUrl}</a></p>
-              <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 8px;">Live demo and testing environment</p>
-            </div>
+
           </div>
           
           <h3>Collaboration Opportunities</h3>
@@ -2924,7 +2914,6 @@ class ModalManager {
           <ul>
             <li><strong>Research Partnerships:</strong> Joint studies on AI algorithms and game theory</li>
             <li><strong>Educational Use:</strong> Integration into university courses and curriculum</li>
-            <li><strong>Open Source Contributions:</strong> Code improvements, new features, bug fixes</li>
             <li><strong>Algorithm Development:</strong> Implementing new pathfinding or decision-making algorithms</li>
             <li><strong>Data Science:</strong> Statistical analysis and visualization of simulation results</li>
           </ul>
@@ -2951,7 +2940,6 @@ class ModalManager {
           <ul>
             <li>University of Angers - Department of Computer Science</li>
             <li>Our academic supervisors and mentors</li>
-            <li>The open-source community for invaluable tools and libraries</li>
             <li>Beta testers and early adopters who provided feedback</li>
           </ul>
           

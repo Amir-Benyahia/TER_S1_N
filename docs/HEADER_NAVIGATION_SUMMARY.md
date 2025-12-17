@@ -42,7 +42,7 @@ Provides project information:
 - **Team Members:**
   - Oussama BELHOUT - Lead Developer & AI Researcher
   - Amir BENYAHIA - Backend Architect & Database Engineer
-  - Nafissa TAMANI - UI/UX Designer & Frontend Developer
+  - Ahmed TAMANI - UI/UX Designer & Frontend Developer
 - **Technology Stack:** Frontend, backend, algorithms, deployment
 - **License & Usage:** Academic and research permissions
 - **Future Roadmap:** Planned features and enhancements
