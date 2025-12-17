@@ -46,12 +46,13 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
+        cache-dependency-path: 'src/package-lock.json'
     
     - name: Install Node dependencies
-      run: npm ci
+      run: cd src && npm ci
     
     - name: Run JavaScript tests
-      run: npm test -- --coverage
+      run: cd src && npm test -- --coverage
     
     - name: Upload JavaScript coverage
       uses: codecov/codecov-action@v3
@@ -71,12 +72,13 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
+        cache-dependency-path: 'src/package-lock.json'
     
     - name: Install dependencies
-      run: npm ci
+      run: cd src && npm ci
     
     - name: Run ESLint
-      run: npm run lint || true
+      run: cd src && npm run lint || true
     
     - name: Set up Python
       uses: actions/setup-python@v4
