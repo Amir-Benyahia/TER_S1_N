@@ -779,3 +779,86 @@ select.form-control {
   }
 }
 
+/* Filter and Sort Controls */
+.list-controls {
+  margin-bottom: 20px;
+}
+
+.filter-sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(22, 27, 77, 0.6);
+  border: 1px solid rgba(111, 125, 255, 0.2);
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.control-select,
+.control-input {
+  padding: 8px 12px;
+  background: rgba(10, 14, 48, 0.8);
+  border: 1px solid rgba(111, 125, 255, 0.3);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.control-input {
+  min-width: 100px;
+}
+
+.control-select:hover,
+.control-input:hover {
+  border-color: rgba(111, 125, 255, 0.5);
+  background: rgba(10, 14, 48, 0.95);
+}
+
+.control-select:focus,
+.control-input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(111, 125, 255, 0.1);
+}
+
+.control-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .filter-sort-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .control-select,
+  .control-input {
+    width: 100%;
+  }
+}

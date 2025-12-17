@@ -32,7 +32,7 @@ class PerformanceMetrics {
     return `
       <div class="performance-metrics">
         <div class="metrics-section">
-          <h3>📊 Métriques Principales</h3>
+          <h3>Performance Metrics</h3>
           <div class="metrics-grid">
             <div class="metric-card">
               <span class="metric-label">Durée de simulation</span>
@@ -76,7 +76,7 @@ class PerformanceMetrics {
                 <span class="metric-value">${this.formatBytes(perf.pacman.memoryUsage)}</span>
               </div>
               <div class="metric-item">
-                <span class="metric-icon">⏱️</span>
+                <span class="metric-icon">TIME</span>
                 <span class="metric-label">Complexité</span>
                 <span class="metric-value">${perf.pacman.timeComplexity}</span>
               </div>

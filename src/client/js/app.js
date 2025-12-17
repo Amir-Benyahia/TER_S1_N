@@ -12,6 +12,14 @@ class PacmanLabApp {
     this.lastRecordedTrajectory = null; // Store last played trajectory
     this.simulationViewer = null;
     
+    // Filtering and sorting state
+    this.simulationsData = [];
+    this.batchesData = [];
+    this.simulationFilters = { outcome: 'all', minScore: 0 };
+    this.simulationSort = { field: 'createdAt', order: 'desc' };
+    this.batchFilters = { minSimulations: 0 };
+    this.batchSort = { field: 'createdAt', order: 'desc' };
+    
     this.init();
   }
 
@@ -383,7 +391,7 @@ class PacmanLabApp {
           </div>
         ` : `
           <div class="empty-state">
-            <div class="empty-state-icon">📦</div>
+            <div class="empty-state-icon"></div>
             <div class="empty-state-text">No mazes available</div>
             <button class="btn btn-primary" onclick="app.loadPage('generator')">Generate a Maze First</button>
           </div>
@@ -634,7 +642,7 @@ class PacmanLabApp {
               Trajectory Simulation
             </button>
             <button class="simulation-tab-btn" data-tab="bot">
-              <span class="tab-icon">◉</span>
+              <span class="tab-icon"></span>
               Bot Simulation
             </button>
           </div>
@@ -1087,7 +1095,7 @@ class PacmanLabApp {
             Simulations
           </button>
           <button class="results-tab-btn" data-tab="batches">
-            <span class="tab-icon">≡</span>
+            <span class="tab-icon"></span>
             Batches
           </button>
         </div>
@@ -1128,6 +1136,8 @@ class PacmanLabApp {
 
       const batches = batchesResponse.batches || [];
       const simulations = simulationsResponse.simulations || [];
+      this.simulationsData = simulations;
+      this.batchesData = batches;
 
       Formatters.showLoading(false);
 
@@ -1139,7 +1149,8 @@ class PacmanLabApp {
           </div>
         `;
       } else {
-        this.renderSimulationsList(simulations);
+        this.renderSimulationControls();
+        this.renderSimulationsList(this.filterAndSortSimulations(simulations));
       }
 
       // Render batches
@@ -1150,7 +1161,8 @@ class PacmanLabApp {
           </div>
         `;
       } else {
-        this.renderBatchesTable(batches);
+        this.renderBatchControls();
+        this.renderBatchesTable(this.filterAndSortBatches(batches));
       }
 
       // Setup tab navigation
@@ -1183,6 +1195,109 @@ class PacmanLabApp {
         document.getElementById(`tab-${tabName}`).classList.add('active');
       });
     });
+  }
+
+  renderBatchControls() {
+    const controlsContainer = document.createElement('div');
+    controlsContainer.className = 'list-controls';
+    controlsContainer.innerHTML = `
+      <div class="filter-sort-bar">
+        <div class="filter-group">
+          <label>Min Simulations:</label>
+          <input type="number" id="batch-filter-sims" class="control-input" placeholder="0" min="0" value="0">
+        </div>
+        <div class="filter-group">
+          <label>Sort By:</label>
+          <select id="batch-sort-field" class="control-select">
+            <option value="createdAt">Date</option>
+            <option value="name">Name</option>
+            <option value="simCount">Sim Count</option>
+            <option value="escapeRate">Escape Rate</option>
+            <option value="meanScore">Mean Score</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Order:</label>
+          <select id="batch-sort-order" class="control-select">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </div>
+        <button id="batch-reset-filters" class="btn btn-secondary btn-sm">Reset</button>
+      </div>
+    `;
+    
+    const batchesList = document.getElementById('batches-list');
+    batchesList.parentElement.insertBefore(controlsContainer, batchesList);
+    
+    // Event listeners
+    document.getElementById('batch-filter-sims').addEventListener('input', (e) => {
+      this.batchFilters.minSimulations = parseInt(e.target.value) || 0;
+      this.renderBatchesTable(this.filterAndSortBatches(this.batchesData));
+    });
+    
+    document.getElementById('batch-sort-field').addEventListener('change', (e) => {
+      this.batchSort.field = e.target.value;
+      this.renderBatchesTable(this.filterAndSortBatches(this.batchesData));
+    });
+    
+    document.getElementById('batch-sort-order').addEventListener('change', (e) => {
+      this.batchSort.order = e.target.value;
+      this.renderBatchesTable(this.filterAndSortBatches(this.batchesData));
+    });
+    
+    document.getElementById('batch-reset-filters').addEventListener('click', () => {
+      this.batchFilters = { minSimulations: 0 };
+      this.batchSort = { field: 'createdAt', order: 'desc' };
+      document.getElementById('batch-filter-sims').value = '0';
+      document.getElementById('batch-sort-field').value = 'createdAt';
+      document.getElementById('batch-sort-order').value = 'desc';
+      this.renderBatchesTable(this.filterAndSortBatches(this.batchesData));
+    });
+  }
+
+  filterAndSortBatches(batches) {
+    let filtered = [...batches];
+    
+    // Apply filters
+    if (this.batchFilters.minSimulations > 0) {
+      filtered = filtered.filter(batch => 
+        (batch.stats?.totalSimulations || 0) >= this.batchFilters.minSimulations
+      );
+    }
+    
+    // Apply sorting
+    filtered.sort((a, b) => {
+      let aVal, bVal;
+      
+      switch(this.batchSort.field) {
+        case 'name':
+          aVal = a.name || '';
+          bVal = b.name || '';
+          return this.batchSort.order === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+        case 'simCount':
+          aVal = a.stats?.totalSimulations || 0;
+          bVal = b.stats?.totalSimulations || 0;
+          break;
+        case 'escapeRate':
+          aVal = a.stats?.escapeRate || 0;
+          bVal = b.stats?.escapeRate || 0;
+          break;
+        case 'meanScore':
+          aVal = a.stats?.score?.mean || 0;
+          bVal = b.stats?.score?.mean || 0;
+          break;
+        case 'createdAt':
+        default:
+          aVal = new Date(a.createdAt || 0).getTime();
+          bVal = new Date(b.createdAt || 0).getTime();
+          break;
+      }
+      
+      return this.batchSort.order === 'asc' ? aVal - bVal : bVal - aVal;
+    });
+    
+    return filtered;
   }
 
   renderBatchesTable(batches) {
@@ -1293,24 +1408,29 @@ class PacmanLabApp {
         <!-- Batch Statistics -->
         <div class="card" style="margin-top: 24px;">
           <div class="card-header">
-            <h3>📊 Batch Statistics - Overview</h3>
+            <h3>Batch Statistics Overview</h3>
           </div>
-          <div class="batch-stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Total Simulations</div>
-              <div class="stat-value">${stats.totalSimulations}</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Escaped</div>
-              <div class="stat-value" style="color: #4caf50;">${stats.escapedCount}</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Caught</div>
-              <div class="stat-value" style="color: #ff5252;">${stats.caughtCount}</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Escape Rate</div>
-              <div class="stat-value">${escapeRate}%</div>
+          <div class="professional-stats-grid">
+            <div class="stats-primary-row">
+              <div class="stat-box stat-primary">
+                <div class="stat-label">Total Simulations</div>
+                <div class="stat-value">${stats.totalSimulations || 0}</div>
+              </div>
+              <div class="stat-box stat-success">
+                <div class="stat-label">Escaped</div>
+                <div class="stat-value">${stats.escapedCount || 0}</div>
+                <div class="stat-percent">${stats.totalSimulations > 0 ? ((stats.escapedCount / stats.totalSimulations) * 100).toFixed(1) : '0'}%</div>
+              </div>
+              <div class="stat-box stat-danger">
+                <div class="stat-label">Caught</div>
+                <div class="stat-value">${stats.caughtCount || 0}</div>
+                <div class="stat-percent">${stats.totalSimulations > 0 ? ((stats.caughtCount / stats.totalSimulations) * 100).toFixed(1) : '0'}%</div>
+              </div>
+              <div class="stat-box stat-accent">
+                <div class="stat-label">Escape Rate</div>
+                <div class="stat-value">${escapeRate}%</div>
+                <div class="stat-bar" style="width: ${stats.totalSimulations > 0 ? escapeRate : 0}%;"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -1318,28 +1438,28 @@ class PacmanLabApp {
         <!-- Performance Metrics: Score -->
         <div class="card" style="margin-top: 24px;">
           <div class="card-header">
-            <h3>🎯 Score Statistics</h3>
+            <h3>Score Distribution</h3>
           </div>
-          <div class="batch-stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Mean Score</div>
-              <div class="stat-value">${meanScore}</div>
+          <div class="professional-stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">Mean</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.score?.mean ? stats.score.mean.toFixed(0) : '0'}</div>
             </div>
-            <div class="stat-card">
-              <div class="stat-label">Median Score</div>
-              <div class="stat-value">${medianScore}</div>
+            <div class="stat-box">
+              <div class="stat-label">Median</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.score?.median ? stats.score.median.toFixed(0) : '0'}</div>
             </div>
-            <div class="stat-card">
-              <div class="stat-label">Std Deviation</div>
-              <div class="stat-value">${stdDevScore}</div>
+            <div class="stat-box">
+              <div class="stat-label">Std Dev</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.score?.stdDev ? stats.score.stdDev.toFixed(1) : '0'}</div>
             </div>
-            <div class="stat-card">
-              <div class="stat-label">Min Score</div>
-              <div class="stat-value">${stats.score?.min?.toFixed(0) || 'N/A'}</div>
+            <div class="stat-box">
+              <div class="stat-label">Min</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.score?.min ? stats.score.min.toFixed(0) : '0'}</div>
             </div>
-            <div class="stat-card">
-              <div class="stat-label">Max Score</div>
-              <div class="stat-value">${stats.score?.max?.toFixed(0) || 'N/A'}</div>
+            <div class="stat-box">
+              <div class="stat-label">Max</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.score?.max ? stats.score.max.toFixed(0) : '0'}</div>
             </div>
           </div>
         </div>
@@ -1347,49 +1467,49 @@ class PacmanLabApp {
         <!-- Performance Metrics: Duration -->
         <div class="card" style="margin-top: 24px;">
           <div class="card-header">
-            <h3>⏱️ Duration Statistics</h3>
+            <h3>Duration Analysis</h3>
           </div>
-          <div class="batch-stats-grid">
-            <div class="stat-card">
+          <div class="professional-stats-grid">
+            <div class="stat-box">
               <div class="stat-label">Mean Duration</div>
-              <div class="stat-value">${durationMean}</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.duration?.mean ? Formatters.formatDuration(stats.duration.mean) : '0s'}</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-box">
               <div class="stat-label">Median Duration</div>
-              <div class="stat-value">${durationMedian}</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.duration?.median ? Formatters.formatDuration(stats.duration.median) : '0s'}</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-box">
               <div class="stat-label">Min Duration</div>
-              <div class="stat-value">${stats.duration?.min ? Formatters.formatDuration(stats.duration.min) : 'N/A'}</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.duration?.min ? Formatters.formatDuration(stats.duration.min) : '0s'}</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-box">
               <div class="stat-label">Max Duration</div>
-              <div class="stat-value">${stats.duration?.max ? Formatters.formatDuration(stats.duration.max) : 'N/A'}</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.duration?.max ? Formatters.formatDuration(stats.duration.max) : '0s'}</div>
             </div>
           </div>
         </div>
 
-        <!-- Performance Metrics: Memory & Complexity -->
+        <!-- Performance Metrics: Memory & Performance -->
         <div class="card" style="margin-top: 24px;">
           <div class="card-header">
-            <h3>💾 Memory & Complexity Statistics</h3>
+            <h3>Performance Metrics</h3>
           </div>
-          <div class="batch-stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Pacman Mean Memory</div>
-              <div class="stat-value">${pacmanMemoryMean}</div>
+          <div class="professional-stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">Pacman Avg Memory</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.performance?.pacman?.avgMemoryUsage ? Formatters.formatBytes(stats.performance.pacman.avgMemoryUsage) : '0 B'}</div>
             </div>
-            <div class="stat-card">
-              <div class="stat-label">Pacman Avg Decision Time</div>
-              <div class="stat-value">${stats.performance?.pacman?.avgDecisionTime?.mean?.toFixed(2) || 'N/A'} ms</div>
+            <div class="stat-box">
+              <div class="stat-label">Pacman Decision Time</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.performance?.pacman?.avgDecisionTime ? stats.performance.pacman.avgDecisionTime.toFixed(2) + ' ms' : '0 ms'}</div>
             </div>
-            <div class="stat-card">
-              <div class="stat-label">Mean Frames</div>
-              <div class="stat-value">${stats.meanFrames || 'N/A'}</div>
+            <div class="stat-box">
+              <div class="stat-label">Ghost Avg Memory</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.performance?.ghosts?.avgMemoryUsage ? Formatters.formatBytes(stats.performance.ghosts.avgMemoryUsage) : '0 B'}</div>
             </div>
-            <div class="stat-card">
-              <div class="stat-label">Frames Std Dev</div>
-              <div class="stat-value">${stats.frames?.stdDev?.toFixed(0) || 'N/A'}</div>
+            <div class="stat-box">
+              <div class="stat-label">Ghost Decision Time</div>
+              <div class="stat-value">${stats.totalSimulations > 0 && stats.performance?.ghosts?.avgDecisionTime ? stats.performance.ghosts.avgDecisionTime.toFixed(2) + ' ms' : '0 ms'}</div>
             </div>
           </div>
         </div>
@@ -1560,6 +1680,123 @@ class PacmanLabApp {
     }
   }
   
+  renderSimulationControls() {
+    const controlsContainer = document.createElement('div');
+    controlsContainer.className = 'list-controls';
+    controlsContainer.innerHTML = `
+      <div class="filter-sort-bar">
+        <div class="filter-group">
+          <label>Outcome:</label>
+          <select id="sim-filter-outcome" class="control-select">
+            <option value="all">All</option>
+            <option value="escaped">Escaped</option>
+            <option value="caught">Caught</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Min Score:</label>
+          <input type="number" id="sim-filter-score" class="control-input" placeholder="0" min="0" value="0">
+        </div>
+        <div class="filter-group">
+          <label>Sort By:</label>
+          <select id="sim-sort-field" class="control-select">
+            <option value="createdAt">Date</option>
+            <option value="score">Score</option>
+            <option value="duration">Duration</option>
+            <option value="name">Name</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Order:</label>
+          <select id="sim-sort-order" class="control-select">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </div>
+        <button id="sim-reset-filters" class="btn btn-secondary btn-sm">Reset</button>
+      </div>
+    `;
+    
+    const simulationsList = document.getElementById('simulations-list');
+    simulationsList.parentElement.insertBefore(controlsContainer, simulationsList);
+    
+    // Event listeners
+    document.getElementById('sim-filter-outcome').addEventListener('change', (e) => {
+      this.simulationFilters.outcome = e.target.value;
+      this.renderSimulationsList(this.filterAndSortSimulations(this.simulationsData));
+    });
+    
+    document.getElementById('sim-filter-score').addEventListener('input', (e) => {
+      this.simulationFilters.minScore = parseInt(e.target.value) || 0;
+      this.renderSimulationsList(this.filterAndSortSimulations(this.simulationsData));
+    });
+    
+    document.getElementById('sim-sort-field').addEventListener('change', (e) => {
+      this.simulationSort.field = e.target.value;
+      this.renderSimulationsList(this.filterAndSortSimulations(this.simulationsData));
+    });
+    
+    document.getElementById('sim-sort-order').addEventListener('change', (e) => {
+      this.simulationSort.order = e.target.value;
+      this.renderSimulationsList(this.filterAndSortSimulations(this.simulationsData));
+    });
+    
+    document.getElementById('sim-reset-filters').addEventListener('click', () => {
+      this.simulationFilters = { outcome: 'all', minScore: 0 };
+      this.simulationSort = { field: 'createdAt', order: 'desc' };
+      document.getElementById('sim-filter-outcome').value = 'all';
+      document.getElementById('sim-filter-score').value = '0';
+      document.getElementById('sim-sort-field').value = 'createdAt';
+      document.getElementById('sim-sort-order').value = 'desc';
+      this.renderSimulationsList(this.filterAndSortSimulations(this.simulationsData));
+    });
+  }
+
+  filterAndSortSimulations(simulations) {
+    let filtered = [...simulations];
+    
+    // Apply filters
+    if (this.simulationFilters.outcome !== 'all') {
+      filtered = filtered.filter(sim => {
+        const caught = sim.results?.caught;
+        return this.simulationFilters.outcome === 'caught' ? caught : !caught;
+      });
+    }
+    
+    if (this.simulationFilters.minScore > 0) {
+      filtered = filtered.filter(sim => (sim.results?.score || 0) >= this.simulationFilters.minScore);
+    }
+    
+    // Apply sorting
+    filtered.sort((a, b) => {
+      let aVal, bVal;
+      
+      switch(this.simulationSort.field) {
+        case 'score':
+          aVal = a.results?.score || 0;
+          bVal = b.results?.score || 0;
+          break;
+        case 'duration':
+          aVal = a.results?.duration || 0;
+          bVal = b.results?.duration || 0;
+          break;
+        case 'name':
+          aVal = a.name || '';
+          bVal = b.name || '';
+          return this.simulationSort.order === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+        case 'createdAt':
+        default:
+          aVal = new Date(a.createdAt || 0).getTime();
+          bVal = new Date(b.createdAt || 0).getTime();
+          break;
+      }
+      
+      return this.simulationSort.order === 'asc' ? aVal - bVal : bVal - aVal;
+    });
+    
+    return filtered;
+  }
+
   renderSimulationsList(simulations) {
     const listEl = document.getElementById('simulations-list');
     if (!listEl) {
@@ -1749,7 +1986,7 @@ class PacmanLabApp {
           </div>
           ` : `
           <div style="background: rgba(255, 152, 0, 0.1); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 152, 0, 0.3); margin-bottom: 20px;">
-            <h3 style="margin-bottom: 15px; color: #ff9800;">ℹ️ Performance Metrics Not Available</h3>
+            <h3 style="margin-bottom: 15px; color: #ff9800;">Performance Metrics Not Available</h3>
             <p style="color: #9aa4ff; margin-bottom: 10px;">
               This simulation preview doesn't include detailed performance metrics yet.
             </p>
@@ -2059,7 +2296,7 @@ class PacmanLabApp {
 
         <!-- Mazes Section -->
         <div class="api-section">
-          <h3 style="color: #6374ff; margin-top: 32px;">🗺️ Mazes</h3>
+          <h3 style="color: #6374ff; margin-top: 32px;">Mazes</h3>
           
           <div class="api-endpoint">
             <div class="endpoint-header">
@@ -2097,7 +2334,7 @@ class PacmanLabApp {
 
         <!-- Batches Section -->
         <div class="api-section">
-          <h3 style="color: #6374ff; margin-top: 32px;">📦 Batches</h3>
+          <h3 style="color: #6374ff; margin-top: 32px;">Batches</h3>
           
           <div class="api-endpoint">
             <div class="endpoint-header">
@@ -2221,7 +2458,7 @@ class PacmanLabApp {
 
         <!-- Automation Script Example -->
         <div class="api-section" style="background: rgba(255, 152, 0, 0.1); border-radius: 8px; padding: 20px; margin-top: 32px; border-left: 4px solid #ff9800;">
-          <h3 style="color: #ff9800; margin-top: 0;">🤖 Automation Script Example</h3>
+          <h3 style="color: #ff9800; margin-top: 0;">Automation Script Example</h3>
           <p style="color: #9aa4ff;">Complete Node.js script for running 5 A* batch simulations:</p>
           <pre style="max-height: 500px; overflow-y: auto;"><code>// batch_simulation.js
 // Run with: node batch_simulation.js
@@ -2451,7 +2688,7 @@ async function runBatchSimulations() {
 }
 
 // Run the batch
-console.log('🚀 Starting batch simulation automation...\\n');
+console.log('Starting batch simulation automation...\\n');
 runBatchSimulations()
   .then(() => {
     console.log('\\n✅ Script completed successfully!');

@@ -762,3 +762,116 @@
   border-radius: 3px;
   font-size: 0.85rem;
 }
+
+/* Professional Statistics Display */
+.professional-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 24px;
+}
+
+.stats-primary-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.stat-box {
+  background: rgba(22, 27, 77, 0.6);
+  border: 1px solid rgba(111, 125, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(111, 125, 255, 0.3);
+  border-color: rgba(111, 125, 255, 0.5);
+}
+
+.stat-box.stat-primary {
+  background: linear-gradient(135deg, rgba(111, 125, 255, 0.2), rgba(111, 125, 255, 0.05));
+  border-color: rgba(111, 125, 255, 0.4);
+}
+
+.stat-box.stat-success {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.05));
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.stat-box.stat-danger {
+  background: linear-gradient(135deg, rgba(255, 82, 82, 0.2), rgba(255, 82, 82, 0.05));
+  border-color: rgba(255, 82, 82, 0.4);
+}
+
+.stat-box.stat-accent {
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.2), rgba(255, 152, 0, 0.05));
+  border-color: rgba(255, 152, 0, 0.4);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  line-height: 1;
+}
+
+.stat-percent {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+.stat-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-dark));
+  transition: width 0.6s ease;
+  border-radius: 0 0 12px 12px;
+}
+
+.stat-box.stat-success .stat-value {
+  color: #4caf50;
+}
+
+.stat-box.stat-danger .stat-value {
+  color: #ff5252;
+}
+
+.stat-box.stat-accent .stat-value {
+  color: #ff9800;
+}
+
+@media (max-width: 768px) {
+  .professional-stats-grid,
+  .stats-primary-row {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  
+  .stat-box {
+    padding: 16px;
+  }
+  
+  .stat-value {
+    font-size: 1.8rem;
+  }
+}
