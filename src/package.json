@@ -37,6 +37,10 @@
   "jest": {
     "testEnvironment": "node",
     "rootDir": "..",
+    "moduleDirectories": [
+      "node_modules",
+      "<rootDir>/src/node_modules"
+    ],
     "testMatch": [
       "<rootDir>/tests/**/*.test.js"
     ],
