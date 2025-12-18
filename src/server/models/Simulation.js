@@ -19,6 +19,31 @@ const simulationSchema = new mongoose.Schema({
     ref: 'Maze',
     required: true
   },
+  // Pacman AI configuration for bot simulations
+  pacmanAlgorithm: {
+    type: String,
+    enum: [
+      'greedy',        // Basic greedy strategy
+      'defensive',     // Safety-focused
+      'aggressive',    // Risk-taking
+      'random',        // Random walker
+      'minimax',       // Game tree search with alpha-beta
+      'expectimax',    // Probabilistic decision making
+      'influence_map', // Spatial reasoning
+      'mcts'          // Monte Carlo Tree Search
+    ],
+    default: 'greedy'
+  },
+  pacmanConfig: {
+    depth: {          // For minimax/expectimax (look-ahead depth)
+      type: Number,
+      default: 3
+    },
+    iterations: {     // For MCTS (number of simulations)
+      type: Number,
+      default: 1000
+    }
+  },
   ghostConfigs: [{
     ghostType: {
       type: String,

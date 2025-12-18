@@ -1,4 +1,4 @@
-"""Game simulation engine for replaying trajectories with ghosts or running AI bots."""
+"""Game simulation engine for replaying trajectories with ghosts."""
 
 import json
 import sys
@@ -28,28 +28,47 @@ from utils.performance_metrics import PerformanceTracker, ComplexityAnalyzer, Sc
 class GameEngine:
     """
     Simulates Pacman gameplay with ghosts.
-    Can either replay a recorded trajectory or use Pacman AI bot.
+    Replays a recorded trajectory and simulates ghost behavior.
     """
     
     def _is_walkable(self, pos):
-        """Check if position is valid and walkable."""
+        """
+        Verifie si une position est valide et traversable.
+        
+        Args:
+            pos: Position (row, col)
+        
+        Returns:
+            bool: True si la position est OK, False sinon
+        """
         if not pos:
             return False
         
         row, col = pos
+        # Verifier que la position est dans les limites
         if row < 0 or row >= len(self.grid):
             return False
         if col < 0 or col >= len(self.grid[0]):
             return False
         
+        # Verifier que ce n'est pas un mur (0 = passage, 1 = mur)
         return self.grid[row][col] != 1
     
     def _find_nearest_walkable(self, pos):
-        """Find nearest walkable position to given position."""
+        """
+        Trouve la case traversable la plus proche d'une position.
+        
+        Args:
+            pos: Position de depart (row, col)
+        
+        Returns:
+            tuple: Position traversable (row, col) ou None
+        """
         if self._is_walkable(pos):
             return pos
         
         row, col = pos
+        # Chercher autour dans un rayon croissant
         for radius in range(1, 10):
             for dr in range(-radius, radius + 1):
                 for dc in range(-radius, radius + 1):
@@ -57,7 +76,7 @@ class GameEngine:
                     if self._is_walkable(check_pos):
                         return check_pos
         
-        # Fallback: return first walkable cell
+        # Si rien trouve, retourner la premiere case libre du labyrinthe
         for r in range(len(self.grid)):
             for c in range(len(self.grid[0])):
                 if self.grid[r][c] == 0:
@@ -66,7 +85,12 @@ class GameEngine:
         return None
     
     def _init_pacman_ai(self, pacman_config):
-        """Initialize Pacman AI agent."""
+        """
+        Initialize Pacman AI agent.
+        
+        Args:
+            pacman_config: Dict with algorithm, depth, iterations, startPos
+        """
         algorithm = pacman_config.get('algorithm', 'greedy').lower()
         depth = pacman_config.get('depth', 3)
         iterations = pacman_config.get('iterations', 1000)
@@ -91,8 +115,10 @@ class GameEngine:
         # Create Pacman AI agent
         pacman_class = pacman_classes[algorithm]
         if callable(pacman_class) and not isinstance(pacman_class, type):
+            # It's a lambda, call it
             self.pacman_ai = pacman_class(self.grid)
         else:
+            # It's a class, instantiate it
             self.pacman_ai = pacman_class(self.grid)
         
         # Set initial position
@@ -101,9 +127,12 @@ class GameEngine:
                 start_pos = (start_pos['y'], start_pos['x'])
             self.pacman_position = start_pos
         else:
+            # Find first walkable cell
             self.pacman_position = self._find_nearest_walkable((1, 1))
         
         self.pacman_algorithm = algorithm
+        
+        # Start tracking for Pacman
         self.performance_tracker.start_tracking('pacman')
         
         print(f"✓ Initialized Pacman AI: {algorithm}")
@@ -113,9 +142,12 @@ class GameEngine:
         Initialize game engine.
         
         Args:
-            grid: 2D maze grid (0=walkable, 1=wall)
+            grid: 2D maze grid (0=walkable)
             ghost_configs: List of ghost configurations
-            pacman_config: Optional Pacman AI configuration for bot mode
+                [{'type': 'blinky', 'algorithm': 'astar', 'startPos': (row, col)}, ...]
+            pacman_config: Optional Pacman AI configuration
+                {'algorithm': 'greedy', 'depth': 3, 'iterations': 1000, 'startPos': (row, col)}
+                If None, will replay trajectory. If provided, will use AI bot.
         """
         self.grid = grid
         self.ghosts = []
@@ -124,13 +156,14 @@ class GameEngine:
         self.performance_tracker = PerformanceTracker()
         self.complexity_analyzer = ComplexityAnalyzer()
         
+        # Calculate maze size for score calculation
         self.maze_size = sum(1 for row in grid for cell in row if cell == 0)
         
         # Initialize Pacman AI if configured
         if pacman_config:
             self._init_pacman_ai(pacman_config)
         
-        # Initialize ghosts
+        # Initialize ghosts based on configurations
         ghost_classes = {
             'blinky': BlinkyAgent,
             'pinky': PinkyAgent,
@@ -147,11 +180,13 @@ class GameEngine:
                 ghost = ghost_classes[ghost_type](grid, algorithm)
                 
                 if start_pos:
+                    # Normaliser le format de position
                     if isinstance(start_pos, dict):
                         start_pos = (start_pos['y'], start_pos['x'])
                     
+                    # Valider que la position n'est pas dans un mur
                     if not self._is_walkable(start_pos):
-                        print(f"Warning: {ghost_type} spawn in wall {start_pos}, correcting...")
+                        print(f"Warning: {ghost_type} spawn dans un mur {start_pos}, correction...")
                         start_pos = self._find_nearest_walkable(start_pos)
                     
                     ghost.set_position(start_pos)
@@ -165,73 +200,69 @@ class GameEngine:
                     'id': ghost_id
                 })
                 
+                # Start tracking for this ghost
                 self.performance_tracker.start_tracking(ghost_id)
     
     def simulate(self, trajectory=None, max_steps=1000):
         """
-        Simulate a game.
+        Simulate a game with the given Pacman trajectory or AI bot.
         
         Args:
-            trajectory: List of Pacman positions (required if not using AI)
+            trajectory: List of Pacman positions/moves (optional if using Pacman AI)
+                [{'position': {'x': , 'y': }, 'timestamp': , ...}, ...]
             max_steps: Maximum steps for AI bot simulation
         
         Returns:
             dict: Simulation results with performance metrics
         """
-        if self.use_pacman_ai:
-            # Initialize pellets
-            pellets = []
-            for y in range(len(self.grid)):
-                for x in range(len(self.grid[0])):
-                    if self.grid[y][x] == 0:
-                        pellets.append((x, y))
-            
-            return self._simulate_with_pacman_ai(pellets, max_steps)
-        else:
-            if not trajectory:
-                raise ValueError("Trajectory required when not using Pacman AI")
-            return self._simulate_replay(trajectory)
-    
-    def _simulate_with_pacman_ai(self, pellets, max_steps):
-        """Simulate game with Pacman AI bot."""
         frames = []
         caught = False
         catch_position = None
         catch_time = None
+        
+        # Performance tracking
         simulation_start_time = time.perf_counter()
         
-        pacman_pos = self.pacman_position
-        pellets_remaining = pellets.copy()
+        # Initialize pellets (simplified - all walkable cells)
+        pellets = []
+        for y in range(len(self.grid)):
+            for x in range(len(self.grid[0])):
+                if self.grid[y][x] == 0:
+                    pellets.append((x, y))
         
+        # Determine simulation mode
+        if self.use_pacman_ai:
+            # BOT MODE: Use Pacman AI
+            results = self._simulate_with_pacman_ai(pellets, max_steps)
+        else:
+            # REPLAY MODE: Use provided trajectory
+            if not trajectory:
+                raise ValueError("Trajectory required when not using Pacman AI")
+            results = self._simulate_replay(trajectory)
+        
+        return results
+        
+        # Get other ghost positions for Inky's calculation
         def get_ghost_positions():
-            return {ghost['type']: ghost['position'] for ghost in self.ghosts}
+            return {
+                ghost['type']: ghost['position']
+                for ghost in self.ghosts
+            }
         
-        for step in range(max_steps):
-            timestamp = step * 100
+        # Simulate each frame
+        for i, move in enumerate(trajectory):
+            # Get Pacman position
+            pacman_pos = move.get('position', {})
+            if isinstance(pacman_pos, dict):
+                pacman_pos = (pacman_pos.get('y'), pacman_pos.get('x'))
             
-            # Pacman makes decision
-            decision_start = time.perf_counter()
+            pacman_dir = move.get('direction')
+            timestamp = move.get('timestamp', i * 100)
             
-            ghost_pos_list = [g['position'] for g in self.ghosts]
-            next_move = self.pacman_ai.get_next_move(
-                pacman_pos,
-                ghost_pos_list,
-                pellets_remaining
-            )
+            # Track Pacman decision (simple replay, minimal complexity)
+            self.performance_tracker.record_decision('pacman', nodes_explored=0)
             
-            # Track nodes explored
-            nodes_explored = getattr(self.pacman_ai, 'nodes_explored', 0)
-            self.performance_tracker.record_decision('pacman', nodes_explored)
-            
-            # Move Pacman
-            if next_move and self._is_walkable(next_move):
-                pacman_pos = next_move
-            
-            # Collect pellet
-            if pacman_pos in pellets_remaining:
-                pellets_remaining.remove(pacman_pos)
-            
-            # Update ghosts
+            # Update each ghost
             ghost_positions = []
             other_ghosts = get_ghost_positions()
             
@@ -239,13 +270,27 @@ class GameEngine:
                 agent = ghost['agent']
                 ghost_id = ghost['id']
                 
-                next_pos = agent.get_next_move(pacman_pos, None, other_ghosts)
+                # Start timing for this ghost's decision
+                decision_start = time.perf_counter()
+                
+                # Get next move for this ghost
+                next_pos = agent.get_next_move(
+                    pacman_pos,
+                    pacman_dir,
+                    other_ghosts
+                )
+                
+                # Get nodes explored (if available from pathfinding)
                 nodes_explored = getattr(agent, 'last_nodes_explored', 0)
+                
+                # Record decision metrics
                 self.performance_tracker.record_decision(ghost_id, nodes_explored)
                 
+                # Valider que le mouvement ne va pas dans un mur
                 if next_pos and self._is_walkable(next_pos):
                     agent.set_position(next_pos)
                     ghost['position'] = next_pos
+                # Sinon le fantome reste sur place
                 
                 ghost_positions.append({
                     'type': ghost['type'],
@@ -266,87 +311,16 @@ class GameEngine:
                 'caught': caught
             })
             
-            # Stop if caught or all pellets collected
-            if caught or not pellets_remaining:
-                break
-        
-        return self._build_results(frames, caught, catch_position, catch_time, 
-                                   simulation_start_time, len(pellets) - len(pellets_remaining))
-    
-    def _simulate_replay(self, trajectory):
-        """Replay a recorded trajectory with ghosts."""
-        frames = []
-        caught = False
-        catch_position = None
-        catch_time = None
-        simulation_start_time = time.perf_counter()
-        
-        self.performance_tracker.start_tracking('pacman')
-        
-        def get_ghost_positions():
-            return {ghost['type']: ghost['position'] for ghost in self.ghosts}
-        
-        for i, move in enumerate(trajectory):
-            pacman_pos = move.get('position', {})
-            if isinstance(pacman_pos, dict):
-                pacman_pos = (pacman_pos.get('y'), pacman_pos.get('x'))
-            
-            pacman_dir = move.get('direction')
-            timestamp = move.get('timestamp', i * 100)
-            
-            self.performance_tracker.record_decision('pacman', nodes_explored=0)
-            
-            # Update ghosts
-            ghost_positions = []
-            other_ghosts = get_ghost_positions()
-            
-            for ghost in self.ghosts:
-                agent = ghost['agent']
-                ghost_id = ghost['id']
-                
-                next_pos = agent.get_next_move(pacman_pos, pacman_dir, other_ghosts)
-                nodes_explored = getattr(agent, 'last_nodes_explored', 0)
-                self.performance_tracker.record_decision(ghost_id, nodes_explored)
-                
-                if next_pos and self._is_walkable(next_pos):
-                    agent.set_position(next_pos)
-                    ghost['position'] = next_pos
-                
-                ghost_positions.append({
-                    'type': ghost['type'],
-                    'position': {'y': ghost['position'][0], 'x': ghost['position'][1]}
-                })
-                
-                if ghost['position'] == pacman_pos and not caught:
-                    caught = True
-                    catch_position = {'y': pacman_pos[0], 'x': pacman_pos[1]}
-                    catch_time = timestamp
-            
-            frames.append({
-                'timestamp': timestamp,
-                'pacman': {'y': pacman_pos[0], 'x': pacman_pos[1]},
-                'ghosts': ghost_positions,
-                'caught': caught
-            })
-            
+            # Stop if caught
             if caught:
                 break
         
-        return self._build_results(frames, caught, catch_position, catch_time, 
-                                   simulation_start_time, 0)
-    
-    def _build_results(self, frames, caught, catch_position, catch_time, 
-                      simulation_start_time, pellets_eaten):
-        """Build simulation results dictionary."""
-        simulation_duration = (time.perf_counter() - simulation_start_time) * 1000
+        # Calculate simulation duration
+        simulation_duration = (time.perf_counter() - simulation_start_time) * 1000  # en ms
         
-        # Get Pacman metrics
+        # Get performance metrics for each entity
         pacman_metrics = self.performance_tracker.get_metrics('pacman')
-        pacman_complexity = self.complexity_analyzer.get_complexity(
-            getattr(self, 'pacman_algorithm', 'replay'), 'pacman'
-        )
         
-        # Get ghost metrics
         ghost_metrics = []
         for ghost in self.ghosts:
             ghost_id = ghost['id']
@@ -364,14 +338,15 @@ class GameEngine:
         
         # Calculate score
         score = ScoreCalculator.calculate_score(
-            trajectory_length=len(frames),
-            pellets_eaten=pellets_eaten,
+            trajectory_length=len(trajectory),
+            pellets_eaten=0,  # TODO: Tracker les pellets si disponibles
             power_pellets_eaten=0,
             caught=caught,
             total_frames=len(frames),
             maze_size=self.maze_size
         )
         
+        # Stop performance tracking
         self.performance_tracker.stop_tracking()
         
         return {
@@ -384,10 +359,11 @@ class GameEngine:
             'performanceMetrics': {
                 'pacman': {
                     'memoryUsage': pacman_metrics['memoryUsage'],
-                    'timeComplexity': pacman_complexity['timeComplexity'],
+                    'timeComplexity': 'O(1)',  # Replay is constant time
                     'avgDecisionTime': pacman_metrics['avgDecisionTime']
                 },
                 'ghosts': ghost_metrics
             },
             'frames': frames
         }
+

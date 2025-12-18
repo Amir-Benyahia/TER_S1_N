@@ -105,20 +105,22 @@ class ComplexityAnalyzer:
     
     # Complexités connues des algorithmes
     ALGORITHM_COMPLEXITIES = {
+        # Pathfinding algorithms (ghosts)
         'astar': {
-            'time': 'O(b^d)',  # b=branching factor, d=depth
+            'time': 'O(b^d)',
             'space': 'O(b^d)',
-            'description': 'A* avec heuristique'
+            'description': 'A* with heuristic'
         },
         'bfs': {
-            'time': 'O(V + E)',  # V=vertices, E=edges
+            'time': 'O(V + E)',
             'space': 'O(V)',
             'description': 'Breadth-First Search'
         },
+        # Basic Pacman strategies
         'greedy': {
-            'time': 'O(1)',  # Décision immédiate
+            'time': 'O(n)',
             'space': 'O(1)',
-            'description': 'Greedy heuristic'
+            'description': 'Greedy nearest pellet'
         },
         'random': {
             'time': 'O(1)',
@@ -126,14 +128,41 @@ class ComplexityAnalyzer:
             'description': 'Random walk'
         },
         'defensive': {
-            'time': 'O(V)',  # Distance calculation
+            'time': 'O(n)',
             'space': 'O(1)',
-            'description': 'Defensive strategy'
+            'description': 'Defensive ghost avoidance'
         },
         'aggressive': {
-            'time': 'O(V)',
+            'time': 'O(n)',
             'space': 'O(1)',
-            'description': 'Aggressive pursuit'
+            'description': 'Aggressive pellet collection'
+        },
+        # Advanced Pacman algorithms
+        'minimax': {
+            'time': 'O(b^d)',
+            'space': 'O(b×d)',
+            'description': 'Minimax with alpha-beta pruning'
+        },
+        'expectimax': {
+            'time': 'O(b^d)',
+            'space': 'O(b×d)',
+            'description': 'Expectimax probabilistic search'
+        },
+        'influence_map': {
+            'time': 'O(w×h)',
+            'space': 'O(w×h)',
+            'description': 'Influence map spatial reasoning'
+        },
+        'mcts': {
+            'time': 'O(k×d)',
+            'space': 'O(k)',
+            'description': 'Monte Carlo Tree Search'
+        },
+        # Replay mode
+        'replay': {
+            'time': 'O(1)',
+            'space': 'O(1)',
+            'description': 'Trajectory replay'
         }
     }
     

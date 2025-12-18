@@ -148,22 +148,36 @@ def place_pellets(args):
 
 
 def simulate_game(args):
-    """Simulate a game with ghosts."""
-    # Load data
-    with open(args.trajectory_file, 'r') as f:
-        trajectory_data = json.load(f)
-    
-    trajectory = trajectory_data.get('moves', [])
-    
+    """Simulate a game with ghosts and optional Pacman AI."""
+    # Load grid
     with open(args.grid_file, 'r') as f:
         grid_data = json.load(f)
         grid = grid_data['grid']
     
+    # Load ghost configs
     ghost_configs = json.loads(args.ghost_configs)
     
+    # Load Pacman config if provided
+    pacman_config = None
+    if hasattr(args, 'pacman_config') and args.pacman_config:
+        pacman_config = json.loads(args.pacman_config)
+    
+    # Load trajectory if provided (for replay mode)
+    trajectory = None
+    if hasattr(args, 'trajectory_file') and args.trajectory_file:
+        with open(args.trajectory_file, 'r') as f:
+            trajectory_data = json.load(f)
+            trajectory = trajectory_data.get('moves', [])
+    
     try:
-        engine = GameEngine(grid, ghost_configs)
-        results = engine.simulate(trajectory)
+        engine = GameEngine(grid, ghost_configs, pacman_config)
+        
+        # Determine max steps for AI mode
+        max_steps = 1000
+        if hasattr(args, 'max_steps'):
+            max_steps = args.max_steps
+        
+        results = engine.simulate(trajectory, max_steps)
         
         return {
             'success': True,
@@ -210,12 +224,16 @@ def main():
     
     # Simulation command
     sim_parser = subparsers.add_parser('simulate', help='Simulate game with ghosts')
-    sim_parser.add_argument('--trajectory-file', required=True,
-                          help='JSON file with recorded trajectory')
+    sim_parser.add_argument('--trajectory-file',
+                          help='JSON file with recorded trajectory (optional if using Pacman AI)')
     sim_parser.add_argument('--grid-file', required=True,
                           help='JSON file with maze grid')
     sim_parser.add_argument('--ghost-configs', required=True,
                           help='Ghost configurations as JSON string')
+    sim_parser.add_argument('--pacman-config',
+                          help='Pacman AI configuration as JSON string (enables bot mode)')
+    sim_parser.add_argument('--max-steps', type=int, default=1000,
+                          help='Maximum steps for AI bot simulation')
     
     args = parser.parse_args()
     

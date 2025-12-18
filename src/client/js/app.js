@@ -678,16 +678,48 @@ class PacmanLabApp {
 
           <!-- Bot Simulation Tab -->
           <div id="tab-bot" class="simulation-tab-content">
-
             
             <div class="form-group">
-              <label for="pacman-algorithm-select">Pacman Algorithm</label>
+              <label for="pacman-algorithm-select">
+                Pacman Algorithm
+                <span style="float: right; font-size: 0.85em; color: #9aa4ff;">
+                  <span id="algo-speed-indicator">Fast</span>
+                </span>
+              </label>
               <select id="pacman-algorithm-select" class="form-control">
-                <option value="greedy">Greedy - Always moves towards nearest pellet</option>
-                <option value="defensive">Defensive - Prioritizes staying away from ghosts</option>
-                <option value="aggressive">Aggressive - Focuses on collecting pellets quickly</option>
-                <option value="random">Random Walker - Random movement with ghost avoidance</option>
+                <optgroup label="Basic Strategies (Fast)">
+                  <option value="greedy" data-speed="fast" data-desc="Balanced: moves towards nearest pellet">Greedy - Balanced</option>
+                  <option value="defensive" data-speed="fast" data-desc="Safe: prioritizes avoiding ghosts">Defensive - Safe</option>
+                  <option value="aggressive" data-speed="fast" data-desc="Risky: focuses on pellet collection">Aggressive - Risky</option>
+                  <option value="random" data-speed="fast" data-desc="Baseline: random movement">Random - Baseline</option>
+                </optgroup>
+                <optgroup label="Advanced Algorithms (Smarter)">
+                  <option value="minimax" data-speed="medium" data-desc="Game tree search with optimal play">Minimax - Optimal</option>
+                  <option value="expectimax" data-speed="medium" data-desc="Probabilistic decision making">Expectimax - Probabilistic</option>
+                  <option value="influence_map" data-speed="fast" data-desc="Spatial tactical reasoning">Influence Maps - Spatial</option>
+                  <option value="mcts" data-speed="slow" data-desc="Monte Carlo Tree Search (state-of-the-art)">MCTS - State-of-the-art</option>
+                </optgroup>
               </select>
+              <small id="algo-description" style="color: #9aa4ff; display: block; margin-top: 5px;">
+                Balanced: moves towards nearest pellet
+              </small>
+            </div>
+
+            <!-- Advanced Configuration (shown for certain algorithms) -->
+            <div id="advanced-pacman-config" style="display: none;">
+              <div class="config-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                  <label for="pacman-depth">Look-ahead Depth</label>
+                  <input type="number" id="pacman-depth" class="form-control" value="3" min="1" max="6" />
+                  <small style="color: #9aa4ff;">For Minimax/Expectimax (1-6, higher = smarter but slower)</small>
+                </div>
+                
+                <div class="form-group">
+                  <label for="pacman-iterations">MCTS Iterations</label>
+                  <input type="number" id="pacman-iterations" class="form-control" value="1000" min="100" max="5000" step="100" />
+                  <small style="color: #9aa4ff;">For MCTS algorithm (100-5000, higher = better)</small>
+                </div>
+              </div>
             </div>
             
             <div class="form-group">
@@ -769,6 +801,41 @@ class PacmanLabApp {
     // Load mazes for bot mode
     this.loadMazesForBot();
 
+    // Setup Pacman algorithm selector to show/hide advanced config and update UI
+    const pacmanAlgoSelect = document.getElementById('pacman-algorithm-select');
+    const advancedConfig = document.getElementById('advanced-pacman-config');
+    const speedIndicator = document.getElementById('algo-speed-indicator');
+    const description = document.getElementById('algo-description');
+    
+    if (pacmanAlgoSelect && advancedConfig) {
+      pacmanAlgoSelect.addEventListener('change', () => {
+        const algorithm = pacmanAlgoSelect.value;
+        const selectedOption = pacmanAlgoSelect.selectedOptions[0];
+        
+        // Update description text
+        if (selectedOption.dataset.desc) {
+          description.textContent = selectedOption.dataset.desc;
+        }
+        
+        // Update speed indicator
+        const speed = selectedOption.dataset.speed || 'fast';
+        if (speed === 'fast') {
+          speedIndicator.innerHTML = 'Fast';
+          speedIndicator.style.color = '#4caf50';
+        } else if (speed === 'medium') {
+          speedIndicator.innerHTML = 'Medium';
+          speedIndicator.style.color = '#ff9800';
+        } else if (speed === 'slow') {
+          speedIndicator.innerHTML = 'Slower';
+          speedIndicator.style.color = '#f44336';
+        }
+        
+        // Show/hide advanced config
+        const needsAdvanced = ['minimax', 'expectimax', 'mcts'].includes(algorithm);
+        advancedConfig.style.display = needsAdvanced ? 'block' : 'none';
+      });
+    }
+
     // Setup start button
     document.getElementById('start-replay-btn').addEventListener('click', async () => {
       const activeTab = document.querySelector('.simulation-tab-btn.active').getAttribute('data-tab');
@@ -830,6 +897,11 @@ class PacmanLabApp {
   async startBotSimulation() {
     const algorithm = document.getElementById('pacman-algorithm-select').value;
     const mazeId = document.getElementById('bot-maze-select').value;
+    const maxDuration = parseInt(document.getElementById('bot-max-duration').value) || 60;
+    
+    // Get advanced config if applicable
+    const depth = parseInt(document.getElementById('pacman-depth')?.value) || 3;
+    const iterations = parseInt(document.getElementById('pacman-iterations')?.value) || 1000;
     
     if (!mazeId) {
       Formatters.showToast('Please select a maze', 'error');
@@ -873,11 +945,20 @@ class PacmanLabApp {
         grid: maze.grid,
         botMode: true,
         botAlgorithm: algorithm,
+        pacmanConfig: {
+          depth: depth,
+          iterations: iterations,
+          startPos: pacmanStart
+        },
+        maxSteps: maxDuration * 10, // Convert seconds to approximate steps
         trajectoryId: 'bot-simulation'
       };
       
       Formatters.showLoading(false);
-      Formatters.showToast(`Starting bot simulation with ${algorithm} algorithm`, 'info');
+      
+      // Show algorithm info
+      const algoName = document.getElementById('pacman-algorithm-select').selectedOptions[0].text;
+      Formatters.showToast(`Starting bot simulation with ${algoName}`, 'info');
       
       // Start replay (which will handle bot mode)
       this.startReplay();
@@ -2173,6 +2254,12 @@ class PacmanLabApp {
             })),
             results: cleanResults // Includes frontend-calculated performance metrics
           };
+          
+          // Add Pacman AI configuration if it's a bot simulation
+          if (isBotSimulation && this.lastRecordedTrajectory.botAlgorithm) {
+            simulationData.pacmanAlgorithm = this.lastRecordedTrajectory.botAlgorithm;
+            simulationData.pacmanConfig = this.lastRecordedTrajectory.pacmanConfig || {};
+          }
           
           console.log('Saving simulation with performance metrics:', simulationData);
           

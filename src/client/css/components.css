@@ -640,6 +640,26 @@
   display: block;
 }
 
+#advanced-pacman-config {
+  background: rgba(111, 125, 255, 0.05);
+  border: 1px solid rgba(111, 125, 255, 0.2);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .simulation-section {
   background: rgba(111, 125, 255, 0.03);
   border: 1px solid rgba(111, 125, 255, 0.15);
