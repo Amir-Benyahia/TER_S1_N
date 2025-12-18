@@ -21,6 +21,59 @@ class GameEngine:
     Replays a recorded trajectory and simulates ghost behavior.
     """
     
+    def _is_walkable(self, pos):
+        """
+        Verifie si une position est valide et traversable.
+        
+        Args:
+            pos: Position (row, col)
+        
+        Returns:
+            bool: True si la position est OK, False sinon
+        """
+        if not pos:
+            return False
+        
+        row, col = pos
+        # Verifier que la position est dans les limites
+        if row < 0 or row >= len(self.grid):
+            return False
+        if col < 0 or col >= len(self.grid[0]):
+            return False
+        
+        # Verifier que ce n'est pas un mur (0 = passage, 1 = mur)
+        return self.grid[row][col] != 1
+    
+    def _find_nearest_walkable(self, pos):
+        """
+        Trouve la case traversable la plus proche d'une position.
+        
+        Args:
+            pos: Position de depart (row, col)
+        
+        Returns:
+            tuple: Position traversable (row, col) ou None
+        """
+        if self._is_walkable(pos):
+            return pos
+        
+        row, col = pos
+        # Chercher autour dans un rayon croissant
+        for radius in range(1, 10):
+            for dr in range(-radius, radius + 1):
+                for dc in range(-radius, radius + 1):
+                    check_pos = (row + dr, col + dc)
+                    if self._is_walkable(check_pos):
+                        return check_pos
+        
+        # Si rien trouve, retourner la premiere case libre du labyrinthe
+        for r in range(len(self.grid)):
+            for c in range(len(self.grid[0])):
+                if self.grid[r][c] == 0:
+                    return (r, c)
+        
+        return None
+    
     def __init__(self, grid, ghost_configs):
         """
         Initialize game engine.
@@ -55,9 +108,15 @@ class GameEngine:
                 ghost = ghost_classes[ghost_type](grid, algorithm)
                 
                 if start_pos:
-                    # Normalize position format
+                    # Normaliser le format de position
                     if isinstance(start_pos, dict):
                         start_pos = (start_pos['y'], start_pos['x'])
+                    
+                    # Valider que la position n'est pas dans un mur
+                    if not self._is_walkable(start_pos):
+                        print(f"Warning: {ghost_type} spawn dans un mur {start_pos}, correction...")
+                        start_pos = self._find_nearest_walkable(start_pos)
+                    
                     ghost.set_position(start_pos)
                 
                 ghost_id = f"{ghost_type}_{algorithm}"
@@ -136,9 +195,11 @@ class GameEngine:
                 # Record decision metrics
                 self.performance_tracker.record_decision(ghost_id, nodes_explored)
                 
-                if next_pos:
+                # Valider que le mouvement ne va pas dans un mur
+                if next_pos and self._is_walkable(next_pos):
                     agent.set_position(next_pos)
                     ghost['position'] = next_pos
+                # Sinon le fantome reste sur place
                 
                 ghost_positions.append({
                     'type': ghost['type'],

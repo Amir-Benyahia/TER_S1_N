@@ -229,28 +229,32 @@ class MazeCanvas {
     this.ctx.fill();
   }
 
-  drawGhost(row, col, type = 'blinky') {
+  drawGhost(row, col, type = 'blinky', offset = 0) {
     const x = col * this.cellSize + this.cellSize / 2;
     const y = row * this.cellSize + this.cellSize / 2;
     const radius = this.cellSize * 0.4;
 
+    // Appliquer un decalage si plusieurs fantomes sur la meme case
+    const offsetX = (offset % 2) * (radius * 0.5) * (offset % 4 < 2 ? -1 : 1);
+    const offsetY = Math.floor(offset / 2) * (radius * 0.5) * (offset < 2 ? -1 : 1);
+
     this.ctx.fillStyle = this.colors.ghost[type] || this.colors.ghost.blinky;
     this.ctx.beginPath();
-    this.ctx.arc(x, y, radius, 0, Math.PI * 2);
+    this.ctx.arc(x + offsetX, y + offsetY, radius * 0.9, 0, Math.PI * 2);
     this.ctx.fill();
 
     // Draw eyes
     this.ctx.fillStyle = 'white';
     const eyeRadius = radius * 0.25;
     this.ctx.beginPath();
-    this.ctx.arc(x - radius * 0.3, y - radius * 0.2, eyeRadius, 0, Math.PI * 2);
-    this.ctx.arc(x + radius * 0.3, y - radius * 0.2, eyeRadius, 0, Math.PI * 2);
+    this.ctx.arc(x + offsetX - radius * 0.3, y + offsetY - radius * 0.2, eyeRadius, 0, Math.PI * 2);
+    this.ctx.arc(x + offsetX + radius * 0.3, y + offsetY - radius * 0.2, eyeRadius, 0, Math.PI * 2);
     this.ctx.fill();
 
     this.ctx.fillStyle = 'black';
     this.ctx.beginPath();
-    this.ctx.arc(x - radius * 0.3, y - radius * 0.2, eyeRadius * 0.5, 0, Math.PI * 2);
-    this.ctx.arc(x + radius * 0.3, y - radius * 0.2, eyeRadius * 0.5, 0, Math.PI * 2);
+    this.ctx.arc(x + offsetX - radius * 0.3, y + offsetY - radius * 0.2, eyeRadius * 0.5, 0, Math.PI * 2);
+    this.ctx.arc(x + offsetX + radius * 0.3, y + offsetY - radius * 0.2, eyeRadius * 0.5, 0, Math.PI * 2);
     this.ctx.fill();
   }
 

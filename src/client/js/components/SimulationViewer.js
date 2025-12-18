@@ -62,6 +62,9 @@ class SimulationViewer {
     this.caughtByGhost = null;
     this.allFrames = []; // Store all frames for saving
     
+    // Historique de pacman pour savoir sa direction
+    this.pacmanHistory = [];
+    
     // Initial render
     console.log('SimulationViewer initialized with grid:', grid.length, 'x', grid[0]?.length);
     console.log('Bot mode:', botMode, '| Algorithm:', botAlgorithm);
@@ -69,11 +72,52 @@ class SimulationViewer {
   }
 
   initializeGhosts() {
-    return this.ghostConfigs.map((config, index) => ({
-      type: config.type || ['blinky', 'pinky', 'inky', 'clyde'][index],
-      position: config.startPos || { y: 1 + index, x: 1 + index * 2 },
-      lastMove: Date.now()
-    }));
+    return this.ghostConfigs.map((config, index) => {
+      let startPos = config.startPos || { y: 1 + index, x: 1 + index * 2 };
+      
+      // Valider que la position n'est pas dans un mur
+      if (!this.isWalkable(startPos)) {
+        console.warn(`Fantome ${config.type} spawn dans un mur (${startPos.y}, ${startPos.x}), correction...`);
+        startPos = this.findNearestWalkable(startPos);
+      }
+      
+      return {
+        type: config.type || ['blinky', 'pinky', 'inky', 'clyde'][index],
+        position: startPos,
+        lastMove: Date.now()
+      };
+    });
+  }
+  
+  findNearestWalkable(pos) {
+    // Si deja OK, retourner directement
+    if (this.isWalkable(pos)) {
+      return pos;
+    }
+    
+    // Chercher autour dans un rayon croissant
+    for (let radius = 1; radius < 10; radius++) {
+      for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+          const checkPos = { y: pos.y + dy, x: pos.x + dx };
+          if (this.isWalkable(checkPos)) {
+            console.log(`Position corrigee: (${pos.y}, ${pos.x}) -> (${checkPos.y}, ${checkPos.x})`);
+            return checkPos;
+          }
+        }
+      }
+    }
+    
+    // Si rien trouve, retourner la premiere case libre
+    for (let y = 0; y < this.grid.length; y++) {
+      for (let x = 0; x < this.grid[0].length; x++) {
+        if (this.grid[y][x] !== 1) {
+          return { y, x };
+        }
+      }
+    }
+    
+    return pos; // Dernier recours
   }
 
   countPellets() {
@@ -194,11 +238,25 @@ class SimulationViewer {
       }
       
       this.currentPacmanPos = pacmanPos;
+      
+      // Mettre a jour l'historique de pacman
+      this.pacmanHistory.push({x: pacmanPos.x, y: pacmanPos.y});
+      if (this.pacmanHistory.length > 5) {
+        this.pacmanHistory.shift(); // Garder que les 5 dernieres positions
+      }
     } else {
       // Normal mode: read from trajectory
       const decisionStart = performance.now();
       const move = this.trajectory[this.currentFrame];
       this.performanceTracker.recordDecision('pacman', 0, decisionStart);
+      
+      // Mettre a jour l'historique
+      if (move && move.position) {
+        this.pacmanHistory.push({x: move.position.x, y: move.position.y});
+        if (this.pacmanHistory.length > 5) {
+          this.pacmanHistory.shift();
+        }
+      }
       
       if (!move || !move.position) {
         // End of trajectory - Pacman escaped!
@@ -420,59 +478,202 @@ class SimulationViewer {
   }
 
   updateGhostPositions(pacmanPos) {
-    // Simple AI: each ghost moves towards Pacman
+    // Chaque fantome a sa propre strategie
     this.ghostPositions.forEach((ghost, idx) => {
       const ghostId = `${ghost.type}_${idx}`;
       const decisionStart = performance.now();
       
-      const dx = pacmanPos.x - ghost.position.x;
-      const dy = pacmanPos.y - ghost.position.y;
-
-      // Move one step towards Pacman
-      let newPos = { ...ghost.position };
-      let nodesExplored = 1; // Simple pathfinding explores at least 1 node
-      let moved = false;
-
-      // Try horizontal movement first
-      if (Math.abs(dx) > Math.abs(dy) && dx !== 0) {
-        const testPos = { x: ghost.position.x + (dx > 0 ? 1 : -1), y: ghost.position.y };
-        if (this.isWalkable(testPos)) {
-          newPos = testPos;
-          moved = true;
-          nodesExplored += Math.abs(dx);
-        }
+      // Calculer la cible en fonction du type de fantome
+      let target;
+      
+      switch(ghost.type) {
+        case 'blinky':
+          // Blinky = agressif, poursuit directement pacman
+          target = pacmanPos;
+          break;
+          
+        case 'pinky':
+          // Pinky = embuscade, vise devant pacman
+          target = this.getPinkyTarget(pacmanPos);
+          break;
+          
+        case 'inky':
+          // Inky = coordination avec blinky pour pieger
+          target = this.getInkyTarget(pacmanPos, ghost.position);
+          break;
+          
+        case 'clyde':
+          // Clyde = aleatoire, fuit si trop proche
+          target = this.getClydeTarget(pacmanPos, ghost.position);
+          break;
+          
+        default:
+          target = pacmanPos;
       }
       
-      // Try vertical movement if horizontal failed or vertical is preferred
-      if (!moved && dy !== 0) {
-        const testPos = { x: ghost.position.x, y: ghost.position.y + (dy > 0 ? 1 : -1) };
-        if (this.isWalkable(testPos)) {
-          newPos = testPos;
-          moved = true;
-          nodesExplored += Math.abs(dy);
-        }
+      // Calculer le mouvement vers la cible
+      const move = this.calculateMoveToTarget(ghost.position, target);
+      const nodesExplored = Math.abs(target.x - ghost.position.x) + Math.abs(target.y - ghost.position.y);
+      
+      // Appliquer le mouvement si valide
+      if (move && this.isWalkable(move)) {
+        ghost.position = move;
       }
       
-      // If preferred direction blocked, try the other direction
-      if (!moved && Math.abs(dy) >= Math.abs(dx) && dx !== 0) {
-        const testPos = { x: ghost.position.x + (dx > 0 ? 1 : -1), y: ghost.position.y };
-        if (this.isWalkable(testPos)) {
-          newPos = testPos;
-          moved = true;
-          nodesExplored += Math.abs(dx);
-        }
-      }
-
-      // Only update position if a valid move was found
-      if (moved) {
-        ghost.position = newPos;
-      }
-      
-      // Record performance metrics
+      // Enregistrer les metriques
       if (this.performanceTracker) {
         this.performanceTracker.recordDecision(ghostId, nodesExplored, decisionStart);
       }
     });
+  }
+  
+  // Pinky vise 4 cases devant pacman pour le couper
+  getPinkyTarget(pacmanPos) {
+    const direction = this.getPacmanDirection();
+    let targetX = pacmanPos.x;
+    let targetY = pacmanPos.y;
+    
+    // Ajouter 4 cases dans la direction de pacman
+    switch(direction) {
+      case 'UP': targetY -= 4; break;
+      case 'DOWN': targetY += 4; break;
+      case 'LEFT': targetX -= 4; break;
+      case 'RIGHT': targetX += 4; break;
+    }
+    
+    // S'assurer que la cible est dans le labyrinthe
+    targetX = Math.max(0, Math.min(this.grid[0].length - 1, targetX));
+    targetY = Math.max(0, Math.min(this.grid.length - 1, targetY));
+    
+    // Si c'est un mur, trouver la case libre la plus proche
+    const target = {x: targetX, y: targetY};
+    if (!this.isWalkable(target)) {
+      return this.findNearestWalkable(target) || pacmanPos;
+    }
+    
+    return target;
+  }
+  
+  // Inky fait un flanquement en se coordonnant avec blinky
+  getInkyTarget(pacmanPos, inkyPos) {
+    // Trouver blinky
+    const blinky = this.ghostPositions.find(g => g.type === 'blinky');
+    if (!blinky) {
+      return pacmanPos; // Pas de blinky = comportement basique
+    }
+    
+    // Calculer 2 cases devant pacman
+    const direction = this.getPacmanDirection();
+    let pivotX = pacmanPos.x;
+    let pivotY = pacmanPos.y;
+    
+    switch(direction) {
+      case 'UP': pivotY -= 2; break;
+      case 'DOWN': pivotY += 2; break;
+      case 'LEFT': pivotX -= 2; break;
+      case 'RIGHT': pivotX += 2; break;
+    }
+    
+    // Calculer le vecteur blinky -> pivot
+    const vectorX = pivotX - blinky.position.x;
+    const vectorY = pivotY - blinky.position.y;
+    
+    // Doubler ce vecteur pour positionner inky de l'autre cote
+    let targetX = pivotX + vectorX;
+    let targetY = pivotY + vectorY;
+    
+    // Limiter aux bornes
+    targetX = Math.max(0, Math.min(this.grid[0].length - 1, targetX));
+    targetY = Math.max(0, Math.min(this.grid.length - 1, targetY));
+    
+    const target = {x: targetX, y: targetY};
+    if (!this.isWalkable(target)) {
+      return this.findNearestWalkable(target) || pacmanPos;
+    }
+    
+    return target;
+  }
+  
+  // Clyde est timide, il fuit si pacman est trop proche
+  getClydeTarget(pacmanPos, clydePos) {
+    // Calculer la distance
+    const distance = Math.abs(pacmanPos.x - clydePos.x) + Math.abs(pacmanPos.y - clydePos.y);
+    
+    if (distance < 8) {
+      // Trop proche = fuite vers le coin oppose
+      const dx = clydePos.x - pacmanPos.x;
+      const dy = clydePos.y - pacmanPos.y;
+      
+      let targetX = clydePos.x + (dx > 0 ? 5 : -5);
+      let targetY = clydePos.y + (dy > 0 ? 5 : -5);
+      
+      targetX = Math.max(0, Math.min(this.grid[0].length - 1, targetX));
+      targetY = Math.max(0, Math.min(this.grid.length - 1, targetY));
+      
+      const target = {x: targetX, y: targetY};
+      if (!this.isWalkable(target)) {
+        return this.findNearestWalkable(target) || clydePos;
+      }
+      
+      return target;
+    } else {
+      // Assez loin = poursuite normale
+      return pacmanPos;
+    }
+  }
+  
+  // Determiner la direction de pacman depuis son historique
+  getPacmanDirection() {
+    if (this.pacmanHistory.length < 2) {
+      return 'RIGHT'; // Direction par defaut
+    }
+    
+    const current = this.pacmanHistory[this.pacmanHistory.length - 1];
+    const previous = this.pacmanHistory[this.pacmanHistory.length - 2];
+    
+    const dx = current.x - previous.x;
+    const dy = current.y - previous.y;
+    
+    if (Math.abs(dx) > Math.abs(dy)) {
+      return dx > 0 ? 'RIGHT' : 'LEFT';
+    } else if (Math.abs(dy) > 0) {
+      return dy > 0 ? 'DOWN' : 'UP';
+    }
+    
+    return 'RIGHT';
+  }
+  
+  // Calculer le prochain mouvement vers une cible
+  calculateMoveToTarget(fromPos, targetPos) {
+    const dx = targetPos.x - fromPos.x;
+    const dy = targetPos.y - fromPos.y;
+    
+    // Determiner quelle direction essayer en premier
+    let moves = [];
+    
+    if (Math.abs(dx) > Math.abs(dy)) {
+      // Priorite horizontale
+      moves = [
+        { x: fromPos.x + (dx > 0 ? 1 : -1), y: fromPos.y },
+        { x: fromPos.x, y: fromPos.y + (dy > 0 ? 1 : -1) },
+      ];
+    } else {
+      // Priorite verticale
+      moves = [
+        { x: fromPos.x, y: fromPos.y + (dy > 0 ? 1 : -1) },
+        { x: fromPos.x + (dx > 0 ? 1 : -1), y: fromPos.y },
+      ];
+    }
+    
+    // Retourner le premier mouvement valide
+    for (const move of moves) {
+      if (this.isWalkable(move)) {
+        return move;
+      }
+    }
+    
+    // Aucun mouvement possible
+    return null;
   }
 
   isWalkable(pos) {
@@ -590,9 +791,25 @@ class SimulationViewer {
 
     // Draw ghosts
     if (this.ghostPositions && Array.isArray(this.ghostPositions)) {
+      // Compter les fantomes par position pour gerer la superposition
+      const positionCounts = {};
+      this.ghostPositions.forEach(ghost => {
+        if (ghost.position) {
+          const key = `${ghost.position.y},${ghost.position.x}`;
+          if (!positionCounts[key]) {
+            positionCounts[key] = [];
+          }
+          positionCounts[key].push(ghost);
+        }
+      });
+      
+      // Dessiner chaque fantome avec un decalage si necessaire
       this.ghostPositions.forEach(ghost => {
         if (ghost.position && this.mazeCanvas && this.mazeCanvas.drawGhost) {
-          this.mazeCanvas.drawGhost(ghost.position.y, ghost.position.x, ghost.type);
+          const key = `${ghost.position.y},${ghost.position.x}`;
+          const ghostsAtPos = positionCounts[key];
+          const offset = ghostsAtPos.indexOf(ghost);
+          this.mazeCanvas.drawGhost(ghost.position.y, ghost.position.x, ghost.type, offset);
         }
       });
     }
