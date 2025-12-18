@@ -1,7 +1,7 @@
 # Membres du groupe
 
-Amir Benyahia
+- Amir Benyahia
 
-Ahmed Tamani
+- Ahmed Tamani
 
-Oussama Belhout
+- Oussama Belhout
