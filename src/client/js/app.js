@@ -2938,7 +2938,7 @@ class ModalManager {
           <h3>Acknowledgments</h3>
           <p>Special thanks to:</p>
           <ul>
-            <li>University of Angers - Department of Computer Science</li>
+            <li>University of cote d'azur - Department of Computer Science</li>
             <li>Our academic supervisors and mentors</li>
             <li>Beta testers and early adopters who provided feedback</li>
           </ul>
