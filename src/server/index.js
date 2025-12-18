@@ -44,10 +44,10 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// ROOT - Welcome page (landing page)
+// ROOT - Main application dashboard
 app.get('/', (req, res) => {
-  console.log('✓ Serving welcome page at /');
-  res.sendFile(path.join(__dirname, '..', 'client', 'welcome.html'));
+  console.log('✓ Serving main app at /');
+  res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
 });
 
 // APP - Main application dashboard

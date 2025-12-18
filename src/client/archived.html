@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <ti  <title>Welcome to Pacman Lab</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23ffeb3b'/%3E%3Cpath d='M50 20 L50 50 L75 65 Z' fill='%23050616'/%3E%3Ccircle cx='50' cy='35' r='5' fill='%23050616'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/welcome.css">
+</head>
+<body>
+  <div class="welcome-container">
+    <!-- Background Image -->
+    <div class="background-image"></div>
+    
+    <!-- Content Overlay -->
+    <div class="content-wrapper">
+      <!-- Logo and Title -->
+      <div class="hero-section">
+        <div class="logo-animation">
+          <svg class="pacman-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="pacmanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#ffeb3b;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#ffc107;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="45" fill="url(#pacmanGradient)"/>
+            <path class="mouth" d="M50 20 L50 50 L75 65 Z" fill="#050616"/>
+            <circle cx="50" cy="35" r="6" fill="#050616"/>
+          </svg>
+        </div>
+        
+        <h1 class="main-title">
+          <span class="title-pacman">PACMAN</span>
+          <span class="title-lab">LAB</span>
+        </h1>
+        
+        <p class="subtitle">Theoretical Game Analysis Platform</p>
+        
+        <div class="feature-tags">
+          <span class="tag">AI Algorithms</span>
+          <span class="tag">Pathfinding</span>
+          <span class="tag">Performance Metrics</span>
+        </div>
+      </div>
+      
+      <!-- Description -->
+      <div class="description-section">
+        <p class="description-text">
+          Explore advanced pathfinding algorithms, analyze AI behavior, 
+          and conduct comprehensive simulations in an interactive environment.
+        </p>
+      </div>
+      
+      <!-- Call to Action -->
+      <div class="cta-section">
+        <button class="start-button" onclick="enterLab()">
+          <span class="button-text">Start Exploring</span>
+          <svg class="button-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        
+
+      </div>
+      
+      <!-- Footer -->
+      <div class="footer-section">
+        <p class="version">Version 1.0</p>
+        <p class="credits">Semester Project - M1</p>
+      </div>
+    </div>
+    
+    <!-- Animated Ghosts -->
+    <div class="ghost-decorations">
+      <div class="ghost ghost-1">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 20 C30 20 15 35 15 55 L15 100 L25 95 L35 100 L45 95 L55 100 L65 95 L75 100 L85 95 L85 55 C85 35 70 20 50 20 Z" fill="#ff1744" opacity="0.6"/>
+          <circle cx="35" cy="50" r="7" fill="white"/>
+          <circle cx="65" cy="50" r="7" fill="white"/>
+          <circle cx="37" cy="52" r="4" fill="#050616"/>
+          <circle cx="67" cy="52" r="4" fill="#050616"/>
+        </svg>
+      </div>
+      <div class="ghost ghost-2">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 20 C30 20 15 35 15 55 L15 100 L25 95 L35 100 L45 95 L55 100 L65 95 L75 100 L85 95 L85 55 C85 35 70 20 50 20 Z" fill="#00e5ff" opacity="0.6"/>
+          <circle cx="35" cy="50" r="7" fill="white"/>
+          <circle cx="65" cy="50" r="7" fill="white"/>
+          <circle cx="37" cy="52" r="4" fill="#050616"/>
+          <circle cx="67" cy="52" r="4" fill="#050616"/>
+        </svg>
+      </div>
+      <div class="ghost ghost-3">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 20 C30 20 15 35 15 55 L15 100 L25 95 L35 100 L45 95 L55 100 L65 95 L75 100 L85 95 L85 55 C85 35 70 20 50 20 Z" fill="#ff9100" opacity="0.6"/>
+          <circle cx="35" cy="50" r="7" fill="white"/>
+          <circle cx="65" cy="50" r="7" fill="white"/>
+          <circle cx="37" cy="52" r="4" fill="#050616"/>
+          <circle cx="67" cy="52" r="4" fill="#050616"/>
+        </svg>
+      </div>
+    </div>
+    
+    <!-- Pellet Trail -->
+    <div class="pellet-trail"></div>
+  </div>
+
+  <script>
+    function enterLab() {
+      // Add fade out animation
+      document.querySelector('.welcome-container').style.animation = 'fadeOut 0.5s ease forwards';
+      
+      // Redirect after animation
+      setTimeout(() => {
+        window.location.href = '/app';
+      }, 500);
+    }
+    
+    function showDocumentation(event) {
+      event.preventDefault();
+      // Store intent to show documentation modal
+      sessionStorage.setItem('showModal', 'documentation');
+      enterLab();
+    }
+    
+    function showAbout(event) {
+      event.preventDefault();
+      // Store intent to show about modal
+      sessionStorage.setItem('showModal', 'about');
+      enterLab();
+    }
+    
+    // Create animated pellets
+    function createPellets() {
+      const trail = document.querySelector('.pellet-trail');
+      for (let i = 0; i < 15; i++) {
+        const pellet = document.createElement('div');
+        pellet.className = 'pellet';
+        pellet.style.left = `${Math.random() * 100}%`;
+        pellet.style.top = `${Math.random() * 100}%`;
+        pellet.style.animationDelay = `${Math.random() * 3}s`;
+        trail.appendChild(pellet);
+      }
+    }
+    
+    // Initialize
+    createPellets();
+    
+    // Add keyboard shortcut
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        enterLab();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -2899,7 +2899,7 @@ class ModalManager {
               <h4>Email</h4>
               <p><a href="mailto:oussama.belhout@example.com">oussama.belhout@etu.unice.fr</a></p>
               <p><a href="mailto:amir.benyahia@example.com">amir.benyahia@etu.unice.fr</a></p>
-              <p><a href="mailto:nafissa.tamani@example.com">nafissa.tamani@etu.unice.fr</a></p>
+              <p><a href="mailto:ahmed.tamani@example.com">ahmed.tamani@etu.unice.fr</a></p>
             </div>
             <div class="contact-card">
               <h4>GitHub</h4>
