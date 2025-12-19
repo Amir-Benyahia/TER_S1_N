@@ -1,0 +1,392 @@
+[
+  {
+    "simulation_number": 1,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 348,
+      "duration": 65.66433275419762,
+      "frames": 1969,
+      "memory_used": 2051792.5214066838,
+      "avg_decision_time": 0.8468534798569627,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 2,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 309,
+      "duration": 30.222010146854913,
+      "frames": 906,
+      "memory_used": 1407715.7677305914,
+      "avg_decision_time": 0.5453807547169609,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 3,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 173,
+      "duration": 65.99682380327097,
+      "frames": 1979,
+      "memory_used": 576028.0051048982,
+      "avg_decision_time": 1.5016887397565004,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 4,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 109,
+      "duration": 89.37901264577843,
+      "frames": 2681,
+      "memory_used": 1261252.906115406,
+      "avg_decision_time": 2.1865809540523307,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 5,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 184,
+      "duration": 36.9921347363382,
+      "frames": 1109,
+      "memory_used": 1758709.9510816466,
+      "avg_decision_time": 2.7726959990983238,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 6,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 275,
+      "duration": 43.20541399713295,
+      "frames": 1296,
+      "memory_used": 1273233.734952889,
+      "avg_decision_time": 3.3805701789290805,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 7,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 418,
+      "duration": 75.06664398410751,
+      "frames": 2251,
+      "memory_used": 822413.2922580446,
+      "avg_decision_time": 4.5035749656933275,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 8,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 257,
+      "duration": 44.152224278317675,
+      "frames": 1324,
+      "memory_used": 980340.852413399,
+      "avg_decision_time": 2.198837460219514,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 9,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 322,
+      "duration": 50.84857697415492,
+      "frames": 1525,
+      "memory_used": 807524.661867854,
+      "avg_decision_time": 3.61041099858625,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 10,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 208,
+      "duration": 43.23080393716299,
+      "frames": 1296,
+      "memory_used": 1484270.4078325615,
+      "avg_decision_time": 2.292506242968319,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 11,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 261,
+      "duration": 74.33284850515817,
+      "frames": 2229,
+      "memory_used": 794887.1981510767,
+      "avg_decision_time": 1.0748247125718806,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 12,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 146,
+      "duration": 37.64332833016222,
+      "frames": 1129,
+      "memory_used": 966034.122009416,
+      "avg_decision_time": 3.542966722995668,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 13,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 433,
+      "duration": 44.58157311150221,
+      "frames": 1337,
+      "memory_used": 648933.1113526134,
+      "avg_decision_time": 0.5595959623453262,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 14,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 497,
+      "duration": 81.41351773869127,
+      "frames": 2442,
+      "memory_used": 686918.4447215723,
+      "avg_decision_time": 2.7427479285373604,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 15,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 472,
+      "duration": 72.60984511755925,
+      "frames": 2178,
+      "memory_used": 1566158.0057239302,
+      "avg_decision_time": 3.336344280101237,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 16,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 229,
+      "duration": 88.3221909532646,
+      "frames": 2649,
+      "memory_used": 2043092.6316916798,
+      "avg_decision_time": 1.0354288420453068,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 17,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 211,
+      "duration": 67.58830519292093,
+      "frames": 2027,
+      "memory_used": 1348816.6320101283,
+      "avg_decision_time": 0.8720333886812792,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 18,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 106,
+      "duration": 57.51463310092193,
+      "frames": 1725,
+      "memory_used": 1659899.024592506,
+      "avg_decision_time": 2.4522430445097703,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 19,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 149,
+      "duration": 52.28023615241955,
+      "frames": 1568,
+      "memory_used": 1045980.0767345425,
+      "avg_decision_time": 2.2547514233405863,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 20,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 150,
+      "duration": 85.05313063831179,
+      "frames": 2551,
+      "memory_used": 1758426.1237193076,
+      "avg_decision_time": 3.539595468139952,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 21,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 268,
+      "duration": 39.505489846110684,
+      "frames": 1185,
+      "memory_used": 1896582.5355798195,
+      "avg_decision_time": 1.4514510495627229,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 22,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 145,
+      "duration": 51.097503392591705,
+      "frames": 1532,
+      "memory_used": 984391.4152894041,
+      "avg_decision_time": 0.548440278668332,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 23,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 139,
+      "duration": 88.31317284615469,
+      "frames": 2649,
+      "memory_used": 1265245.5804967142,
+      "avg_decision_time": 2.6463035095734546,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 24,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 217,
+      "duration": 35.58243285111086,
+      "frames": 1067,
+      "memory_used": 601512.4450165667,
+      "avg_decision_time": 0.7654596436744134,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 25,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 489,
+      "duration": 76.85053503758476,
+      "frames": 2305,
+      "memory_used": 967271.3346326583,
+      "avg_decision_time": 4.173261160543108,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 26,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 171,
+      "duration": 70.66871133752056,
+      "frames": 2120,
+      "memory_used": 1552441.403458524,
+      "avg_decision_time": 0.9592887418789915,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 27,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 263,
+      "duration": 38.59040423059983,
+      "frames": 1157,
+      "memory_used": 946750.1403882576,
+      "avg_decision_time": 2.766956924581043,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 28,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 404,
+      "duration": 45.999856048533346,
+      "frames": 1379,
+      "memory_used": 958400.7278245247,
+      "avg_decision_time": 1.388487298584574,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 29,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 250,
+      "duration": 62.777981155073846,
+      "frames": 1883,
+      "memory_used": 1304813.984928851,
+      "avg_decision_time": 2.226010671298985,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 30,
+    "pacman_algorithm": "greedy",
+    "ghost_algorithm": "greedy",
+    "results": {
+      "score": 184,
+      "duration": 42.544148471846526,
+      "frames": 1276,
+      "memory_used": 1415836.4173560196,
+      "avg_decision_time": 1.353384730619162,
+      "completed": true
+    }
+  }
+]

@@ -83,5 +83,106 @@ Restructuration de l'interface utilisateur qui affichait au debut qu'un simple m
 - Web service opérationnel consultable sur l'URL : https://pacmaz-s1-n.onrender.com/
 
 
+# Rapport d'activité — Jour 5
+## Objectif du jour :
+Collaboration étroite avec l'équipe pour la refactorisation majeure vers l'architecture PacLab complète.
+
+## Travail effectué :
+
+### 1. Refactorisation collaborative (Co-authored commit avec Belhout et Amir)
+Contribution à la migration complète de l'architecture :
+- **Architecture MVC complète** : Séparation claire Models/Views/Controllers
+- **Nouveaux modèles Mongoose** : Maze, Trajectory, Simulation
+- **Structure client-serveur** : Frontend vanilla JS + Backend Express
+
+### 2. Amélioration du système de tests
+- Configuration Jest pour tests unitaires JavaScript
+- Tests Python avec pytest
+- Configuration `.eslintrc.json` pour qualité de code
+- Tests sur :
+  * Algorithmes de génération
+  * IA des fantômes
+  * Pathfinding (A*, BFS)
+  * API REST endpoints
+
+
+### 3. Nouveaux modules Python
+Contribution au développement de :
+- Module `ghost_ai/` : 4 personnalités distinctes (Blinky, Pinky, Inky, Clyde)
+- Module `pathfinding/` : A* et BFS implémentés
+- Module `simulation/` : Moteur de jeu avec replay
+- Module `maze/pellets/` : Placement stratégique des pastilles
+
+## Résultat :
+Architecture PacLab complète et modulaire déployée. Tests automatisés en place. Documentation exhaustive pour maintenance future.
+
+
+
+# Rapport d'activité — Jour 6 & 7
+## Objectif :
+Corrections critiques de déploiement et optimisation de l'infrastructure CI/CD.
+
+## Travail effectué :
+
+### 1. Fix Render deployment
+**Problème** : Double chemin `src/src/` causé par mauvaise configuration
+**Solution** :
+- Création de `render.yaml` avec configuration explicite
+- Ajout `rootDir` pour éviter double référence
+- Correction du chemin `requirements.txt`
+
+### 2. Restructuration package.json 
+**Problème** : Render ne trouvait pas les dépendances Node.js
+**Solution critique** :
+- Migration `package.json` et `package-lock.json` vers `src/`
+- Mise à jour des chemins dans GitHub Actions
+- Correction workflow CI/CD
+
+## Résultat :
+Déploiement Render stable et fonctionnel. Pipeline CI/CD opérationnel avec tests automatisés.
+
+
+
+# Rapport d'activité — Jour 8 & 9
+## Objectif :
+Support aux corrections frontend et stabilisation finale de la plateforme.
+
+## Travail effectué :
+
+### 1. Support corrections frontend (Collaboration avec Belhout)
+
+- Aide à la résolution bugs d'affichage
+- Validation de l'intégration API REST
+- Tests end-to-end des fonctionnalités
+
+**Corrections apportées par l'équipe** :
+- Fix Jest configuration pour tests frontend
+- Correction navigation sidebar
+- Amélioration métriques de performance
+- Fix disparition des pastilles dans le jeu
+- Correction affichage des statistiques batches
+
+### 2. IA des fantômes (Collaboration avec Amir)
+**Contribution** : Review et tests du commit d'Amir
+
+**Améliorations validées** :
+- 4 personnalités distinctes fonctionnelles
+- Correction spawn dans les murs
+- Gestion affichage fantômes superposés
+- Historique Pacman pour direction
+
+
+### 3. Tests et validation
+**Tests réalisés** :
+- Tests manuels sur déploiement Render
+- Validation endpoints API REST
+- Tests performance avec batches de simulations
+- Vérification comportement des 4 fantômes
+- Tests de génération de labyrinthes (Kruskal, Prim)
+
+
+**URL Production** : https://pacmaz-s1-n.onrender.com/
+
+
 
 

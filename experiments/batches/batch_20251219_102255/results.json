@@ -1,0 +1,362 @@
+[
+  {
+    "simulation_number": 1,
+    "algorithm": "greedy",
+    "results": {
+      "score": 240,
+      "duration": 60.21325957430953,
+      "frames": 1806,
+      "memory_used": 1063337.9147537565,
+      "avg_decision_time": 1.4122590819852765,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 2,
+    "algorithm": "greedy",
+    "results": {
+      "score": 181,
+      "duration": 37.31267776604693,
+      "frames": 1119,
+      "memory_used": 2068628.3359005232,
+      "avg_decision_time": 1.8557473688296922,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 3,
+    "algorithm": "greedy",
+    "results": {
+      "score": 226,
+      "duration": 42.44937975251571,
+      "frames": 1273,
+      "memory_used": 1872295.8308285424,
+      "avg_decision_time": 1.1821296898543596,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 4,
+    "algorithm": "greedy",
+    "results": {
+      "score": 473,
+      "duration": 52.30172785239631,
+      "frames": 1569,
+      "memory_used": 1310799.1301282288,
+      "avg_decision_time": 3.902793162761001,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 5,
+    "algorithm": "greedy",
+    "results": {
+      "score": 152,
+      "duration": 46.695290175182805,
+      "frames": 1400,
+      "memory_used": 604826.9238358727,
+      "avg_decision_time": 3.2604805610927112,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 6,
+    "algorithm": "greedy",
+    "results": {
+      "score": 484,
+      "duration": 67.04063767288119,
+      "frames": 2011,
+      "memory_used": 1230856.6160769204,
+      "avg_decision_time": 4.854611058011434,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 7,
+    "algorithm": "greedy",
+    "results": {
+      "score": 134,
+      "duration": 31.539896287862273,
+      "frames": 946,
+      "memory_used": 1846329.1687721119,
+      "avg_decision_time": 3.038226258847341,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 8,
+    "algorithm": "greedy",
+    "results": {
+      "score": 104,
+      "duration": 70.61545774487894,
+      "frames": 2118,
+      "memory_used": 592478.1424537154,
+      "avg_decision_time": 2.489383394713254,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 9,
+    "algorithm": "greedy",
+    "results": {
+      "score": 427,
+      "duration": 83.76492067778798,
+      "frames": 2512,
+      "memory_used": 880486.3526623577,
+      "avg_decision_time": 2.7416681255196833,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 10,
+    "algorithm": "greedy",
+    "results": {
+      "score": 190,
+      "duration": 42.06469954392945,
+      "frames": 1261,
+      "memory_used": 699285.9078502205,
+      "avg_decision_time": 4.65135741042509,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 11,
+    "algorithm": "greedy",
+    "results": {
+      "score": 372,
+      "duration": 30.792819220607424,
+      "frames": 923,
+      "memory_used": 1106756.8557494846,
+      "avg_decision_time": 2.728713994846934,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 12,
+    "algorithm": "greedy",
+    "results": {
+      "score": 304,
+      "duration": 52.372403948309476,
+      "frames": 1571,
+      "memory_used": 596296.0418002227,
+      "avg_decision_time": 2.318949198921777,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 13,
+    "algorithm": "greedy",
+    "results": {
+      "score": 387,
+      "duration": 65.39676132907147,
+      "frames": 1961,
+      "memory_used": 1927773.172570331,
+      "avg_decision_time": 1.5063787397985027,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 14,
+    "algorithm": "greedy",
+    "results": {
+      "score": 117,
+      "duration": 68.54170578183594,
+      "frames": 2056,
+      "memory_used": 1422448.375022166,
+      "avg_decision_time": 3.079160203688777,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 15,
+    "algorithm": "greedy",
+    "results": {
+      "score": 273,
+      "duration": 56.05218028007881,
+      "frames": 1681,
+      "memory_used": 2074568.821685759,
+      "avg_decision_time": 1.164969453724513,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 16,
+    "algorithm": "greedy",
+    "results": {
+      "score": 356,
+      "duration": 89.06901831627388,
+      "frames": 2672,
+      "memory_used": 741263.7891892467,
+      "avg_decision_time": 1.4247036723240472,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 17,
+    "algorithm": "greedy",
+    "results": {
+      "score": 141,
+      "duration": 49.188930299007,
+      "frames": 1475,
+      "memory_used": 572216.3462277054,
+      "avg_decision_time": 0.7391979646993803,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 18,
+    "algorithm": "greedy",
+    "results": {
+      "score": 188,
+      "duration": 62.498721206410316,
+      "frames": 1874,
+      "memory_used": 1682439.0358008628,
+      "avg_decision_time": 4.357531311824702,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 19,
+    "algorithm": "greedy",
+    "results": {
+      "score": 261,
+      "duration": 64.83545718308127,
+      "frames": 1945,
+      "memory_used": 1375632.4957809602,
+      "avg_decision_time": 1.0025859907099728,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 20,
+    "algorithm": "greedy",
+    "results": {
+      "score": 423,
+      "duration": 75.37806954048483,
+      "frames": 2261,
+      "memory_used": 720451.2794437067,
+      "avg_decision_time": 2.897157649513105,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 21,
+    "algorithm": "greedy",
+    "results": {
+      "score": 240,
+      "duration": 58.52070313946175,
+      "frames": 1755,
+      "memory_used": 1559225.0753952353,
+      "avg_decision_time": 2.351096659794924,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 22,
+    "algorithm": "greedy",
+    "results": {
+      "score": 171,
+      "duration": 47.02014496230969,
+      "frames": 1410,
+      "memory_used": 993773.8186709506,
+      "avg_decision_time": 1.0070243078390266,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 23,
+    "algorithm": "greedy",
+    "results": {
+      "score": 409,
+      "duration": 61.2687736353187,
+      "frames": 1838,
+      "memory_used": 1923370.8965709133,
+      "avg_decision_time": 2.615501179957934,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 24,
+    "algorithm": "greedy",
+    "results": {
+      "score": 136,
+      "duration": 63.161925183521035,
+      "frames": 1894,
+      "memory_used": 1541212.2845897884,
+      "avg_decision_time": 1.0922916108736562,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 25,
+    "algorithm": "greedy",
+    "results": {
+      "score": 144,
+      "duration": 83.37598855709552,
+      "frames": 2501,
+      "memory_used": 1313456.2941766975,
+      "avg_decision_time": 1.0272282804822346,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 26,
+    "algorithm": "greedy",
+    "results": {
+      "score": 323,
+      "duration": 39.9256783587791,
+      "frames": 1197,
+      "memory_used": 1117977.0651978867,
+      "avg_decision_time": 4.04327581690527,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 27,
+    "algorithm": "greedy",
+    "results": {
+      "score": 151,
+      "duration": 55.164310156721655,
+      "frames": 1654,
+      "memory_used": 1286672.0561382743,
+      "avg_decision_time": 4.131016672848606,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 28,
+    "algorithm": "greedy",
+    "results": {
+      "score": 290,
+      "duration": 78.07809158951747,
+      "frames": 2342,
+      "memory_used": 1419760.8379255435,
+      "avg_decision_time": 3.5613843148642763,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 29,
+    "algorithm": "greedy",
+    "results": {
+      "score": 214,
+      "duration": 59.78049484684612,
+      "frames": 1793,
+      "memory_used": 2015860.3779037988,
+      "avg_decision_time": 0.9137834496499186,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 30,
+    "algorithm": "greedy",
+    "results": {
+      "score": 133,
+      "duration": 58.10597045660911,
+      "frames": 1743,
+      "memory_used": 1200607.3155306382,
+      "avg_decision_time": 0.522480473937035,
+      "completed": true
+    }
+  }
+]

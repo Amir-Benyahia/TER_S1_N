@@ -14,16 +14,78 @@ const { calculateSimulationStats, formatStats } = require('../utils/statistics')
  */
 exports.createBatch = async (req, res) => {
   try {
-    const { name, description = '' } = req.body;
+    const { 
+      batch_id,
+      name, 
+      description = '',
+      algorithm,
+      pacman_algorithm,
+      ghost_algorithm,
+      n_simulations,
+      maze,
+      statistics,
+      results,
+      created_at
+    } = req.body;
 
     if (!name || name.trim() === '') {
       return res.status(400).json({ error: 'Batch name is required' });
     }
 
+    // Convertir statistics en format attendu par le frontend
+    const stats = {
+      totalSimulations: n_simulations || 0,
+      escapedCount: 0,
+      caughtCount: 0,
+      escapeRate: 0,
+      score: {
+        mean: statistics?.score?.mean || 0,
+        median: statistics?.score?.mean || 0,
+        stdDev: statistics?.score?.std || 0,
+        min: statistics?.score?.min || 0,
+        max: statistics?.score?.max || 0
+      },
+      duration: {
+        mean: 0,
+        median: 0,
+        stdDev: 0,
+        min: 0,
+        max: 0
+      },
+      frames: {
+        mean: 0,
+        median: 0,
+        stdDev: 0,
+        min: 0,
+        max: 0
+      },
+      performance: {
+        pacman: {
+          avgMemoryUsage: (statistics?.memory?.mean_mb || 0) * 1024 * 1024,
+          avgDecisionTime: statistics?.decision_time?.mean_ms || 0
+        },
+        ghosts: {
+          avgMemoryUsage: 0,
+          avgDecisionTime: 0,
+          avgNodesExplored: 0
+        }
+      }
+    };
+
     const batch = new SimulationBatch({
       name: name.trim(),
       description: description.trim(),
-      simulations: []
+      batchId: batch_id || `batch_${Date.now()}`,
+      algorithm: algorithm || pacman_algorithm || 'astar',
+      pacmanAlgorithm: pacman_algorithm || algorithm || 'astar',
+      ghostAlgorithm: ghost_algorithm || 'bfs',
+      simulationCount: n_simulations || 0,
+      maze: maze || null,
+      statistics: statistics || {},
+      results: results || [],
+      simulations: [],
+      stats: stats,
+      createdAt: created_at ? new Date(created_at) : new Date()
     });
 
     await batch.save();

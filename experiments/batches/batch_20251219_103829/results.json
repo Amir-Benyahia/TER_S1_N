@@ -1,0 +1,392 @@
+[
+  {
+    "simulation_number": 1,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 233,
+      "duration": 31.43454203007399,
+      "frames": 943,
+      "memory_used": 1380618.7218424492,
+      "avg_decision_time": 3.828491701060931,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 2,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 272,
+      "duration": 67.96716184059537,
+      "frames": 2039,
+      "memory_used": 585980.3441943561,
+      "avg_decision_time": 2.2964512006244204,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 3,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 354,
+      "duration": 42.30964356749759,
+      "frames": 1269,
+      "memory_used": 729984.2503974547,
+      "avg_decision_time": 3.188086498356653,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 4,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 187,
+      "duration": 83.3489744530897,
+      "frames": 2500,
+      "memory_used": 1063448.5137301565,
+      "avg_decision_time": 4.591016881708953,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 5,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 167,
+      "duration": 82.46436818306783,
+      "frames": 2473,
+      "memory_used": 1175643.796926966,
+      "avg_decision_time": 4.085567027233136,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 6,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 227,
+      "duration": 63.7864615717084,
+      "frames": 1913,
+      "memory_used": 1752203.4259550706,
+      "avg_decision_time": 0.8309890751302857,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 7,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 355,
+      "duration": 75.80520489600013,
+      "frames": 2274,
+      "memory_used": 1187624.224874157,
+      "avg_decision_time": 2.372115639119249,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 8,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 279,
+      "duration": 68.97533742173322,
+      "frames": 2069,
+      "memory_used": 2095161.1483022948,
+      "avg_decision_time": 1.2734773549880538,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 9,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 225,
+      "duration": 83.67623397419023,
+      "frames": 2510,
+      "memory_used": 1232252.1247022669,
+      "avg_decision_time": 1.8909604519266687,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 10,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 353,
+      "duration": 65.13751469845715,
+      "frames": 1954,
+      "memory_used": 1024584.1479302396,
+      "avg_decision_time": 1.4633498825223865,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 11,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 167,
+      "duration": 43.37060541727993,
+      "frames": 1301,
+      "memory_used": 1780874.1573508102,
+      "avg_decision_time": 3.5751029033765613,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 12,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 175,
+      "duration": 76.6599210447421,
+      "frames": 2299,
+      "memory_used": 1326562.1605558863,
+      "avg_decision_time": 4.298678674265339,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 13,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 213,
+      "duration": 34.16449418427327,
+      "frames": 1024,
+      "memory_used": 645090.3865913502,
+      "avg_decision_time": 4.599315211569023,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 14,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 439,
+      "duration": 73.85216901704025,
+      "frames": 2215,
+      "memory_used": 1797102.6213644487,
+      "avg_decision_time": 1.1904254636733929,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 15,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 482,
+      "duration": 71.2651524661839,
+      "frames": 2137,
+      "memory_used": 1371879.2814838805,
+      "avg_decision_time": 4.187343880692065,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 16,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 334,
+      "duration": 35.28540084586273,
+      "frames": 1058,
+      "memory_used": 528539.1232236476,
+      "avg_decision_time": 1.3422248150751805,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 17,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 456,
+      "duration": 55.98756152931769,
+      "frames": 1679,
+      "memory_used": 1124268.8462798465,
+      "avg_decision_time": 0.8382748855470628,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 18,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 159,
+      "duration": 41.79749341852116,
+      "frames": 1253,
+      "memory_used": 1355531.654950472,
+      "avg_decision_time": 1.4421797300612795,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 19,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 190,
+      "duration": 64.2227685778727,
+      "frames": 1926,
+      "memory_used": 1808386.2464633828,
+      "avg_decision_time": 2.531647752915669,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 20,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 195,
+      "duration": 81.36537759133638,
+      "frames": 2440,
+      "memory_used": 1702547.5041356375,
+      "avg_decision_time": 2.6712766605828757,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 21,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 363,
+      "duration": 81.99309925630737,
+      "frames": 2459,
+      "memory_used": 634136.3639240572,
+      "avg_decision_time": 2.016489363679346,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 22,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 464,
+      "duration": 53.76232324668675,
+      "frames": 1612,
+      "memory_used": 1473180.6691572843,
+      "avg_decision_time": 4.274049009818035,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 23,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 334,
+      "duration": 82.39642418217642,
+      "frames": 2471,
+      "memory_used": 2033593.6113947337,
+      "avg_decision_time": 1.4566920802796595,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 24,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 462,
+      "duration": 41.21044715285444,
+      "frames": 1236,
+      "memory_used": 1046990.2502280095,
+      "avg_decision_time": 4.815314863033529,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 25,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 305,
+      "duration": 79.57363988887327,
+      "frames": 2387,
+      "memory_used": 1373451.903699961,
+      "avg_decision_time": 1.8329157575840427,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 26,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 390,
+      "duration": 56.83028799502355,
+      "frames": 1704,
+      "memory_used": 1896011.3765475408,
+      "avg_decision_time": 1.4654608469135777,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 27,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 132,
+      "duration": 50.40439224368726,
+      "frames": 1512,
+      "memory_used": 1469633.0041971463,
+      "avg_decision_time": 4.500915289707705,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 28,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 383,
+      "duration": 60.7464091210023,
+      "frames": 1822,
+      "memory_used": 1820820.5659823283,
+      "avg_decision_time": 3.557433097602856,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 29,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 407,
+      "duration": 85.03863227017078,
+      "frames": 2551,
+      "memory_used": 2064841.1836669466,
+      "avg_decision_time": 1.9129531469245045,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 30,
+    "pacman_algorithm": "astar",
+    "ghost_algorithm": "bfs",
+    "results": {
+      "score": 289,
+      "duration": 44.79512745599986,
+      "frames": 1343,
+      "memory_used": 1012737.1786606414,
+      "avg_decision_time": 2.645593653223698,
+      "completed": true
+    }
+  }
+]

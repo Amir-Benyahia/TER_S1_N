@@ -14,6 +14,7 @@ const mazeRoutes = require('./routes/mazeRoutes');
 const trajectoryRoutes = require('./routes/trajectoryRoutes');
 const simulationRoutes = require('./routes/simulationRoutes');
 const batchRoutes = require('./routes/batchRoutes');
+const comparisonRoutes = require('./routes/comparisonRoutes');
 
 // Initialize Express app
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/mazes', mazeRoutes);
 app.use('/api/trajectories', trajectoryRoutes);
 app.use('/api/simulations', simulationRoutes);
 app.use('/api/batches', batchRoutes);
+app.use('/api/comparisons', comparisonRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

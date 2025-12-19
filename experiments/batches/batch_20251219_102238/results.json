@@ -1,0 +1,362 @@
+[
+  {
+    "simulation_number": 1,
+    "algorithm": "astar",
+    "results": {
+      "score": 286,
+      "duration": 84.08193674723663,
+      "frames": 2522,
+      "memory_used": 558897.0065729171,
+      "avg_decision_time": 4.544042004200847,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 2,
+    "algorithm": "astar",
+    "results": {
+      "score": 488,
+      "duration": 35.10824245161924,
+      "frames": 1053,
+      "memory_used": 2077937.6818018327,
+      "avg_decision_time": 1.8163420372169081,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 3,
+    "algorithm": "astar",
+    "results": {
+      "score": 415,
+      "duration": 52.845886706678904,
+      "frames": 1585,
+      "memory_used": 641281.1206213756,
+      "avg_decision_time": 2.2342279729804577,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 4,
+    "algorithm": "astar",
+    "results": {
+      "score": 429,
+      "duration": 56.6231446097503,
+      "frames": 1698,
+      "memory_used": 1949910.1390104224,
+      "avg_decision_time": 4.329327260384096,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 5,
+    "algorithm": "astar",
+    "results": {
+      "score": 433,
+      "duration": 31.52923101713695,
+      "frames": 945,
+      "memory_used": 791420.7184958538,
+      "avg_decision_time": 1.6538316950540657,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 6,
+    "algorithm": "astar",
+    "results": {
+      "score": 315,
+      "duration": 50.730919081347565,
+      "frames": 1521,
+      "memory_used": 1045695.4940664682,
+      "avg_decision_time": 4.1555414465809575,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 7,
+    "algorithm": "astar",
+    "results": {
+      "score": 483,
+      "duration": 59.377418938236715,
+      "frames": 1781,
+      "memory_used": 931032.136292842,
+      "avg_decision_time": 1.116960888925752,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 8,
+    "algorithm": "astar",
+    "results": {
+      "score": 212,
+      "duration": 46.716716917781454,
+      "frames": 1401,
+      "memory_used": 2032404.8345392437,
+      "avg_decision_time": 4.751636832471825,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 9,
+    "algorithm": "astar",
+    "results": {
+      "score": 474,
+      "duration": 89.385388572728,
+      "frames": 2681,
+      "memory_used": 1844360.7418397556,
+      "avg_decision_time": 1.9315540778597962,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 10,
+    "algorithm": "astar",
+    "results": {
+      "score": 388,
+      "duration": 31.786949274798484,
+      "frames": 953,
+      "memory_used": 843522.9706280446,
+      "avg_decision_time": 3.496393403548082,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 11,
+    "algorithm": "astar",
+    "results": {
+      "score": 438,
+      "duration": 74.69568648046317,
+      "frames": 2240,
+      "memory_used": 1023910.8677116712,
+      "avg_decision_time": 1.207803976708568,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 12,
+    "algorithm": "astar",
+    "results": {
+      "score": 144,
+      "duration": 66.60778693203198,
+      "frames": 1998,
+      "memory_used": 1656773.3090857598,
+      "avg_decision_time": 2.8167768583098565,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 13,
+    "algorithm": "astar",
+    "results": {
+      "score": 204,
+      "duration": 85.76718277465717,
+      "frames": 2573,
+      "memory_used": 756517.3008304245,
+      "avg_decision_time": 0.5743381411025924,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 14,
+    "algorithm": "astar",
+    "results": {
+      "score": 200,
+      "duration": 82.8135323673084,
+      "frames": 2484,
+      "memory_used": 1634897.73392954,
+      "avg_decision_time": 1.3690220688516161,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 15,
+    "algorithm": "astar",
+    "results": {
+      "score": 301,
+      "duration": 74.2924382813328,
+      "frames": 2228,
+      "memory_used": 1033473.4140361367,
+      "avg_decision_time": 3.9849886820773848,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 16,
+    "algorithm": "astar",
+    "results": {
+      "score": 191,
+      "duration": 88.24727174017053,
+      "frames": 2647,
+      "memory_used": 1599591.5296798437,
+      "avg_decision_time": 2.6348187064342268,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 17,
+    "algorithm": "astar",
+    "results": {
+      "score": 269,
+      "duration": 69.24851512714301,
+      "frames": 2077,
+      "memory_used": 724581.5558043305,
+      "avg_decision_time": 2.8485675314265957,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 18,
+    "algorithm": "astar",
+    "results": {
+      "score": 103,
+      "duration": 70.63559094765647,
+      "frames": 2119,
+      "memory_used": 930180.1806005826,
+      "avg_decision_time": 2.8904661947040395,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 19,
+    "algorithm": "astar",
+    "results": {
+      "score": 244,
+      "duration": 69.58923258544021,
+      "frames": 2087,
+      "memory_used": 1862950.1677280741,
+      "avg_decision_time": 1.6562265421619253,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 20,
+    "algorithm": "astar",
+    "results": {
+      "score": 398,
+      "duration": 43.46055007760268,
+      "frames": 1303,
+      "memory_used": 1317426.7129454596,
+      "avg_decision_time": 0.6943791812144575,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 21,
+    "algorithm": "astar",
+    "results": {
+      "score": 328,
+      "duration": 39.62037068457638,
+      "frames": 1188,
+      "memory_used": 1587612.9647939315,
+      "avg_decision_time": 2.977416227520502,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 22,
+    "algorithm": "astar",
+    "results": {
+      "score": 388,
+      "duration": 65.21207040715993,
+      "frames": 1956,
+      "memory_used": 549717.6562305854,
+      "avg_decision_time": 3.193353774443093,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 23,
+    "algorithm": "astar",
+    "results": {
+      "score": 482,
+      "duration": 68.06554148707451,
+      "frames": 2041,
+      "memory_used": 1787510.993859374,
+      "avg_decision_time": 2.5108624142853353,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 24,
+    "algorithm": "astar",
+    "results": {
+      "score": 385,
+      "duration": 32.316450197189006,
+      "frames": 969,
+      "memory_used": 1082363.400056138,
+      "avg_decision_time": 3.791609130661707,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 25,
+    "algorithm": "astar",
+    "results": {
+      "score": 157,
+      "duration": 59.1487720851746,
+      "frames": 1774,
+      "memory_used": 1722583.7347489563,
+      "avg_decision_time": 4.070853957436286,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 26,
+    "algorithm": "astar",
+    "results": {
+      "score": 353,
+      "duration": 88.20411257072494,
+      "frames": 2646,
+      "memory_used": 1841677.926703678,
+      "avg_decision_time": 0.851987612292651,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 27,
+    "algorithm": "astar",
+    "results": {
+      "score": 475,
+      "duration": 46.434408994333836,
+      "frames": 1393,
+      "memory_used": 1992564.3760720617,
+      "avg_decision_time": 0.5012417186045424,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 28,
+    "algorithm": "astar",
+    "results": {
+      "score": 123,
+      "duration": 71.34068660732427,
+      "frames": 2140,
+      "memory_used": 1042922.4959190211,
+      "avg_decision_time": 3.399789573817703,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 29,
+    "algorithm": "astar",
+    "results": {
+      "score": 106,
+      "duration": 33.09912636350715,
+      "frames": 992,
+      "memory_used": 839424.8025587546,
+      "avg_decision_time": 2.9974206374864956,
+      "completed": true
+    }
+  },
+  {
+    "simulation_number": 30,
+    "algorithm": "astar",
+    "results": {
+      "score": 347,
+      "duration": 60.53352257058619,
+      "frames": 1816,
+      "memory_used": 1276530.9625317922,
+      "avg_decision_time": 1.3351311198847988,
+      "completed": true
+    }
+  }
+]
