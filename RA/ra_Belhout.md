@@ -82,6 +82,172 @@ Travaux réalisés
 
 ## Rapport d'activité — Jour 4
 
-- j'ai modifié le layout du front end (UI/UX) pour que ca affiche une labyraithe effectif et non pas des 0s et 1s, en utilisant les canva et un theme unifié
-kjnkln
-- added pipeline CI/CD for 
+Résumé
+------
+Journée consacrée à l'amélioration de l'interface utilisateur et à la mise en place de l'intégration continue.
+
+Travaux réalisés
+----------------
+1. Modification du layout front-end (UI/UX) pour afficher un labyrinthe graphique et non plus des 0s et 1s, en utilisant les Canvas HTML5 et un thème visuel unifié.
+2. Mise en place d'un pipeline CI/CD pour le front-end avec GitHub Actions.
+3. Ajout de tests automatisés pour le pipeline d'intégration continue.
+
+---
+
+## Rapport d'activité — Semaine 5 (13-14 Novembre 2025)
+
+Résumé
+------
+Semaine dédiée à l'intégration de la base de données MongoDB et à la préparation de la présentation de mi-parcours.
+
+Travaux réalisés
+----------------
+1. **Intégration MongoDB** :
+   - Création du fichier de configuration `src/config/database.js` pour la connexion MongoDB.
+   - Implémentation du modèle `Maze.js` avec schéma Mongoose pour stocker les labyrinthes générés.
+   - Modification du contrôleur `generationController.js` pour persister les labyrinthes en base de données.
+   - Mise à jour des routes et du fichier `.gitignore` pour les variables d'environnement.
+
+2. **Présentation de mi-parcours** :
+   - Préparation et push de la présentation.
+   - Corrections multiples suite aux retours (présentation, contenu).
+
+3. **Documentation** :
+   - Mise à jour complète du `README.md` (+406 lignes) avec les instructions d'installation et d'utilisation.
+
+---
+
+## Rapport d'activité — Semaine 6 (28 Novembre 2025)
+
+Résumé
+------
+Semaine de travail sur la branche `Seance_5`, principalement du work-in-progress et de la stabilisation.
+
+Travaux réalisés
+----------------
+1. Travail en cours (WIP) sur la branche de développement.
+2. Gestion des fichiers non suivis et indexation.
+3. Préparation pour les prochaines fonctionnalités.
+
+---
+
+## Rapport d'activité — Semaine 7 (16 Décembre 2025)
+
+Résumé
+------
+Semaine majeure de refactoring avec la migration vers l'architecture "PacLab" et le déploiement sur Render.
+
+Travaux réalisés
+----------------
+1. **Migration PacLab** (co-réalisé avec Ahmed TAMANI et Amir BENYAHIA) :
+   - Refactoring complet de l'architecture du projet.
+   - Mise en place d'une nouvelle structure de fichiers plus modulaire.
+   - Création du fichier `demo.html` pour les démonstrations.
+   - Ajout du répertoire `data/trajectories/` pour stocker les trajectoires.
+
+2. **Déploiement Render** :
+   - Correction du déploiement : ajustement du `rootDir` pour éviter le double chemin `src/`.
+   - Résolution des problèmes de chemins relatifs.
+
+3. **Documentation** :
+   - Création de `DEPLOYMENT.md` (guide de déploiement).
+   - Création de `MONGODB_SETUP_GUIDE.md` (guide de configuration MongoDB).
+   - Création de `PROJECT_SUMMARY.md` (résumé du projet).
+   - Création de `SETUP.md` (instructions d'installation).
+   - Fichiers `QUICK_START.txt` et `QUICK_MONGODB_SETUP.txt` pour démarrage rapide.
+
+4. **CI/CD** :
+   - Suppression de l'ancien workflow `render-cicd.yml`.
+   - Création du nouveau workflow `test.yml` avec configuration ESLint.
+
+5. **Interface utilisateur** :
+   - Suppression des boutons "details" inutiles.
+   - Modification des métriques affichées.
+
+---
+
+## Rapport d'activité — Semaine 8 (17 Décembre 2025)
+
+Résumé
+------
+Journée intensive de corrections, d'améliorations UI et de stabilisation du pipeline CI/CD.
+
+Travaux réalisés
+----------------
+1. **Corrections CI/CD (GitHub Actions + Jest)** :
+   - Fix du workflow pour utiliser `src/package-lock.json`.
+   - Correction de la configuration Jest : utilisation de `<rootDir>` pour trouver les tests.
+   - Ajout de `src/node_modules` aux `moduleDirectories` de Jest.
+   - Correction du chemin des tests vers `../tests/`.
+   - Fix du chargement du fichier `.env`.
+
+2. **Corrections Render** :
+   - Modification du chemin `requirements.txt` pour utiliser `cd ..` au lieu de `../`.
+
+3. **Améliorations Front-End** :
+   - Ajout d'une page d'accueil (welcome page).
+   - Nouveau design front-end (`commited new front`).
+   - Modification des logos.
+   - Configuration de la barre de navigation.
+   - Amélioration de l'affichage des métriques.
+
+4. **Corrections fonctionnelles** :
+   - Fix du suivi du score et de la disparition des pellets.
+   - Rectification des statistiques de simulation et de batches.
+
+5. **Documentation** :
+   - Condensation et réorganisation des fichiers de documentation.
+   - Finalisations diverses.
+
+---
+
+## Rapport d'activité — Semaine 9 (18 Décembre 2025)
+
+Résumé
+------
+Semaine finale dédiée à l'implémentation des algorithmes avancés de Pacman et à la documentation complète du projet.
+
+Travaux réalisés
+----------------
+1. **Algorithmes d'IA Pacman** :
+   - Implémentation de **Minimax** avec élagage alpha-beta (`minimax.py` - 190 lignes).
+   - Implémentation de **Expectimax** pour la modélisation probabiliste des fantômes (`expectimax.py` - 200 lignes).
+   - Implémentation de **Monte Carlo Tree Search (MCTS)** (`mcts.py` - 241 lignes).
+   - Implémentation des **Influence Maps** pour le raisonnement spatial (`influence_map.py` - 157 lignes).
+   - Création d'un script de démonstration `demo_advanced_ai.py` (245 lignes).
+
+2. **Intégration Game Engine** :
+   - Refactoring majeur de `game_engine.py` (+261 lignes) pour supporter les 8 algorithmes de Pacman.
+   - Création d'une sauvegarde `game_engine_backup.py`.
+   - Mise à jour de `__init__.py` pour exposer les nouveaux algorithmes.
+   - Amélioration de `performance_metrics.py` avec les complexités des nouveaux algorithmes.
+
+3. **Documentation API** :
+   - `API_DOCUMENTATION.md` (925 lignes) - Documentation complète de l'API.
+   - `API_ARCHITECTURE.md` (350 lignes) - Architecture de l'API.
+   - `API_CURL_EXAMPLES.md` (458 lignes) - Exemples cURL.
+   - `API_QUICK_REFERENCE.md` (167 lignes) - Référence rapide.
+   - `API_QUICK_START_CARD.md` (244 lignes) - Carte de démarrage rapide.
+   - `API_INDEX.md` (382 lignes) - Index de la documentation.
+   - `API_DOCUMENTATION_SUMMARY.md` (349 lignes) - Résumé.
+   - `Pacman_API.postman_collection.json` (428 lignes) - Collection Postman.
+
+4. **Documentation Technique** :
+   - `ADVANCED_AI_ALGORITHMS.md` (430 lignes) - Explication des algorithmes avancés.
+   - `DECISION_DIAGRAMS.md` (544 lignes) - Diagrammes de décision.
+   - `PACMAN_AI_CONFIGURATION.md` (364 lignes) - Guide de configuration des IA.
+   - `RAPPORT_FINAL_PACMAN_DECISION_MAKING.md` (1093 lignes) - **Rapport final complet** sur la prise de décision Pacman.
+
+5. **Assets visuels** :
+   - Ajout de `a_star.gif` - Animation de l'algorithme A*.
+   - Ajout de diagrammes de classes (`class_diag.webp`, `class_diag_1.webp`, `class_diag_2.webp`).
+   - Ajout du diagramme de cas d'utilisation (`use_case_diag.webp`).
+
+6. **Front-End** :
+   - Mise à jour de `app.js` (+101 lignes) pour l'intégration des nouveaux algorithmes.
+   - Amélioration de `components.css` pour le style des nouveaux composants.
+   - Suppression temporaire de la welcome page.
+   - Rectification des erreurs front-end.
+
+7. **Mise à jour README** :
+   - Extension majeure du README (+231 lignes) avec documentation des algorithmes et références API. 
