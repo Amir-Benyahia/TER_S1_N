@@ -16,6 +16,39 @@ const simulationBatchSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    batchId: {
+      type: String,
+      unique: true,
+      index: true
+    },
+    algorithm: {
+      type: String,
+      default: 'astar'
+    },
+    pacmanAlgorithm: {
+      type: String,
+      default: 'astar'
+    },
+    ghostAlgorithm: {
+      type: String,
+      default: 'bfs'
+    },
+    simulationCount: {
+      type: Number,
+      default: 0
+    },
+    maze: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null
+    },
+    statistics: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
+    },
+    results: {
+      type: [mongoose.Schema.Types.Mixed],
+      default: []
+    },
     simulations: [
       {
         type: mongoose.Schema.Types.ObjectId,

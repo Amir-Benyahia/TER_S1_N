@@ -1,0 +1,62 @@
+# Configuration des expériences de benchmark avec système de batches
+# Modifier ce fichier pour personnaliser les tests
+
+batch:
+  # Nombre de runs par combinaison dans un batch
+  runs_per_config: 5
+  
+  # Timeout maximum par simulation (secondes)
+  max_duration: 60
+  
+  # Configuration du labyrinthe si création automatique
+  maze_config:
+    width: 21
+    height: 21
+    algorithm: "recursive_backtracker"
+    imperfection: 30
+    symmetric: true
+
+# Algorithmes à tester
+algorithms:
+  pacman:
+    - greedy
+    - defensive
+    - aggressive
+    - random
+  
+  ghost:
+    - astar
+    - bfs
+
+# Combinaisons à tester (si vide, teste toutes les combinaisons)
+# Format: [{pacman: "greedy", ghost: "astar"}, ...]
+specific_combinations: []
+
+# Métriques à collecter
+metrics:
+  - duration
+  - score
+  - frames
+  - escape_rate
+  - pacman_memory
+  - pacman_decision_time
+  - ghost_memory_avg
+  - ghost_decision_time_avg
+  - ghost_nodes_explored_avg
+
+# Configuration des graphes
+graphs:
+  # DPI pour la qualité des images
+  dpi: 300
+  
+  # Style matplotlib (disponibles: default, classic, seaborn-v0_8, bmh, etc.)
+  style: "seaborn-v0_8-darkgrid"
+  
+  # Taille des figures (largeur, hauteur) en pouces
+  figsize: [14, 8]
+  
+  # Types de graphes à générer pour les comparaisons de batches
+  types:
+    - bar_comparison        # Barres comparatives multi-batches
+    - grouped_comparison    # Graphique groupé avec plusieurs métriques
+    - heatmap              # Cartes thermiques par batch

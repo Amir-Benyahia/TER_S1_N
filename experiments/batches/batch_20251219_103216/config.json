@@ -1,0 +1,10 @@
+{
+  "batch_id": "batch_20251219_103216",
+  "batch_name": "Batch Pacman:GREEDY vs Ghosts:ASTAR",
+  "pacman_algorithm": "greedy",
+  "ghost_algorithm": "astar",
+  "n_simulations": 30,
+  "maze_width": 21,
+  "maze_height": 21,
+  "created_at": "2025-12-19T10:32:16.481476"
+}
