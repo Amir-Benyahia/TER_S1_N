@@ -140,3 +140,135 @@ Aujourd'hui, j'ai :
 Résultat :
 L'intelligence artificielle est entièrement connectée au projet global. L'API est prête à être consommée par l'interface utilisateur pour animer les fantômes. La supériorité de l'approche collaborative a été démontrée et quantifiée via le framework de benchmark.
 
+---
+
+## Rapport d'activité – Jour 8
+
+Aujourd'hui, j'ai :
+
+- **Corrigé les problèmes de CI/CD et Jest** :
+   - Résolution du problème de chemin Jest en mettant à jour la configuration pour utiliser `<rootDir>`
+   - Correction du workflow GitHub Actions pour utiliser `src/package-lock.json`
+   - Ajustement des chemins de tests vers `../tests/` pour correspondre à la nouvelle structure
+   - Fix du chargement du fichier `.env` dans les tests
+
+- **Correction du déploiement Render** :
+   - Modification du chemin `requirements.txt` pour utiliser `cd ..` au lieu de `../`
+   - Validation du pipeline de déploiement automatisé
+
+- **Collaboration sur l'architecture PacLab** (avec Ahmed TAMANI et Belhout) :
+   - Participation à la migration complète vers l'architecture modulaire PacLab
+   - Restructuration des fichiers et dossiers pour une meilleure organisation
+   - Mise en place de la nouvelle structure `data/trajectories/`
+   - Création du fichier `demo.html` pour les démonstrations
+
+- **Documentation** :
+   - Contribution aux guides de déploiement et de configuration
+   - Validation des instructions d'installation
+
+Résultat :  
+L'infrastructure CI/CD est désormais stable avec des tests automatisés fonctionnels. Le déploiement Render est opérationnel et la nouvelle architecture PacLab est en place pour supporter les futures évolutions.
+
+---
+
+## Rapport d'activité – Jour 9
+
+Aujourd'hui, j'ai :
+
+- **Amélioration de l'IA des fantômes** :
+   - Implémentation de comportements différenciés pour les 4 fantômes (Blinky, Pinky, Inky, Clyde)
+   - Chaque fantôme possède désormais sa propre personnalité et stratégie de chasse :
+     * **Blinky (Rouge)** : Chasseur agressif qui poursuit directement Pacman
+     * **Pinky (Rose)** : Stratège qui anticipe la position future de Pacman (4 cases devant)
+     * **Inky (Cyan)** : Embusqueur qui utilise Blinky comme référence pour des attaques coordonnées
+     * **Clyde (Orange)** : Patrouilleur timide qui alterne entre chasse et fuite selon la distance
+   
+- **Corrections de bugs critiques** :
+   - Fix du problème de spawn des fantômes dans les murs
+   - Correction de l'affichage des fantômes superposés (système de décalage visuel)
+   - Amélioration du suivi de direction de Pacman avec historique des mouvements
+   - Gestion améliorée des collisions et détections
+
+- **Amélioration du moteur de jeu** (`game_engine.py`) :
+   - Intégration des nouvelles personnalités de fantômes dans le moteur de simulation
+   - Ajout de la logique de comportement spécifique pour chaque fantôme
+   - Amélioration de la synchronisation des mouvements
+
+- **Mise à jour de l'interface de visualisation** :
+   - Amélioration de `SimulationViewer.js` pour afficher les comportements différenciés
+   - Mise à jour de `MazeCanvas.js` pour la gestion visuelle des fantômes superposés
+   - Amélioration de l'animation et du rendu des entités
+
+- **Documentation technique** :
+   - Création de `GHOST_AI_README.md` documentant :
+     * Les algorithmes de chaque fantôme
+     * Les stratégies de poursuite et d'embuscade
+     * Les paramètres de configuration
+     * Les diagrammes de comportement
+
+- **Mise à jour du README** :
+   - Amélioration de la documentation générale du projet
+   - Correction du formatage de la liste des membres du groupe
+   - Ajout de références aux nouvelles fonctionnalités IA
+
+Résultat :  
+Les fantômes possèdent désormais des comportements distincts et réalistes, rendant le jeu plus stratégique et imprévisible. L'IA est complètement fonctionnelle avec 4 personnalités différenciées validées. La documentation technique permet une compréhension approfondie des algorithmes implémentés.
+
+---
+
+## Rapport d'activité – Jour 10
+
+Aujourd'hui, j'ai :
+
+- **Développement du système de comparaison par batches** :
+   - Création d'un système complet d'expérimentation et de benchmarking dans le dossier `experiments/`
+   - Architecture modulaire avec 10+ scripts Python spécialisés pour différents aspects de l'analyse
+
+- **Scripts de génération de batches** :
+   - `batch_runner.py` : Générateur de batches de simulations avec support des IA Pacman vs algorithmes fantômes
+   - `create_batch_with_sims.py` : Création de batches avec simulations réelles via l'API REST
+   - `benchmark_runner.py` : Exécution de campagnes de benchmarks automatisées
+   
+- **Scripts de visualisation et analyse** :
+   - `visualize_3d.py` : Génération de graphiques 3D comparant les performances (score, durée, frames)
+   - `compare_batches_from_api.py` : Comparaison de batches en temps réel depuis l'API
+   - `compare_batches_clean.py` : Analyse statistique détaillée des résultats de batches
+   - `graph_generator.py` : Génération de visualisations avancées
+
+- **Infrastructure de données** :
+   - `upload_to_db.py` : Téléversement automatique des résultats vers MongoDB
+   - `list_batches_db.py` : Listage et consultation des batches stockés
+   - Configuration via `config.yaml` pour paramétrer les expériences
+
+- **Génération de 24 batches de test** :
+   - Création de 24 dossiers de batches avec configurations complètes
+   - Chaque batch contient : `config.json`, `maze.json`, `results.json`, `statistics.json`
+   - Total de ~30 simulations par batch pour validation statistique
+   - Tests de différentes combinaisons : IA Pacman (DEFENSIVE, AGGRESSIVE, GREEDY) vs Algorithmes fantômes (A*, BFS, GREEDY)
+
+- **Génération de visualisations 3D** :
+   - 5 graphiques PNG générés dans `experiments/outputs/` :
+     * `comparison_3d.png` : Comparaison globale des batches
+     * `comparison_3d_render.png` : Visualisation optimisée pour Render
+     * `batch_comparison.png` : Vue d'ensemble des performances
+     * 2 graphiques spécifiques de batches individuels
+
+- **Intégration backend** :
+   - Mise à jour de `batchController.js` pour gérer les nouveaux champs `pacmanAlgorithm` et `ghostAlgorithm`
+   - Création de `comparisonController.js` pour les endpoints de comparaison
+   - Nouveau modèle `Comparison.js` et `SimulationBatch.js`
+   - Routes API `/api/comparisons` via `comparisonRoutes.js`
+
+- **Documentation complète** :
+   - `experiments/README.md` : Guide d'utilisation du système d'expérimentation
+   - Documentation des scripts, des paramètres et des workflows
+   - Exemples d'utilisation et de configuration
+
+- **Déploiement et validation** :
+   - Push du système complet vers le dépôt principal
+   - Tests de génération de batches sur Render
+   - Validation de l'API de comparaison en production
+   - Vérification de la cohérence des visualisations 3D
+
+Résultat :  
+Système d'expérimentation et de benchmarking entièrement fonctionnel permettant de comparer scientifiquement les performances des différentes combinaisons d'algorithmes (IA Pacman vs stratégies fantômes). Les visualisations 3D offrent une vue claire et synthétique des résultats. L'infrastructure est prête pour des analyses à grande échelle et l'optimisation des algorithmes basée sur des données quantitatives.
